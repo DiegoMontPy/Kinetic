@@ -54,3 +54,4 @@ docs/          CONVENCIONES.md
 - `npm run build` genera `dist/`, listo para servir como archivos estáticos.
 - `SITE_URL` y `BASE_PATH` definen el dominio y la ruta base (por defecto `https://diegomontpy.github.io` y `/`).
 - Para publicar en un subdirectorio: `SITE_URL=https://diegomontpy.github.io BASE_PATH=/Kinetic/ npm run build`.
+- Cada push a `main` publica el sitio en GitHub Pages (`https://diegomontpy.github.io/Kinetic/`).

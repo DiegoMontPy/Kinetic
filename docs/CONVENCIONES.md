@@ -64,6 +64,7 @@ blender -b ruta/a/Chasis.blend -P scripts/render-chassis.py
 
 - `SITE_URL`: origen público. Por defecto `https://diegomontpy.github.io`. Pendiente: dominio definitivo (probablemente de la universidad).
 - `BASE_PATH`: ruta base. Por defecto `/`; en GitHub Pages es `/Kinetic/`.
+- En el despliegue (`.github/workflows/deploy.yml`) ambos valores salen de `actions/configure-pages`. Si se configura un dominio propio en Pages, se ajustan solos.
 - En Git Bash para Windows hay que anteponer `MSYS_NO_PATHCONV=1`: si no, `/Kinetic/` se convierte en una ruta de disco.
 
 ## Commits
