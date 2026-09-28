@@ -1,0 +1,7 @@
+dist/
+.astro/
+node_modules/
+referencia/
+package-lock.json
+public/fonts/
+src/assets/
