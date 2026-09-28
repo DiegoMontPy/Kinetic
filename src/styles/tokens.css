@@ -1,0 +1,122 @@
+/*
+ * Design tokens. Components take every color, size and spacing value from here.
+ * Custom properties cannot be used inside media queries, so the two breakpoints
+ * are fixed by convention: 640px (layout) and 960px (navigation).
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Color */
+  --color-bg: #000000;
+  --color-surface: #0b0f14;
+  --color-surface-alt: #141c25;
+  --color-accent: #006dff;
+  --color-accent-hover: #3b8bff;
+  --color-accent-press: #0058cc;
+  --color-line-blue: #8fbeff;
+  --color-text: #f2f4f8;
+  --color-text-muted: #9aa0ac;
+  --color-text-subtle: #808793;
+  --color-done: #31e083;
+  --color-border: rgb(255 255 255 / 0.09);
+  --color-border-strong: rgb(255 255 255 / 0.18);
+  --color-on-accent: #ffffff;
+  --color-plate: #f2f4f8;
+  --color-placeholder-fill: rgb(154 160 172 / 0.12);
+  --color-grid-line: rgb(143 190 255 / 0.08);
+  --color-grid-line-minor: rgb(143 190 255 / 0.035);
+  --color-nav-bg: rgb(0 0 0 / 0.82);
+
+  /* Typography */
+  --font-heading: "Lexend", "Lexend Fallback", system-ui, sans-serif;
+  --font-body: "Albert Sans", "Albert Sans Fallback", system-ui, sans-serif;
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --text-lg: clamp(1.125rem, 1.02rem + 0.45vw, 1.375rem);
+  --text-xl: clamp(1.75rem, 1.3rem + 1.9vw, 2.5rem);
+  --text-2xl: clamp(2.5rem, 1.8rem + 3vw, 3.5rem);
+  --text-display: clamp(3rem, 1.6rem + 6vw, 5.25rem);
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --leading-tight: 1.02;
+  --leading-snug: 1.2;
+  --leading-body: 1.6;
+  --tracking-display: -0.035em;
+  --tracking-heading: -0.02em;
+  --tracking-caps: 0.16em;
+  --measure: 60ch;
+
+  /* Spacing: 4px scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --section-space: clamp(var(--space-16), 9vw, var(--space-24));
+
+  /* Shape */
+  --radius-control: 2px;
+  --radius-frame: 8px;
+  --border-width: 1px;
+  --border-width-strong: 2px;
+  --focus-width: 2px;
+  --focus-offset: 3px;
+
+  /* Layout */
+  --container: 1140px;
+  --gutter: 24px;
+  --nav-height: 68px;
+  --nav-row: 48px;
+  --tap-min: 44px;
+  --hero-min-height: calc(92svh - var(--nav-height));
+  --grid-major: 96px;
+  --grid-minor: 24px;
+
+  /* Elements */
+  --monogram-size: 36px;
+  --icon-sm: 20px;
+  --icon-md: 24px;
+  --icon-lg: 32px;
+  --dot-size: 8px;
+  --plate-platinum: 256px;
+  --plate-gold: 176px;
+  --plate-silver: 128px;
+  --plate-bronze: 96px;
+  --plate-inset: 16%;
+  --logo-rest-opacity: 0.7;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-reveal: 500ms;
+  --reveal-shift: 16px;
+  --stagger-step: 80ms;
+  --nav-blur: 12px;
+
+  /* Layers */
+  --z-panel: 90;
+  --z-nav: 100;
+  --z-skip: 200;
+}
+
+@media (max-width: 639px) {
+  :root {
+    --plate-platinum: 240px;
+    --plate-gold: 144px;
+    --plate-silver: 96px;
+    --plate-bronze: 72px;
+  }
+}
