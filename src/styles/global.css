@@ -234,9 +234,11 @@ button {
   transition-delay: calc(var(--reveal-index, 0) * var(--stagger-step));
 }
 
-:root[data-reveal-ready] [data-reveal]:not([data-revealed]) {
-  opacity: 0;
-  transform: translateY(var(--reveal-shift));
+@media screen {
+  :root[data-reveal-ready] [data-reveal]:not([data-revealed]) {
+    opacity: 0;
+    transform: translateY(var(--reveal-shift));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
