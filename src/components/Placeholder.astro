@@ -1,0 +1,58 @@
+---
+import type { ComponentProps } from "astro/types";
+
+import Icon from "./Icon.astro";
+
+interface Props {
+  /** One of the labels in placeholderLabels (src/data/site.ts). */
+  label: string;
+  /** Aspect ratio of the content it stands in for: 16:9 photos and renders, 1:1 logos and portraits. */
+  ratio: "16:9" | "1:1";
+  icon?: ComponentProps<typeof Icon>["name"];
+  /** Accessible name when the visible label alone is not specific enough. */
+  description?: string;
+}
+
+const { label, ratio, icon = "tbd", description } = Astro.props;
+---
+
+<div class="placeholder" data-ratio={ratio} role="img" aria-label={description ?? label}>
+  <Icon name={icon} size="lg" />
+  <span class="label" aria-hidden="true">
+    {label}
+  </span>
+</div>
+
+<style>
+  .placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-4);
+    border: var(--border-width-strong) dashed var(--color-accent);
+    border-radius: var(--radius-frame);
+    background: var(--color-placeholder-fill);
+    color: var(--color-accent-hover);
+    text-align: center;
+  }
+
+  .placeholder[data-ratio="16:9"] {
+    aspect-ratio: 16 / 9;
+  }
+
+  .placeholder[data-ratio="1:1"] {
+    aspect-ratio: 1;
+  }
+
+  .label {
+    color: var(--color-text-muted);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-caps);
+    line-height: var(--leading-snug);
+    text-transform: uppercase;
+  }
+</style>
