@@ -1,0 +1,254 @@
+---
+import { joinLink, navigation, ui } from "../data/site";
+import { isCurrentPage, withBase } from "../lib/paths";
+import Brand from "./Brand.astro";
+import ButtonLink from "./ButtonLink.astro";
+import Icon from "./Icon.astro";
+
+const { pathname } = Astro.url;
+---
+
+<header class="site-header" data-site-header>
+  <div class="bar container">
+    <Brand />
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-menu-toggle
+    >
+      <span class="visually-hidden">{ui.menu}</span>
+      <Icon name="menu" class="icon-open" />
+      <Icon name="close" class="icon-close" />
+    </button>
+    <nav class="menu" id="site-menu" aria-label={ui.mainNavigation}>
+      <ul class="nav-list list-reset">
+        {navigation.map((item) => (
+          <li>
+            <a
+              class="nav-link"
+              href={withBase(item.href)}
+              aria-current={isCurrentPage(item.href, pathname) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <ButtonLink
+        class="join"
+        href={joinLink.href}
+        size="sm"
+        aria-current={isCurrentPage(joinLink.href, pathname) ? "page" : undefined}
+      >
+        {joinLink.label}
+      </ButtonLink>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-site-header]");
+  const toggle = header?.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const menu = header?.querySelector<HTMLElement>("#site-menu");
+
+  if (header && toggle && menu) {
+    const desktop = window.matchMedia("(min-width: 960px)");
+    const isOpen = () => header.hasAttribute("data-open");
+
+    const setOpen = (open: boolean) => {
+      header.toggleAttribute("data-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      for (const region of document.querySelectorAll<HTMLElement>("main, body > footer")) {
+        region.inert = open;
+      }
+    };
+
+    const close = (restoreFocus = false) => {
+      if (!isOpen()) return;
+      setOpen(false);
+      if (restoreFocus) toggle.focus();
+    };
+
+    toggle.addEventListener("click", () => setOpen(!isOpen()));
+    menu.addEventListener("click", (event) => {
+      if (event.target instanceof Element && event.target.closest("a")) close();
+    });
+    document.addEventListener("click", (event) => {
+      if (isOpen() && event.target instanceof Node && !header.contains(event.target)) close();
+    });
+
+    // Keeps keyboard focus inside the toggle and the open panel.
+    document.addEventListener("keydown", (event) => {
+      if (!isOpen()) return;
+      if (event.key === "Escape") {
+        close(true);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = [toggle, ...menu.querySelectorAll<HTMLElement>("a[href], button")];
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    desktop.addEventListener("change", (event) => {
+      if (event.matches) close();
+    });
+    window.addEventListener("pageshow", () => close());
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-nav);
+    border-bottom: var(--border-width) solid var(--color-border);
+    background: var(--color-nav-bg);
+    backdrop-filter: blur(var(--nav-blur));
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    height: var(--nav-height);
+  }
+
+  .menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-left: auto;
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: var(--nav-height);
+    padding-inline: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .nav-link:hover,
+  .nav-link[aria-current="page"] {
+    color: var(--color-text);
+  }
+
+  .nav-link[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    right: var(--space-3);
+    bottom: calc(-1 * var(--border-width));
+    left: var(--space-3);
+    height: var(--border-width-strong);
+    background: var(--color-accent);
+  }
+
+  .menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    margin-left: auto;
+    padding: 0;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .menu-toggle[aria-expanded="true"] .icon-open,
+  .menu-toggle[aria-expanded="false"] .icon-close {
+    display: none;
+  }
+
+  @media (max-width: 959px) {
+    .menu-toggle {
+      display: inline-flex;
+    }
+
+    .menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      z-index: var(--z-panel);
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-6);
+      max-height: calc(100svh - var(--nav-height));
+      margin: 0;
+      padding: 0 var(--gutter) var(--space-6);
+      overflow-y: auto;
+      border-bottom: var(--border-width) solid var(--color-border);
+      background: var(--color-bg);
+    }
+
+    .site-header[data-open] .menu {
+      display: flex;
+    }
+
+    .nav-list {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .nav-link {
+      height: var(--nav-row);
+      padding-inline: 0;
+      border-bottom: var(--border-width) solid var(--color-border);
+      font-size: var(--text-base);
+    }
+
+    .nav-link[aria-current="page"]::after {
+      right: 0;
+      left: 0;
+    }
+
+    .join {
+      width: 100%;
+    }
+  }
+
+  /* Without JavaScript the panel cannot open, so the links stay listed under the bar. */
+  @media (scripting: none) and (max-width: 959px) {
+    .bar {
+      flex-wrap: wrap;
+      height: auto;
+      min-height: var(--nav-height);
+    }
+
+    .menu-toggle {
+      display: none;
+    }
+
+    .menu {
+      position: static;
+      display: flex;
+      width: 100%;
+      padding-inline: 0;
+      border-bottom: 0;
+    }
+  }
+</style>

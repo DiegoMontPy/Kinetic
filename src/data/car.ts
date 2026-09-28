@@ -18,6 +18,10 @@ export const car = {
       file: "kr01-chassis-wireframe.png",
       alt: "Modelo CAD del chasis tubular de KR-01",
     },
+    social: {
+      file: "kr01-chassis-lateral.png",
+      alt: "Vista lateral del chasis tubular de acero de KR-01",
+    },
     caption: "KR-01 · Chasis tubular de acero",
   } satisfies Record<string, CarImage | string>,
 };

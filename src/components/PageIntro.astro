@@ -1,0 +1,49 @@
+---
+import { site } from "../data/site";
+import StatusDot from "./StatusDot.astro";
+
+interface Props {
+  heading: string;
+  status: string;
+}
+
+const { heading, status } = Astro.props;
+---
+
+<section class="intro blueprint" aria-labelledby="page-title">
+  <div class="container">
+    <p class="caps">
+      {site.name} · {site.category}
+    </p>
+    <h1 id="page-title">{heading}</h1>
+    <p class="status">
+      <StatusDot status="in-progress" />
+      {status}
+    </p>
+  </div>
+</section>
+
+<style>
+  .intro {
+    display: grid;
+    align-items: center;
+    min-height: var(--intro-min-height);
+    padding-block: var(--section-space);
+  }
+
+  h1 {
+    margin-block: var(--space-4) var(--space-6);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+  }
+</style>

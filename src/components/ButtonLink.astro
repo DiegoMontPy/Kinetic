@@ -1,0 +1,138 @@
+---
+import type { ComponentProps } from "astro/types";
+
+import { withBase } from "../lib/paths";
+import Icon from "./Icon.astro";
+
+interface Props {
+  /** Root-relative internal path. Without it, or when disabled, a <button> is rendered. */
+  href?: string;
+  variant?: "solid" | "outline" | "light" | "light-outline";
+  size?: "sm" | "md";
+  block?: boolean;
+  disabled?: boolean;
+  download?: boolean;
+  icon?: ComponentProps<typeof Icon>["name"];
+  class?: string;
+  "aria-current"?: "page";
+  "aria-describedby"?: string;
+}
+
+const {
+  href,
+  variant = "solid",
+  size = "md",
+  block = false,
+  disabled = false,
+  download = false,
+  icon,
+  class: className,
+  ...attrs
+} = Astro.props;
+---
+
+{href && !disabled ? (
+  <a
+    class:list={["button", className]}
+    href={withBase(href)}
+    download={download || undefined}
+    data-variant={variant}
+    data-size={size}
+    data-block={block || undefined}
+    {...attrs}
+  >
+    {icon && <Icon name={icon} size="sm" />}
+    <slot />
+  </a>
+) : (
+  <button
+    class:list={["button", className]}
+    type="button"
+    disabled={disabled}
+    data-variant={variant}
+    data-size={size}
+    data-block={block || undefined}
+    {...attrs}
+  >
+    {icon && <Icon name={icon} size="sm" />}
+    <slot />
+  </button>
+)}
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--tap-min);
+    padding: var(--space-3) var(--space-6);
+    border: var(--border-width) solid transparent;
+    border-radius: var(--radius-control);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .button[data-size="sm"] {
+    padding-inline: var(--space-5);
+    font-size: var(--text-sm);
+  }
+
+  .button[data-block] {
+    width: 100%;
+  }
+
+  .button[data-variant="solid"] {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .button[data-variant="solid"]:hover {
+    background: var(--color-accent-press);
+  }
+
+  .button[data-variant="outline"] {
+    border-color: var(--color-border-strong);
+    background: transparent;
+    color: var(--color-text);
+  }
+
+  .button[data-variant="outline"]:hover {
+    border-color: var(--color-accent-hover);
+  }
+
+  .button[data-variant="light"] {
+    background: var(--color-on-accent);
+    color: var(--color-accent);
+  }
+
+  .button[data-variant="light"]:hover {
+    background: var(--color-plate);
+    color: var(--color-accent-press);
+  }
+
+  .button[data-variant="light-outline"] {
+    border-color: var(--color-on-accent);
+    background: transparent;
+    color: var(--color-on-accent);
+  }
+
+  .button[data-variant="light-outline"]:hover:not(:disabled) {
+    background: var(--color-on-accent);
+    color: var(--color-accent);
+  }
+
+  .button:disabled {
+    opacity: var(--disabled-opacity);
+    cursor: not-allowed;
+  }
+</style>

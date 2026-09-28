@@ -1,0 +1,11 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import { pages } from "../data/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const page = pages.sponsors;
+---
+
+<BaseLayout title={page.title} description={page.description}>
+  <PageIntro heading={page.heading} status={page.status} />
+</BaseLayout>

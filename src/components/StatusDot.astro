@@ -1,0 +1,30 @@
+---
+import type { SubsystemStatus } from "../data/subsystems";
+
+interface Props {
+  status: SubsystemStatus;
+}
+
+const { status } = Astro.props;
+---
+
+<span class="dot" data-status={status} aria-hidden="true"></span>
+
+<style>
+  .dot {
+    display: inline-block;
+    flex: none;
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 50%;
+    background: var(--color-text-subtle);
+  }
+
+  .dot[data-status="done"] {
+    background: var(--color-done);
+  }
+
+  .dot[data-status="in-progress"] {
+    background: var(--color-accent);
+  }
+</style>

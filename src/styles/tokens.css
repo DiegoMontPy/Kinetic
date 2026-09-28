@@ -51,6 +51,7 @@
   --tracking-heading: -0.02em;
   --tracking-caps: 0.16em;
   --measure: 60ch;
+  --measure-narrow: 46ch;
 
   /* Spacing: 4px scale */
   --space-1: 0.25rem;
@@ -82,15 +83,20 @@
   --nav-row: 48px;
   --tap-min: 44px;
   --hero-min-height: calc(92svh - var(--nav-height));
+  --intro-min-height: calc(60svh - var(--nav-height));
   --grid-major: 96px;
   --grid-minor: 24px;
+  --cell-min: 16rem;
+  --band-padding: clamp(var(--space-8), 4vw, var(--space-12));
 
   /* Elements */
   --monogram-size: 36px;
   --icon-sm: 20px;
   --icon-md: 24px;
   --icon-lg: 32px;
+  --icon-stroke: 1.5;
   --dot-size: 8px;
+  --disabled-opacity: 0.55;
   --plate-platinum: 256px;
   --plate-gold: 176px;
   --plate-silver: 128px;
