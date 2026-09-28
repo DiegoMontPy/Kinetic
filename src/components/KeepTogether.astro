@@ -1,0 +1,18 @@
+---
+import { car } from "../data/car";
+
+interface Props {
+  text: string;
+}
+
+// Browsers break "KR-01" after the hyphen, and neither font has a non-breaking hyphen glyph.
+const parts = Astro.props.text.split(car.name);
+---
+
+{parts.map((part, index) => (index === 0 ? part : [<span class="name">{car.name}</span>, part]))}
+
+<style>
+  .name {
+    white-space: nowrap;
+  }
+</style>

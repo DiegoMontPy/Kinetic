@@ -1,17 +1,17 @@
 ---
-import "../styles/tokens.css";
-import "../styles/global.css";
+import FsaeExplainer from "../components/FsaeExplainer.astro";
+import HomeHero from "../components/HomeHero.astro";
+import KeyFigures from "../components/KeyFigures.astro";
+import ProjectStatus from "../components/ProjectStatus.astro";
+import SponsorWall from "../components/SponsorWall.astro";
+import { pages } from "../data/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kinetic Racing</title>
-  </head>
-  <body>
-    <main>
-      <h1>Kinetic Racing</h1>
-    </main>
-  </body>
-</html>
+<BaseLayout title={pages.home.title} description={pages.home.description}>
+  <HomeHero />
+  <ProjectStatus />
+  <KeyFigures />
+  <FsaeExplainer />
+  <SponsorWall />
+</BaseLayout>

@@ -1,0 +1,85 @@
+---
+import { home } from "../data/site";
+
+const { fsae } = home;
+---
+
+<section class="section" aria-labelledby="fsae-title">
+  <div class="container layout">
+    <div class="intro">
+      <h2 id="fsae-title">{fsae.heading}</h2>
+      <p class="lede">{fsae.intro}</p>
+      <p class="note">{fsae.companyNote}</p>
+    </div>
+    <ol class="phases list-reset">
+      {fsae.phases.map((phase, index) => (
+        <li class="phase" data-reveal>
+          <span class="number" aria-hidden="true">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <div class="body">
+            <h3>{phase.title}</h3>
+            <p>{phase.description}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: start;
+    gap: var(--space-16);
+  }
+
+  .intro {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .note {
+    max-width: var(--measure);
+    color: var(--color-text);
+  }
+
+  .phase {
+    display: grid;
+    grid-template-columns: var(--space-12) minmax(0, 1fr);
+    gap: var(--space-4);
+    padding-block: var(--space-6);
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .phase:last-child {
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  .number {
+    color: var(--color-accent-hover);
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--leading-snug);
+    padding-top: var(--space-1);
+  }
+
+  .body {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .body p {
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 959px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-10);
+    }
+  }
+</style>

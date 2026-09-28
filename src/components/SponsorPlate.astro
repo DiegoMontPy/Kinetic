@@ -1,0 +1,74 @@
+---
+import { Image } from "astro:assets";
+
+import { placeholderLabels } from "../data/site";
+import type { Sponsor } from "../data/sponsors";
+import { findAsset } from "../lib/assets";
+import Placeholder from "./Placeholder.astro";
+
+interface Props {
+  sponsor: Sponsor;
+}
+
+const { sponsor } = Astro.props;
+const logo = findAsset(`sponsors/${sponsor.logo}`);
+const Plate = sponsor.url ? "a" : "div";
+---
+
+{logo ? (
+  <Plate class="plate" href={sponsor.url}>
+    <Image
+      src={logo}
+      alt={sponsor.name}
+      width={480}
+      widths={[160, 320, 480]}
+      sizes="(max-width: 639px) 30vw, 180px"
+      format={sponsor.logo.endsWith(".svg") ? "svg" : "webp"}
+    />
+  </Plate>
+) : (
+  <Placeholder
+    ratio="1:1"
+    label={placeholderLabels.sponsorLogo}
+    icon="badge"
+    description={sponsor.name}
+  />
+)}
+
+<style>
+  .plate {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    padding: var(--plate-inset);
+    border-radius: var(--radius-control);
+    background: var(--color-plate);
+    isolation: isolate;
+  }
+
+  /* Multiply turns white logo backgrounds into the plate color, so every logo sits flush. */
+  .plate :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    filter: grayscale(1);
+    opacity: var(--logo-rest-opacity);
+    transition:
+      filter var(--duration-fast) var(--ease-out),
+      opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .plate:hover :global(img),
+  .plate:focus-visible :global(img) {
+    filter: none;
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .plate :global(img) {
+      filter: none;
+      opacity: 1;
+    }
+  }
+</style>

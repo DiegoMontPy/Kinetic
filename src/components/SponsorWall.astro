@@ -1,0 +1,130 @@
+---
+import { sponsorSection, sponsors, tiers } from "../data/sponsors";
+import { withBase } from "../lib/paths";
+import Icon from "./Icon.astro";
+import KeepTogether from "./KeepTogether.astro";
+import SponsorCta from "./SponsorCta.astro";
+import SponsorPlate from "./SponsorPlate.astro";
+
+const groups = tiers
+  .map((tier) => ({ ...tier, sponsors: sponsors.filter((sponsor) => sponsor.tier === tier.id) }))
+  .filter((group) => group.sponsors.length > 0);
+
+// The invitation card joins the lowest tier on the wall, or stands alone if there is none.
+const walls = groups.length > 0 ? groups : [{ ...tiers[tiers.length - 1], sponsors: [] }];
+const lowest = walls[walls.length - 1];
+const showTierHeadings = walls.length > 1;
+const { invite } = sponsorSection;
+---
+
+<section class="section" aria-labelledby="sponsors-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="sponsors-title">{sponsorSection.heading}</h2>
+      <p class="lede">
+        <KeepTogether text={sponsorSection.lead} />
+      </p>
+    </div>
+    {walls.map((wall) => (
+      <div class="tier" data-tier={wall.id}>
+        {showTierHeadings && <h3 class="tier-title">{wall.label}</h3>}
+        <ul class="wall list-reset">
+          {wall.sponsors.map((sponsor) => (
+            <li data-reveal>
+              <SponsorPlate sponsor={sponsor} />
+            </li>
+          ))}
+          {wall === lowest && (
+            <li data-reveal>
+              <a class="invite" href={withBase(invite.href)}>
+                <Icon name="plus" size="lg" />
+                <span class="invite-title">{invite.title}</span>
+                <span class="invite-action">{invite.action}</span>
+              </a>
+            </li>
+          )}
+        </ul>
+      </div>
+    ))}
+    <SponsorCta />
+  </div>
+</section>
+
+<style>
+  .tier + .tier {
+    margin-top: var(--space-10);
+  }
+
+  .tier-title {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: var(--border-width) solid var(--color-border);
+    font-size: var(--text-base);
+  }
+
+  .tier {
+    --plate: var(--plate-gold);
+  }
+
+  .tier[data-tier="platinum"] {
+    --plate: var(--plate-platinum);
+  }
+
+  .tier[data-tier="silver"] {
+    --plate: var(--plate-silver);
+  }
+
+  .tier[data-tier="bronze"] {
+    --plate: var(--plate-bronze);
+  }
+
+  .wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--plate), 1fr));
+    gap: var(--space-3);
+  }
+
+  .invite {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    aspect-ratio: 1;
+    padding: var(--space-3);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+    color: var(--color-text);
+    text-align: center;
+    text-decoration: none;
+    transition: border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .invite:hover {
+    border-color: var(--color-accent-hover);
+  }
+
+  .invite :global(.icon) {
+    margin-bottom: var(--space-2);
+    color: var(--color-accent-hover);
+  }
+
+  .invite-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+  }
+
+  .invite-action {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  @container (max-width: 110px) {
+    .invite-action {
+      display: none;
+    }
+  }
+</style>

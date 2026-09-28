@@ -1,0 +1,77 @@
+---
+import { sponsorSection, sponsorshipPackage } from "../data/sponsors";
+import ButtonLink from "./ButtonLink.astro";
+import KeepTogether from "./KeepTogether.astro";
+
+const { cta } = sponsorSection;
+---
+
+<div class="band" data-reveal>
+  <div class="copy">
+    <h3 class="title">
+      <KeepTogether text={cta.heading} />
+    </h3>
+    <p>{cta.text}</p>
+  </div>
+  <div class="actions">
+    <ButtonLink href={cta.contact.href} variant="light">
+      {cta.contact.label}
+    </ButtonLink>
+    {sponsorshipPackage ? (
+      <ButtonLink href={sponsorshipPackage} variant="light-outline" icon="download" download>
+        {cta.packageLabel}
+      </ButtonLink>
+    ) : (
+      <>
+        <ButtonLink
+          variant="light-outline"
+          icon="download"
+          disabled
+          aria-describedby="package-note"
+        >
+          {cta.packageLabel}
+        </ButtonLink>
+        <p class="note" id="package-note">
+          {cta.packagePending}
+        </p>
+      </>
+    )}
+  </div>
+</div>
+
+<style>
+  .band {
+    display: grid;
+    gap: var(--space-8);
+    margin-top: var(--space-12);
+    padding: var(--band-padding);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .band :global(:focus-visible) {
+    outline-color: var(--color-on-accent);
+  }
+
+  .copy {
+    display: grid;
+    gap: var(--space-2);
+    max-width: var(--measure);
+  }
+
+  .title {
+    font-size: var(--text-xl);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+  }
+
+  .note {
+    max-width: var(--measure-narrow);
+    font-size: var(--text-sm);
+  }
+</style>

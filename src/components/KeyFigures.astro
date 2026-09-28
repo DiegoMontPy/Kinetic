@@ -1,0 +1,99 @@
+---
+import { car } from "../data/car";
+import { home, site } from "../data/site";
+import { subsystems } from "../data/subsystems";
+import { team } from "../data/team";
+
+const { labels } = home.figures;
+const figures: { label: string; value: number | string }[] = [
+  { label: labels.members, value: team.activeMembers },
+  { label: labels.subsystems, value: subsystems.length },
+  { label: labels.chassis, value: car.chassisBuilt },
+  { label: labels.car, value: car.name },
+];
+---
+
+<section class="section figures-section" aria-labelledby="figures-title">
+  <div class="container">
+    <div class="head">
+      <h2 id="figures-title">{home.figures.heading}</h2>
+      <p class="caps" lang="en">
+        {site.taglines.team}
+      </p>
+    </div>
+    <dl class="figures">
+      {figures.map((figure) => (
+        <div class="figure" data-reveal>
+          <dt class="label">{figure.label}</dt>
+          <dd class="value">
+            {typeof figure.value === "number" ? (
+              <span data-count={figure.value} style={`--digits: ${String(figure.value).length}`}>
+                {figure.value}
+              </span>
+            ) : (
+              figure.value
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .figures-section {
+    background: var(--color-surface);
+  }
+
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-8);
+    margin-bottom: var(--space-10);
+  }
+
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--border-width);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-border);
+  }
+
+  .figure {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    padding: var(--space-8) var(--space-6);
+    background: var(--color-surface);
+  }
+
+  .value {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* Neither font ships tabular figures, so each counter reserves its final width. */
+  .value [data-count] {
+    display: inline-block;
+    min-inline-size: calc(var(--digits) * 1ch);
+  }
+
+  .label {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  @media (max-width: 959px) {
+    .figures {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
