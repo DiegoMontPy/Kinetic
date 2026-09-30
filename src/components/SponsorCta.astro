@@ -74,4 +74,12 @@ const { cta } = sponsorSection;
     max-width: var(--measure-narrow);
     font-size: var(--text-sm);
   }
+
+  /* On narrow phones the band is thinner than a one-line button, so buttons go full width. */
+  @media (max-width: 639px) {
+    .actions :global(.button) {
+      width: 100%;
+      white-space: normal;
+    }
+  }
 </style>
