@@ -223,7 +223,11 @@ button {
     var(--grid-major) var(--grid-major),
     var(--grid-minor) var(--grid-minor),
     var(--grid-minor) var(--grid-minor);
-  mask-image: radial-gradient(ellipse 75% 70% at 62% 45%, black 15%, transparent 78%);
+  mask-image: radial-gradient(
+    var(--blueprint-shape, ellipse 75% 70% at 62% 45%),
+    black 15%,
+    transparent 78%
+  );
 }
 
 /* Scroll reveal. Hidden only once the inline script has set the flag on <html>. */
