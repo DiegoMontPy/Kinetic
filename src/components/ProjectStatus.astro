@@ -3,50 +3,97 @@ import { car } from "../data/car";
 import { home } from "../data/site";
 import { statusLabels, subsystems } from "../data/subsystems";
 import KeepTogether from "./KeepTogether.astro";
-import StatusDot from "./StatusDot.astro";
 
 const done = subsystems.filter((subsystem) => subsystem.status === "done").length;
 ---
 
 <section class="section" aria-labelledby="status-title">
   <div class="container">
-    <div class="section-head">
+    <div class="head">
       <h2 id="status-title">{home.status.heading}</h2>
-      <p class="lede">
+      <p class="summary">
         <KeepTogether text={home.status.summary(car.name, done, subsystems.length)} />
       </p>
     </div>
-    <ul class="cells list-reset">
+    <ol class="rail list-reset">
       {subsystems.map((subsystem, index) => (
-        <li class="cell" data-reveal>
+        <li class="stop" data-status={subsystem.status} data-reveal>
+          <span class="marker" aria-hidden="true" />
           <span class="index" aria-hidden="true">
             {String(index + 1).padStart(2, "0")}
           </span>
           <h3 class="name">{subsystem.name}</h3>
-          <p class="state">
-            <StatusDot status={subsystem.status} />
-            {statusLabels[subsystem.status]}
-          </p>
+          <p class="state">{statusLabels[subsystem.status]}</p>
         </li>
       ))}
-    </ul>
+    </ol>
   </div>
 </section>
 
 <style>
-  .cells {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--cell-min)), 1fr));
-    gap: var(--border-width);
-    border: var(--border-width) solid var(--color-border);
-    background: var(--color-border);
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-8);
+    margin-bottom: var(--space-16);
   }
 
-  .cell {
+  .summary {
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+  }
+
+  .rail {
     display: grid;
-    gap: var(--space-2);
-    padding: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--cell-min)), 1fr));
+    row-gap: var(--space-12);
+  }
+
+  /* Each stop draws the stretch of line up to the next one; a finished stop fills it. */
+  .stop {
+    position: relative;
+    display: grid;
+    gap: var(--space-1);
+    padding: calc(var(--stop-size) + var(--space-6)) var(--space-6) 0 0;
+  }
+
+  .stop::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--stop-size) / 2);
+    right: 0;
+    left: 0;
+    height: var(--border-width);
+    background: var(--color-border-strong);
+    translate: 0 -50%;
+  }
+
+  .stop[data-status="done"]::before {
+    height: var(--border-width-strong);
+    background: var(--color-done);
+  }
+
+  .marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: var(--stop-size);
+    height: var(--stop-size);
+    border: var(--border-width-strong) solid var(--color-text-subtle);
+    border-radius: 50%;
     background: var(--color-bg);
+  }
+
+  .stop[data-status="done"] .marker {
+    border-color: var(--color-done);
+    background: var(--color-done);
+  }
+
+  .stop[data-status="in-progress"] .marker {
+    border-color: var(--color-accent);
   }
 
   .index {
@@ -57,14 +104,48 @@ const done = subsystems.filter((subsystem) => subsystem.status === "done").lengt
   }
 
   .name {
-    margin-top: var(--space-6);
+    font-size: var(--text-xl);
   }
 
   .state {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
     color: var(--color-text-muted);
     font-size: var(--text-sm);
+  }
+
+  .stop[data-status="done"] .state {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 639px) {
+    .rail {
+      row-gap: 0;
+    }
+
+    .stop {
+      padding: 0 0 var(--space-10) calc(var(--stop-size) + var(--space-6));
+    }
+
+    .stop::before {
+      top: 0;
+      right: auto;
+      bottom: 0;
+      left: calc(var(--stop-size) / 2);
+      width: var(--border-width);
+      height: auto;
+      translate: -50% 0;
+    }
+
+    .stop[data-status="done"]::before {
+      width: var(--border-width-strong);
+      height: auto;
+    }
+
+    .stop:last-child {
+      padding-bottom: 0;
+    }
+
+    .stop:last-child::before {
+      display: none;
+    }
   }
 </style>

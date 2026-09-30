@@ -18,66 +18,78 @@ const visual = [render, wireframe]
   .find((image): image is { alt: string; src: ImageMetadata } => image.src !== undefined);
 ---
 
-<section class="hero blueprint" aria-labelledby="hero-title">
-  <div class="container grid">
-    <div class="copy">
-      <p class="caps">{hero.eyebrow}</p>
-      <h1 id="hero-title" class="motto" lang="en">
-        {site.motto.map((line) => (
-          <span>{line}</span>
-        ))}
-      </h1>
-      <p class="lede intro">
-        <KeepTogether text={hero.intro} />
-      </p>
-      <div class="actions">
-        <ButtonLink href={hero.primaryAction.href}>{hero.primaryAction.label}</ButtonLink>
-        <ButtonLink href={hero.secondaryAction.href} variant="outline">
-          {hero.secondaryAction.label}
-        </ButtonLink>
-      </div>
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container copy">
+    <p class="caps label eyebrow">{hero.eyebrow}</p>
+    <h1 id="hero-title" class="motto" lang="en">
+      {site.motto.map((line) => (
+        <span>{line}</span>
+      ))}
+    </h1>
+    <p class="lede intro">
+      <KeepTogether text={hero.intro} />
+    </p>
+    <div class="actions">
+      <ButtonLink href={hero.primaryAction.href}>{hero.primaryAction.label}</ButtonLink>
+      <ButtonLink href={hero.secondaryAction.href} variant="outline">
+        {hero.secondaryAction.label}
+      </ButtonLink>
     </div>
-    <figure class="visual">
+  </div>
+  <figure class="visual">
+    <div class="render blueprint">
       {visual ? (
         <Picture
           src={visual.src}
           alt={visual.alt}
           formats={["avif", "webp"]}
           fallbackFormat="webp"
-          widths={[480, 720, 960, 1440]}
-          sizes="(min-width: 960px) 600px, calc(100vw - 48px)"
-          width={960}
+          widths={[720, 1080, 1440, 1920, 2400]}
+          sizes="(min-width: 960px) 184vw, 150vw"
+          width={1440}
           loading="eager"
           fetchpriority="high"
         />
       ) : (
         <Placeholder ratio="16:9" label={placeholderLabels.render} icon="render" />
       )}
-      <figcaption class="caps">{car.images.caption}</figcaption>
-    </figure>
-  </div>
+    </div>
+    <figcaption class="caps label caption">{car.images.caption}</figcaption>
+  </figure>
 </section>
 
 <style>
   .hero {
+    position: relative;
     display: grid;
     align-items: center;
     min-height: var(--hero-min-height);
-    padding-block: var(--space-12) var(--space-16);
+    padding-block: var(--space-12);
+    overflow: clip;
+    container-type: inline-size;
   }
 
-  .grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    align-items: center;
-    gap: var(--space-12);
+  .copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Small labels sit on a black tag so they stay legible wherever the render passes behind. */
+  .label {
+    width: fit-content;
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-bg);
+  }
+
+  .eyebrow {
+    margin-inline-start: calc(-1 * var(--space-2));
   }
 
   .motto {
-    margin-block: var(--space-5) var(--space-6);
+    margin-block: var(--space-6) var(--space-8);
     font-size: var(--text-display);
     font-weight: var(--weight-bold);
-    line-height: var(--leading-tight);
+    line-height: var(--leading-display);
     letter-spacing: var(--tracking-display);
   }
 
@@ -86,7 +98,7 @@ const visual = [render, wireframe]
   }
 
   .intro {
-    max-width: var(--measure-narrow);
+    max-width: var(--measure-hero);
   }
 
   .actions {
@@ -96,24 +108,40 @@ const visual = [render, wireframe]
     margin-top: var(--space-8);
   }
 
-  .visual :global(img) {
-    width: 100%;
-    height: auto;
+  .visual {
+    position: absolute;
+    inset: 0;
+    margin: 0;
   }
 
-  .visual figcaption {
-    margin-top: var(--space-3);
-    text-align: right;
+  /* Anchored to the viewport edge, not the container, so the chassis is cut by the frame. */
+  .render {
+    --blueprint-shape: ellipse 58% 62% at 50% 50%;
+    position: absolute;
+    top: 50%;
+    right: calc(var(--hero-visual-width) * var(--hero-visual-crop) * -1);
+    width: var(--hero-visual-width);
+    translate: 0 -50%;
+  }
+
+  .render :global(img) {
+    width: 100%;
+    height: auto;
+    mask-image: linear-gradient(to right, rgb(0 0 0 / var(--hero-render-dim)) 14%, black 58%);
+  }
+
+  .caption {
+    position: absolute;
+    right: max(var(--gutter), (100cqi - var(--container)) / 2);
+    bottom: var(--space-8);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .copy > *,
-    .visual {
+    .copy > * {
       animation: hero-enter var(--duration-reveal) var(--ease-out) both;
     }
 
-    .copy > :nth-child(2),
-    .visual {
+    .copy > :nth-child(2) {
       animation-delay: var(--stagger-step);
     }
 
@@ -124,6 +152,10 @@ const visual = [render, wireframe]
     .copy > :nth-child(4) {
       animation-delay: calc(3 * var(--stagger-step));
     }
+
+    .visual {
+      animation: hero-fade var(--duration-reveal) var(--ease-out) var(--stagger-step) both;
+    }
   }
 
   @keyframes hero-enter {
@@ -133,18 +165,50 @@ const visual = [render, wireframe]
     }
   }
 
+  @keyframes hero-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* Stacked in reading order: eyebrow, render with its caption, then motto, intro and actions. */
   @media (max-width: 959px) {
     .hero {
-      min-height: auto;
+      align-content: center;
+      align-items: start;
+      padding: var(--space-8) var(--gutter) var(--space-10);
     }
 
-    .grid {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--space-8);
+    .copy {
+      display: contents;
     }
 
-    .visual figcaption {
-      text-align: left;
+    .eyebrow {
+      order: -2;
+    }
+
+    .visual {
+      position: static;
+      order: -1;
+      margin-inline: calc(-1 * var(--gutter));
+    }
+
+    .render {
+      position: relative;
+      top: auto;
+      right: auto;
+      margin-left: calc(100% - var(--hero-visual-width) * (1 - var(--hero-visual-crop)));
+      translate: none;
+    }
+
+    .render :global(img) {
+      mask-image: none;
+    }
+
+    /* Pulled up over the render's transparent bottom margin so it sits right under the chassis. */
+    .caption {
+      position: static;
+      margin: calc(var(--hero-visual-width) * -0.04) 0 0 calc(var(--gutter) - var(--space-2));
     }
   }
 </style>

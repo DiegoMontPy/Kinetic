@@ -1,6 +1,6 @@
 ---
 import { car } from "../data/car";
-import { home, site } from "../data/site";
+import { home } from "../data/site";
 import { subsystems } from "../data/subsystems";
 import { team } from "../data/team";
 
@@ -13,70 +13,63 @@ const figures: { label: string; value: number | string }[] = [
 ];
 ---
 
-<section class="section figures-section" aria-labelledby="figures-title">
-  <div class="container">
-    <div class="head">
-      <h2 id="figures-title">{home.figures.heading}</h2>
-      <p class="caps" lang="en">
-        {site.taglines.team}
-      </p>
-    </div>
-    <dl class="figures">
-      {figures.map((figure) => (
-        <div class="figure" data-reveal>
-          <dt class="label">{figure.label}</dt>
-          <dd class="value">
-            {typeof figure.value === "number" ? (
-              <span data-count={figure.value} style={`--digits: ${String(figure.value).length}`}>
-                {figure.value}
-              </span>
-            ) : (
-              figure.value
-            )}
-          </dd>
-        </div>
-      ))}
-    </dl>
-  </div>
+<section class="band" aria-labelledby="figures-title">
+  <h2 id="figures-title" class="visually-hidden">
+    {home.figures.heading}
+  </h2>
+  <dl class="figures">
+    {figures.map((figure) => (
+      <div class="figure" data-reveal>
+        <dt class="label">{figure.label}</dt>
+        <dd class="value">
+          {typeof figure.value === "number" ? (
+            <span data-count={figure.value} style={`--digits: ${String(figure.value).length}`}>
+              {figure.value}
+            </span>
+          ) : (
+            figure.value
+          )}
+        </dd>
+      </div>
+    ))}
+  </dl>
 </section>
 
 <style>
-  .figures-section {
-    background: var(--color-surface);
+  .band {
+    container-type: inline-size;
+    border-top: var(--border-width) solid var(--color-border);
+    background: var(--color-bg);
   }
 
-  .head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-3) var(--space-8);
-    margin-bottom: var(--space-10);
-  }
-
+  /* Columns never shrink below their figure, and share whatever width is left. */
   .figures {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--border-width);
-    border: var(--border-width) solid var(--color-border);
-    background: var(--color-border);
+    grid-auto-columns: minmax(max-content, 1fr);
+    grid-auto-flow: column;
   }
 
   .figure {
     display: flex;
     flex-direction: column-reverse;
     justify-content: flex-end;
-    gap: var(--space-3);
-    padding: var(--space-8) var(--space-6);
-    background: var(--color-surface);
+    gap: var(--space-4);
+    padding: var(--space-16) var(--space-8);
+    border-left: var(--border-width) solid var(--color-border);
+  }
+
+  /* The first figure lines up with the page content; the band runs on to the right edge. */
+  .figure:first-child {
+    padding-left: max(var(--gutter), (100cqi - var(--container)) / 2);
+    border-left: 0;
   }
 
   .value {
     font-family: var(--font-heading);
-    font-size: var(--text-2xl);
+    font-size: var(--text-figure);
     font-weight: var(--weight-bold);
     font-variant-numeric: tabular-nums;
-    line-height: var(--leading-tight);
+    line-height: var(--leading-display);
     letter-spacing: var(--tracking-display);
   }
 
@@ -88,12 +81,47 @@ const figures: { label: string; value: number | string }[] = [
 
   .label {
     color: var(--color-text-muted);
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
   }
 
   @media (max-width: 959px) {
     .figures {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-flow: row;
+    }
+
+    .figure,
+    .figure:first-child {
+      padding: var(--space-12) var(--gutter);
+    }
+
+    .figure:nth-child(odd) {
+      border-left: 0;
+    }
+
+    .figure:nth-child(n + 3) {
+      border-top: var(--border-width) solid var(--color-border);
+    }
+  }
+
+  /* Two by two on phones: the figure size follows the cell width so "KR-01" always fits. */
+  @media (max-width: 639px) {
+    .figure,
+    .figure:first-child {
+      container-type: inline-size;
+      padding-block: var(--space-8);
+    }
+
+    .figure:nth-child(odd) {
+      padding-right: var(--space-4);
+    }
+
+    .figure:nth-child(even) {
+      padding-left: var(--space-4);
+    }
+
+    .value {
+      font-size: min(var(--text-figure), var(--figure-fit));
     }
   }
 </style>

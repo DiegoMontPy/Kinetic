@@ -1,4 +1,5 @@
 ---
+import { site } from "../data/site";
 import { sponsorSection, sponsors, tiers } from "../data/sponsors";
 import { withBase } from "../lib/paths";
 import Icon from "./Icon.astro";
@@ -17,10 +18,15 @@ const showTierHeadings = walls.length > 1;
 const { invite } = sponsorSection;
 ---
 
-<section class="section" aria-labelledby="sponsors-title">
+<section class="section sponsors" aria-labelledby="sponsors-title">
   <div class="container">
     <div class="section-head">
-      <h2 id="sponsors-title">{sponsorSection.heading}</h2>
+      <p class="caps" lang="en">
+        {site.taglines.team}
+      </p>
+      <h2 class="title" id="sponsors-title">
+        {sponsorSection.heading}
+      </h2>
       <p class="lede">
         <KeepTogether text={sponsorSection.lead} />
       </p>
@@ -51,6 +57,17 @@ const { invite } = sponsorSection;
 </section>
 
 <style>
+  .sponsors {
+    padding-top: var(--section-space-lg);
+  }
+
+  .title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
   .tier + .tier {
     margin-top: var(--space-10);
   }
