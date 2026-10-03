@@ -11,6 +11,9 @@
 - Ningún componente lleva texto escrito a mano: todo sale de esos archivos.
 - `null` (o una lista vacía) marca un dato pendiente. Nunca se rellena con texto inventado.
 - Un subsistema nuevo se abre agregando una entrada en `subsystems.ts`. La cuadrícula de estado y las cifras se ajustan solas.
+- Los sistemas del vehículo (`vehicleSystems` en `car.ts`) no son los subsistemas del equipo: un sistema existe aunque ningún grupo lo tenga asignado. Sin especificaciones confirmadas, un sistema queda en `tbd` y solo lista lo que falta definir.
+- Cada vehículo es una generación (`generations` en `car.ts`). El del año siguiente se agrega al final de la lista, pasa a ser el actual y El carro lo muestra sin cambios en las páginas; los anteriores quedan en el archivo.
+- Los beneficios de cada nivel de patrocinio están en `tierOffers` (`sponsors.ts`). El primer nivel de la lista se resalta en azul.
 
 ## Diseño
 
@@ -19,13 +22,15 @@
 - Un solo acento, `--color-accent`. `--color-done` se usa solo para el estado "terminado".
 - El texto azul sobre `surface` o `surface-alt` usa `--color-accent-hover`, porque `--color-accent` no llega a AA sobre esos fondos.
 - Lo que falta se muestra siempre con `Placeholder.astro` y una etiqueta de `placeholderLabels` (`site.ts`): 16:9 para fotos y renders, 1:1 para logos y retratos.
+- Un valor pendiente dentro de un texto, una ficha o una tabla usa `PendingTag.astro`, la versión en línea del mismo borde punteado. Una cifra que no existe nunca se muestra como cero.
 
 ## Imágenes
 
 - Van en `src/assets/` y se procesan con `astro:assets`. Se resuelven con `findAsset()` (`src/lib/assets.ts`), que devuelve `undefined` si el archivo no existe.
 - El hero usa `kr01-chassis-render.png`. Si no existe, cae a `kr01-chassis-wireframe.png`, y si tampoco está, al placeholder.
 - La imagen para redes sociales (1200×630) se genera del render lateral, porque el recorte 1.91:1 no corta el chasis.
-- Astro copia a `dist/` el original de toda imagen de `src/assets/` que no se procese. Hoy le pasa a `kr01-chassis-trasera.png`, que ninguna página usa: se resuelve cuando El carro lo muestre.
+- Astro copia a `dist/` el original de toda imagen de `src/assets/` que no se procese. Hoy le pasa a `kr01-chassis-wireframe.png`, que solo se usa si falta el render.
+- Las fotos de taller van en `src/assets/taller/` y se conectan en `workshopShots` (`car.ts`). Mientras `photo` sea `null`, la galería muestra el placeholder.
 
 ## Logos de sponsors
 
@@ -62,6 +67,7 @@ blender -b ruta/a/Chasis.blend -P scripts/render-chassis.py
 
 - Revelado con `data-reveal` y contadores con `data-count`. La lógica está en `src/lib/reveal.js` y se incrusta en `<head>`: sin JavaScript no se oculta nada.
 - El hero tiene su propia secuencia de entrada en CSS. `prefers-reduced-motion: reduce` desactiva todo.
+- Las vistas de El carro son pestañas solo con JavaScript; sin él se muestran las tres apiladas. `@media (scripting: enabled)` reserva el lugar de las pestañas antes de que corra el script, así nada salta al cargar.
 
 ## Variables de entorno
 

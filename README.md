@@ -43,6 +43,16 @@ docs/          CONVENCIONES.md
 - `null` marca un dato pendiente; el sitio muestra el placeholder o lo omite.
 - Las reglas completas están en `docs/CONVENCIONES.md`.
 
+## Agregar el vehículo de una temporada nueva
+
+- Agregá una entrada al final de `generations` en `src/data/car.ts`: pasa a ser la generación actual.
+- Actualizá en el mismo archivo `car`, `specs`, `views` y `vehicleSystems` con los datos del vehículo nuevo.
+- Los vehículos anteriores siguen listados en el archivo de generaciones de El carro.
+
+## Agregar fotos de taller
+
+- Copiá la foto a `src/assets/taller/` y completá `photo` (`file` y `alt`) en la entrada que corresponda de `workshopShots`.
+
 ## Agregar un sponsor
 
 - Copiá el logo a `src/assets/sponsors/`: SVG, o PNG con fondo transparente, con nombre en kebab-case.
