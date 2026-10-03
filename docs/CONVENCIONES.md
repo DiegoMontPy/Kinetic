@@ -31,7 +31,10 @@
 
 - Formato preferido: SVG. Alternativa: PNG con fondo transparente.
 - Nombre en kebab-case con el nombre de la empresa (`grupo-infrasal.svg`), sin márgenes vacíos alrededor del logo.
-- Decisión actual: todos los logos van sobre la misma placa clara (`--color-plate`) con igual padding y proporción 1:1. `mix-blend-mode: multiply` funde los fondos blancos con la placa.
+- Un logo nunca se edita: no se invierte ni se recolorea. Es la marca del patrocinador.
+- Dos variantes de placa, con igual tamaño, padding y proporción 1:1: clara (`--color-plate`) para logos oscuros y oscura (`--color-plate-dark`) para logos que vienen en blanco. Cada entrada de `sponsors.ts` declara la suya en `plate`.
+- `mix-blend-mode` funde el fondo del logo con la placa: `multiply` en la clara (fondos blancos) y `screen` en la oscura (fondos negros).
+- Lo correcto es pedirle a cada empresa su logo en la variante que haga falta. La placa oscura es el recurso mientras tanto; hoy la usa Grupo Cofiño.
 - Pendiente: cuando lleguen los logos definitivos en SVG o en versión blanca, pasar a logos transparentes sobre negro.
 - Niveles: `platinum`, `gold`, `silver`, `bronze` y `provisional`. Mientras todos sean `provisional`, el muro muestra un solo grupo.
 

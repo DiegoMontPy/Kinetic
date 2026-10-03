@@ -16,7 +16,7 @@ const Plate = sponsor.url ? "a" : "div";
 ---
 
 {logo ? (
-  <Plate class="plate" href={sponsor.url}>
+  <Plate class="plate" href={sponsor.url} data-plate={sponsor.plate}>
     <Image
       src={logo}
       alt={sponsor.name}
@@ -57,6 +57,15 @@ const Plate = sponsor.url ? "a" : "div";
     transition:
       filter var(--duration-fast) var(--ease-out),
       opacity var(--duration-fast) var(--ease-out);
+  }
+
+  /* Dark plate for logos that come in white: screen turns their black background into the plate. */
+  .plate[data-plate="dark"] {
+    background: var(--color-plate-dark);
+  }
+
+  .plate[data-plate="dark"] :global(img) {
+    mix-blend-mode: screen;
   }
 
   .plate:hover :global(img),

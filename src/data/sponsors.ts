@@ -1,10 +1,14 @@
 export type SponsorTier = "platinum" | "gold" | "silver" | "bronze" | "provisional";
 
+/** "light" for dark logos, "dark" for logos that come in white. The logo file is never edited. */
+export type PlateVariant = "light" | "dark";
+
 export interface Sponsor {
   name: string;
   tier: SponsorTier;
   /** File name inside src/assets/sponsors/. */
   logo: string;
+  plate: PlateVariant;
   url?: string;
 }
 
@@ -23,19 +27,21 @@ export const tiers: { id: SponsorTier; label: string }[] = [
  */
 export const sponsors: Sponsor[] = [
   // Pending: confirm whether the sponsor is the local Audi dealership.
-  { name: "Audi", tier: "provisional", logo: "audi.png" },
+  { name: "Audi", tier: "provisional", logo: "audi.png", plate: "light" },
   {
     name: "Autódromo Internacional El Jabalí",
     tier: "provisional",
     logo: "autodromo-el-jabali.png",
+    plate: "light",
   },
   {
     name: "Automóvil Club de El Salvador",
     tier: "provisional",
     logo: "automovil-club-de-el-salvador.png",
+    plate: "light",
   },
-  { name: "Grupo Infrasal", tier: "provisional", logo: "grupo-infrasal.jpg" },
-  { name: "Super Repuestos", tier: "provisional", logo: "super-repuestos.png" },
+  { name: "Grupo Infrasal", tier: "provisional", logo: "grupo-infrasal.jpg", plate: "light" },
+  { name: "Super Repuestos", tier: "provisional", logo: "super-repuestos.png", plate: "light" },
 ];
 
 /** Pending: path of the sponsorship package PDF inside public/, e.g. "/paquete-patrocinio.pdf". */

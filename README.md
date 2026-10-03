@@ -46,7 +46,8 @@ docs/          CONVENCIONES.md
 ## Agregar un sponsor
 
 - Copiá el logo a `src/assets/sponsors/`: SVG, o PNG con fondo transparente, con nombre en kebab-case.
-- Agregá una entrada en `src/data/sponsors.ts` con `name`, `tier`, `logo` y, si existe, `url`.
+- Agregá una entrada en `src/data/sponsors.ts` con `name`, `tier`, `logo`, `plate` y, si existe, `url`.
+- `plate` es `"light"` para un logo oscuro y `"dark"` para uno que viene en blanco. El archivo del logo no se edita.
 - Si el archivo del logo no está, el sitio muestra un placeholder en su lugar.
 
 ## Build
