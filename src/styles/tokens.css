@@ -28,6 +28,7 @@
   --color-grid-line: rgb(143 190 255 / 0.08);
   --color-grid-line-minor: rgb(143 190 255 / 0.035);
   --color-nav-bg: rgb(0 0 0 / 0.82);
+  --color-on-accent-line: rgb(255 255 255 / 0.5);
 
   /* Typography */
   --font-heading: "Lexend", "Lexend Fallback", system-ui, sans-serif;
@@ -107,6 +108,8 @@
   /* El carro: width of the spec sheet beside the render, and shape of the view stage. */
   --spec-column: 21rem;
   --stage-ratio: 2 / 1;
+  /* Sponsors: width of the benefit column in the level table. */
+  --row-header: 13rem;
 
   /* Elements */
   --monogram-size: 36px;
@@ -123,6 +126,12 @@
   --plate-bronze: 96px;
   --plate-inset: 16%;
   --logo-rest-opacity: 0.7;
+  /* Logo size on the car per level: the box stands for the space, the fill for the logo. */
+  --logo-mark-box: 56px;
+  --logo-mark-sm: 32%;
+  --logo-mark-md: 50%;
+  --logo-mark-lg: 72%;
+  --logo-mark-xl: 100%;
 
   /* Motion */
   --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
@@ -146,5 +155,6 @@
     --plate-gold: 144px;
     --plate-silver: 96px;
     --plate-bronze: 72px;
+    --logo-mark-box: 40px;
   }
 }

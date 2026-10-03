@@ -1,0 +1,70 @@
+---
+import { logoSizeLabels, sponsorPage, type TierOffer, type TierRow } from "../data/sponsors";
+import PendingTag from "./PendingTag.astro";
+
+interface Props {
+  offer: TierOffer;
+  row: TierRow;
+  /** True on the blue background of the highlighted level. */
+  highlight?: boolean;
+}
+
+const { offer, row, highlight = false } = Astro.props;
+const { levels } = sponsorPage;
+---
+
+{row === "amount" &&
+  (offer.amount ?? (
+    <PendingTag label={levels.amountPending} surface={highlight ? "accent" : "dark"} />
+  ))}
+{row === "logoOnCar" && (
+  <span class="logo">
+    <span class="mark" data-size={offer.logoOnCar} aria-hidden="true">
+      <span class="fill" />
+    </span>
+    {logoSizeLabels[offer.logoOnCar]}
+  </span>
+)}
+{(row === "website" || row === "social") && offer[row]}
+{row === "teamProfiles" && (offer.teamProfiles ?? <span class="none">{levels.notIncluded}</span>)}
+
+<style>
+  .logo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  /* The box stands for the space on the car; the fill grows with the level. */
+  .mark {
+    display: grid;
+    place-items: center;
+    width: var(--logo-mark-box);
+    aspect-ratio: 1;
+    border: var(--border-width) solid var(--mark-line, var(--color-border-strong));
+    border-radius: var(--radius-control);
+  }
+
+  .fill {
+    width: var(--logo-mark-sm);
+    aspect-ratio: 1;
+    background: var(--mark-fill, var(--color-accent));
+  }
+
+  .mark[data-size="md"] .fill {
+    width: var(--logo-mark-md);
+  }
+
+  .mark[data-size="lg"] .fill {
+    width: var(--logo-mark-lg);
+  }
+
+  .mark[data-size="xl"] .fill {
+    width: var(--logo-mark-xl);
+  }
+
+  .none {
+    color: var(--color-text-subtle);
+  }
+</style>

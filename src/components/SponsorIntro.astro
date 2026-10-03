@@ -1,0 +1,126 @@
+---
+import { currentGeneration } from "../data/car";
+import { sponsorPage } from "../data/sponsors";
+import KeepTogether from "./KeepTogether.astro";
+
+const { intro } = sponsorPage;
+---
+
+<section class="intro" aria-labelledby="page-title">
+  <div class="container">
+    <header class="head">
+      <p class="caps">{intro.eyebrow(currentGeneration.season)}</p>
+      <h1 id="page-title" class="title">
+        {intro.heading}
+      </h1>
+      <p class="lede">
+        <KeepTogether text={intro.lead} />
+      </p>
+    </header>
+    <h2 class="caps benefits-title">{intro.benefitsLabel}</h2>
+    <dl class="benefits">
+      {intro.benefits.map((benefit) => (
+        <div class="benefit" data-reveal>
+          <dt class="keyword">{benefit.keyword}</dt>
+          <dd class="detail">
+            <p>
+              <KeepTogether text={benefit.text} />
+            </p>
+            {benefit.tags.length > 0 && (
+              <ul class="tags list-reset">
+                {benefit.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .intro {
+    padding-block: var(--space-16) var(--section-space);
+  }
+
+  .head {
+    display: grid;
+    gap: var(--space-5);
+    margin-bottom: var(--space-16);
+  }
+
+  .title {
+    max-width: 16em;
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .benefits-title {
+    padding-bottom: var(--space-4);
+    font-family: var(--font-body);
+    letter-spacing: var(--tracking-caps);
+  }
+
+  .benefits {
+    border-top: var(--border-width) solid var(--color-border-strong);
+  }
+
+  /* Each benefit reads as one line of a statement: the keyword, then what it means for the company. */
+  .benefit {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: baseline;
+    gap: var(--space-4) var(--space-12);
+    padding-block: var(--space-8);
+    border-bottom: var(--border-width) solid var(--color-border-strong);
+  }
+
+  .keyword {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .detail {
+    display: grid;
+    gap: var(--space-4);
+    max-width: var(--measure);
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .tags li {
+    padding: var(--space-1) var(--space-3);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+  }
+
+  @media (max-width: 639px) {
+    .intro {
+      padding-top: var(--space-10);
+    }
+
+    .head {
+      margin-bottom: var(--space-12);
+    }
+
+    .benefit {
+      grid-template-columns: minmax(0, 1fr);
+      padding-block: var(--space-6);
+    }
+  }
+</style>

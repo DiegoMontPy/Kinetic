@@ -1,5 +1,7 @@
 ---
-import PageIntro from "../components/PageIntro.astro";
+import SponsorIntro from "../components/SponsorIntro.astro";
+import SponsorLevels from "../components/SponsorLevels.astro";
+import SponsorWall from "../components/SponsorWall.astro";
 import { pages } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -7,5 +9,8 @@ const page = pages.sponsors;
 ---
 
 <BaseLayout title={page.title} description={page.description}>
-  <PageIntro heading={page.heading} status={page.status} />
+  <SponsorIntro />
+  <SponsorLevels />
+  <!-- Same wall and contact band as Inicio: it is the same content. -->
+  <SponsorWall />
 </BaseLayout>

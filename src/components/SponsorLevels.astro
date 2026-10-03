@@ -1,0 +1,286 @@
+---
+import { site } from "../data/site";
+import { sponsorPage, tierOffers, tiers } from "../data/sponsors";
+import KeepTogether from "./KeepTogether.astro";
+import PendingTag from "./PendingTag.astro";
+import TierBenefit from "./TierBenefit.astro";
+
+const { levels } = sponsorPage;
+const offers = tierOffers.map((offer, index) => ({
+  ...offer,
+  label: tiers.find((tier) => tier.id === offer.tier)?.label ?? offer.tier,
+  highlight: index === 0,
+}));
+---
+
+<section class="section levels" aria-labelledby="levels-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="levels-title" class="title">
+        {levels.heading}
+      </h2>
+      <p class="lede">{levels.lead}</p>
+    </div>
+
+    {levels.draft && (
+      <p class="draft">
+        <PendingTag label={levels.draft.tag} />
+        <span>{levels.draft.text}</span>
+      </p>
+    )}
+
+    <table class="table">
+      <caption class="visually-hidden">{levels.caption}</caption>
+      <thead>
+        <tr>
+          <th scope="col" class="corner">
+            <span class="visually-hidden">{levels.rowHeader}</span>
+          </th>
+          {offers.map((offer) => (
+            <th scope="col" class="tier" data-highlight={offer.highlight || undefined}>
+              {offer.label}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {levels.rows.map((row) => (
+          <tr data-row={row.id}>
+            <th scope="row">{row.label}</th>
+            {offers.map((offer) => (
+              <td data-highlight={offer.highlight || undefined}>
+                <TierBenefit offer={offer} row={row.id} highlight={offer.highlight} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <ul class="cards list-reset">
+      {offers.map((offer) => (
+        <li class="card" data-highlight={offer.highlight || undefined}>
+          <h3 class="card-title">{offer.label}</h3>
+          <dl class="card-rows">
+            {levels.rows.map((row) => (
+              <div class="card-row" data-row={row.id}>
+                <dt>{row.label}</dt>
+                <dd>
+                  <TierBenefit offer={offer} row={row.id} highlight={offer.highlight} />
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </li>
+      ))}
+    </ul>
+
+    <div class="notes">
+      <p>
+        {levels.websiteNote} {levels.amountNote}
+      </p>
+      <p>
+        <KeepTogether text={levels.contact} />{" "}
+        <a href={site.instagram.url}>{site.instagram.handle}</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .levels {
+    background: var(--color-surface);
+  }
+
+  .title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* Highlighted level: a full blue column, from its name down to the last benefit. */
+  [data-highlight] {
+    --mark-fill: var(--color-on-accent);
+    --mark-line: var(--color-on-accent-line);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  /* Read before any benefit: a sponsorship table works as an offer. */
+  .draft {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    margin-bottom: var(--space-10);
+    padding: var(--space-4) var(--space-5);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+    font-size: var(--text-base);
+  }
+
+  .draft span {
+    flex: 1 1 var(--measure-narrow);
+  }
+
+  .table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .corner {
+    width: var(--row-header);
+  }
+
+  .table th,
+  .table td {
+    padding: var(--space-5) var(--space-6);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .tier {
+    padding-block: var(--space-8) var(--space-5);
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .tier[data-highlight] {
+    border-radius: var(--radius-frame) var(--radius-frame) 0 0;
+  }
+
+  tbody th {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+  }
+
+  tbody th,
+  tbody td {
+    border-top: var(--border-width) solid var(--color-border-strong);
+  }
+
+  tbody td[data-highlight] {
+    border-top-color: var(--color-on-accent-line);
+  }
+
+  tbody tr:last-child td[data-highlight] {
+    border-radius: 0 0 var(--radius-frame) var(--radius-frame);
+  }
+
+  .cards {
+    display: none;
+  }
+
+  .notes {
+    display: grid;
+    gap: var(--space-2);
+    max-width: var(--measure);
+    margin-top: var(--space-10);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .notes a {
+    color: var(--color-accent-hover);
+    font-weight: var(--weight-semibold);
+  }
+
+  /* Narrow screens: one card per level instead of columns, so nothing scrolls sideways. */
+  @media (max-width: 959px) {
+    .table {
+      display: none;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-3);
+    }
+
+    .card {
+      display: grid;
+      align-content: start;
+      gap: var(--space-4);
+      padding: var(--space-6);
+      border: var(--border-width) solid var(--color-border-strong);
+      border-radius: var(--radius-frame);
+    }
+
+    .card[data-highlight] {
+      border-color: var(--color-accent);
+    }
+
+    .card-title {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: var(--tracking-display);
+    }
+
+    .card-rows {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .card-row {
+      display: grid;
+      gap: var(--space-2);
+      padding-top: var(--space-4);
+      border-top: var(--border-width) solid var(--color-border-strong);
+    }
+
+    .card[data-highlight] .card-row {
+      border-top-color: var(--color-on-accent-line);
+    }
+
+    .card-row dt {
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-caps);
+      text-transform: uppercase;
+    }
+
+    .card[data-highlight] .card-row dt {
+      color: inherit;
+    }
+  }
+
+  /* Phones: label and value side by side, so each level stays a short card. */
+  @media (max-width: 639px) {
+    .cards {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .card {
+      padding: var(--space-5);
+    }
+
+    .card-rows {
+      gap: var(--space-3);
+    }
+
+    .card-row {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      align-items: center;
+      gap: var(--space-4);
+      padding-top: var(--space-3);
+    }
+
+    .card-row dt {
+      font-size: var(--text-sm);
+      letter-spacing: normal;
+      text-transform: none;
+    }
+
+    .card-row dd {
+      font-size: var(--text-sm);
+    }
+  }
+</style>

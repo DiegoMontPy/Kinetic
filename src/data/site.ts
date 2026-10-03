@@ -90,7 +90,6 @@ export const pages = {
     description:
       "Patrocinar a Kinetic Racing: tu marca sobre KR-01, el primer monoplaza de Formula SAE del Key Institute.",
     heading: "Sponsors",
-    status: "El programa de patrocinio está en preparación.",
   },
   join: {
     title: "Únete — Kinetic Racing",
