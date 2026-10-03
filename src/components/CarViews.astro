@@ -1,0 +1,273 @@
+---
+import { Picture } from "astro:assets";
+
+import { car, carPage, defaultViewId, views } from "../data/car";
+import { placeholderLabels } from "../data/site";
+import { findAsset } from "../lib/assets";
+import KeepTogether from "./KeepTogether.astro";
+import Placeholder from "./Placeholder.astro";
+
+const items = views.map((view) => ({ ...view, src: findAsset(view.image.file) }));
+const selectedId = items.some((view) => view.id === defaultViewId) ? defaultViewId : items[0]?.id;
+---
+
+<section class="section" aria-labelledby="views-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="views-title">{carPage.views.heading}</h2>
+      <p class="lede">
+        <KeepTogether text={carPage.views.lead} />
+      </p>
+    </div>
+    <div class="viewer" data-viewer>
+      <div class="tabs" data-tablist data-label={carPage.views.tabsLabel}>
+        {items.map((view) => (
+          <button
+            type="button"
+            class="tab"
+            id={`view-tab-${view.id}`}
+            data-tab={`view-${view.id}`}
+            data-default={view.id === selectedId || undefined}
+          >
+            {view.label}
+          </button>
+        ))}
+      </div>
+      {items.map((view) => (
+        <figure
+          class="panel"
+          id={`view-${view.id}`}
+          data-panel
+          data-default={view.id === selectedId || undefined}
+        >
+          <div class="stage blueprint">
+            {view.src ? (
+              <Picture
+                src={view.src}
+                alt={view.image.alt}
+                formats={["avif", "webp"]}
+                fallbackFormat="webp"
+                widths={[640, 960, 1280, 1600]}
+                sizes="(min-width: 1188px) 880px, (min-width: 640px) 78vw, 100vw"
+                width={1280}
+              />
+            ) : (
+              <Placeholder
+                ratio="16:9"
+                label={placeholderLabels.render}
+                icon="render"
+                description={view.image.alt}
+              />
+            )}
+          </div>
+          <figcaption class="caps label">
+            {car.name} · {view.caption}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  // Turns the stacked views into tabs. Without this script all of them stay visible.
+  for (const viewer of document.querySelectorAll<HTMLElement>("[data-viewer]")) {
+    const tablist = viewer.querySelector<HTMLElement>("[data-tablist]");
+    const tabs = [...viewer.querySelectorAll<HTMLButtonElement>("[data-tab]")];
+    const panels = tabs.map((tab) => document.getElementById(tab.dataset.tab ?? ""));
+    if (!tablist || tabs.length === 0 || panels.some((panel) => panel === null)) continue;
+
+    const select = (index: number, moveFocus: boolean) => {
+      tabs.forEach((tab, tabIndex) => {
+        const active = tabIndex === index;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+        panels[tabIndex]!.hidden = !active;
+      });
+      if (moveFocus) tabs[index].focus();
+    };
+
+    tablist.setAttribute("role", "tablist");
+    tablist.setAttribute("aria-label", tablist.dataset.label ?? "");
+    tabs.forEach((tab, index) => {
+      const panel = panels[index]!;
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", panel.id);
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", tab.id);
+      panel.tabIndex = 0;
+
+      tab.addEventListener("click", () => select(index, false));
+      tab.addEventListener("keydown", (event) => {
+        const last = tabs.length - 1;
+        const targets: Record<string, number> = {
+          ArrowRight: index === last ? 0 : index + 1,
+          ArrowDown: index === last ? 0 : index + 1,
+          ArrowLeft: index === 0 ? last : index - 1,
+          ArrowUp: index === 0 ? last : index - 1,
+          Home: 0,
+          End: last,
+        };
+        const target = targets[event.key];
+        if (target === undefined) return;
+        event.preventDefault();
+        select(target, true);
+      });
+    });
+
+    const initial = tabs.findIndex((tab) => tab.hasAttribute("data-default"));
+    select(Math.max(initial, 0), false);
+    viewer.setAttribute("data-ready", "");
+  }
+</script>
+
+<style>
+  /* Without JavaScript the tabs would do nothing, so only the stacked views are shown. */
+  .tabs {
+    display: none;
+  }
+
+  .viewer[data-ready] .tabs {
+    display: flex;
+  }
+
+  /* With scripting on, the tabs take their place before the script runs, so nothing shifts. */
+  @media (scripting: enabled) {
+    .tabs {
+      display: flex;
+    }
+
+    .viewer:not([data-ready]) .panel:not([data-default]) {
+      display: none;
+    }
+  }
+
+  .tabs {
+    gap: var(--space-1);
+  }
+
+  .tab {
+    position: relative;
+    min-height: var(--tap-min);
+    padding: var(--space-2) var(--space-4);
+    border: 0;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-family: var(--font-heading);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-heading);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .tab:first-child {
+    padding-left: 0;
+  }
+
+  .tab:hover,
+  .tab[aria-selected="true"],
+  .viewer:not([data-ready]) .tab[data-default] {
+    color: var(--color-text);
+  }
+
+  .tab[aria-selected="true"]::after,
+  .viewer:not([data-ready]) .tab[data-default]::after {
+    content: "";
+    position: absolute;
+    right: var(--space-4);
+    bottom: calc(-1 * var(--border-width));
+    left: var(--space-4);
+    height: var(--border-width-strong);
+    background: var(--color-accent);
+  }
+
+  .tab:first-child::after {
+    left: 0;
+  }
+
+  .tab:focus-visible {
+    outline-offset: calc(-1 * var(--focus-width));
+  }
+
+  .panel {
+    position: relative;
+  }
+
+  .panel[hidden] {
+    display: none;
+  }
+
+  .panel + .panel {
+    margin-top: var(--space-6);
+  }
+
+  .viewer[data-ready] .panel + .panel {
+    margin-top: 0;
+  }
+
+  .panel:focus-visible {
+    outline-offset: var(--focus-offset);
+  }
+
+  .stage {
+    --blueprint-shape: ellipse 60% 75% at 50% 50%;
+    display: grid;
+    place-items: center;
+    aspect-ratio: var(--stage-ratio);
+    border-block: var(--border-width) solid var(--color-border);
+  }
+
+  /* The <img> becomes the grid item, so its size resolves against the frame. */
+  .stage :global(picture) {
+    display: contents;
+  }
+
+  .stage :global(img) {
+    width: auto;
+    height: 100%;
+    aspect-ratio: var(--render-trim);
+    object-fit: cover;
+  }
+
+  .label {
+    position: absolute;
+    bottom: var(--space-4);
+    left: 0;
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-bg);
+  }
+
+  @media (max-width: 639px) {
+    .stage {
+      aspect-ratio: var(--render-trim);
+    }
+
+    .stage :global(img) {
+      width: 100%;
+      height: auto;
+    }
+
+    .tab {
+      flex: 1;
+      padding-inline: var(--space-2);
+    }
+
+    .tab:first-child {
+      padding-left: var(--space-2);
+    }
+
+    .tab::after,
+    .tab:first-child::after {
+      right: 0;
+      left: 0;
+    }
+
+    .label {
+      position: static;
+      display: inline-block;
+      margin-top: var(--space-3);
+      padding: 0;
+    }
+  }
+</style>

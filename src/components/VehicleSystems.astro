@@ -1,0 +1,201 @@
+---
+import { carPage, vehicleStatusLabels, vehicleSystems } from "../data/car";
+import Icon from "./Icon.astro";
+import PendingTag from "./PendingTag.astro";
+import StatusDot from "./StatusDot.astro";
+
+const { systems } = carPage;
+const done = vehicleSystems.filter((system) => system.status === "done").length;
+---
+
+<section class="section" aria-labelledby="systems-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="systems-title">{systems.heading}</h2>
+      <p class="lede">{systems.lead(done, vehicleSystems.length)}</p>
+    </div>
+    <ul class="systems list-reset">
+      {vehicleSystems.map((system) => (
+        <li>
+          <details
+            class="system"
+            data-status={system.status}
+            open={system.status === "done" || undefined}
+          >
+            <summary>
+              <h3 class="name">{system.name}</h3>
+              <span class="state">
+                <StatusDot status={system.status} />
+                {vehicleStatusLabels[system.status]}
+              </span>
+              <Icon name="chevron" class="toggle" />
+            </summary>
+            <div class="body">
+              <p class="role">{system.role}</p>
+              {system.facts.length > 0 && (
+                <div class="group">
+                  <h4 class="caps">{systems.factsHeading}</h4>
+                  <dl class="facts">
+                    {system.facts.map((fact) => (
+                      <div class="fact">
+                        <dt>{fact.label}</dt>
+                        <dd>{fact.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              )}
+              {system.open.length > 0 && (
+                <div class="group">
+                  <h4 class="caps">{systems.openHeading}</h4>
+                  <ul class="open list-reset">
+                    {system.open.map((item) => (
+                      <li>
+                        <PendingTag label={item} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </details>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .systems {
+    border-top: var(--border-width) solid var(--color-border-strong);
+  }
+
+  .system {
+    border-bottom: var(--border-width) solid var(--color-border-strong);
+  }
+
+  summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--space-6);
+    min-height: var(--tap-min);
+    padding-block: var(--space-5);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:focus-visible {
+    outline-offset: calc(-1 * var(--focus-width));
+  }
+
+  .name {
+    font-size: var(--text-xl);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  summary:hover .name {
+    color: var(--color-accent-hover);
+  }
+
+  .state {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .system[data-status="done"] .state {
+    color: var(--color-text);
+  }
+
+  .system :global(.toggle) {
+    color: var(--color-text-muted);
+    transition: rotate var(--duration-fast) var(--ease-out);
+  }
+
+  .system[open] :global(.toggle) {
+    rotate: 180deg;
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-4) var(--space-12);
+    padding-bottom: var(--space-8);
+  }
+
+  .role {
+    max-width: var(--measure-narrow);
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+  }
+
+  .group {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .group + .group {
+    margin-top: var(--space-6);
+  }
+
+  .group h4 {
+    margin: 0;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4) var(--space-8);
+  }
+
+  .fact {
+    display: grid;
+    gap: var(--space-1);
+    padding-top: var(--space-3);
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .fact dt {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .open {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .system :global(.toggle) {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 959px) {
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 639px) {
+    summary {
+      gap: var(--space-3);
+    }
+
+    .name {
+      font-size: var(--text-lg);
+    }
+
+    .facts {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

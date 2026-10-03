@@ -1,0 +1,105 @@
+---
+import { Picture } from "astro:assets";
+
+import { carPage, workshopShots } from "../data/car";
+import { placeholderLabels } from "../data/site";
+import { findAsset } from "../lib/assets";
+import Placeholder from "./Placeholder.astro";
+
+const shots = workshopShots.map((shot) => ({
+  ...shot,
+  src: shot.photo ? findAsset(shot.photo.file) : undefined,
+}));
+---
+
+<section class="section" aria-labelledby="workshop-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="workshop-title">{carPage.workshop.heading}</h2>
+      <p class="lede">{carPage.workshop.lead}</p>
+    </div>
+    <ul class="gallery list-reset">
+      {shots.map((shot) => (
+        <li class="shot" data-reveal>
+          <figure>
+            {shot.src && shot.photo ? (
+              <Picture
+                src={shot.src}
+                alt={shot.photo.alt}
+                formats={["avif", "webp"]}
+                fallbackFormat="webp"
+                widths={[480, 800, 1200]}
+                sizes="(min-width: 960px) 760px, 100vw"
+                width={1200}
+              />
+            ) : (
+              <Placeholder ratio="16:9" label={placeholderLabels.workshopPhoto} icon="camera" />
+            )}
+            <figcaption class="caption">{shot.caption}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* The first shot leads at twice the width; the next two stack beside it. */
+  .gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+
+  .shot:first-child {
+    grid-row: span 2;
+  }
+
+  figure {
+    position: relative;
+    height: 100%;
+  }
+
+  /* Stretched to the height of the two stacked shots, so both columns end on the same line. */
+  @media (min-width: 960px) {
+    .shot:first-child :global(.placeholder),
+    .shot:first-child :global(img) {
+      height: 100%;
+    }
+  }
+
+  figure :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-frame);
+    object-fit: cover;
+  }
+
+  .caption {
+    position: absolute;
+    bottom: var(--space-3);
+    left: var(--space-3);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-control);
+    background: var(--color-bg);
+    font-size: var(--text-sm);
+  }
+
+  /* Narrower screens: the lead shot spans the full width and the other two share a row. */
+  @media (max-width: 959px) {
+    .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .shot:first-child {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .gallery {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

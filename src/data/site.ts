@@ -77,7 +77,6 @@ export const pages = {
     description:
       "KR-01, el primer monoplaza de Kinetic Racing: chasis tubular de acero terminado y el resto del vehículo en diseño.",
     heading: "El carro",
-    status: "La ficha de KR-01 está en preparación.",
   },
   team: {
     title: "Equipo — Kinetic Racing",

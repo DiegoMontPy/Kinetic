@@ -1,0 +1,37 @@
+---
+interface Props {
+  /** One of the pending labels in src/data/. */
+  label: string;
+  /** "accent" when the tag sits on the blue background. */
+  surface?: "dark" | "accent";
+}
+
+const { label, surface = "dark" } = Astro.props;
+---
+
+<span class="pending" data-surface={surface}>
+  {label}
+</span>
+
+<style>
+  /* Inline version of Placeholder.astro: a value that does not exist yet, never a zero. */
+  .pending {
+    display: inline-block;
+    padding: var(--space-1) var(--space-2);
+    border: var(--border-width) dashed var(--color-accent);
+    border-radius: var(--radius-control);
+    color: var(--color-accent-hover);
+    font-family: var(--font-body);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-caps);
+    line-height: var(--leading-snug);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .pending[data-surface="accent"] {
+    border-color: var(--color-on-accent);
+    color: var(--color-on-accent);
+  }
+</style>

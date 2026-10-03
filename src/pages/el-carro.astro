@@ -1,5 +1,9 @@
 ---
-import PageIntro from "../components/PageIntro.astro";
+import CarOverview from "../components/CarOverview.astro";
+import CarViews from "../components/CarViews.astro";
+import GenerationArchive from "../components/GenerationArchive.astro";
+import VehicleSystems from "../components/VehicleSystems.astro";
+import WorkshopGallery from "../components/WorkshopGallery.astro";
 import { pages } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -7,5 +11,9 @@ const page = pages.car;
 ---
 
 <BaseLayout title={page.title} description={page.description}>
-  <PageIntro heading={page.heading} status={page.status} />
+  <CarOverview />
+  <CarViews />
+  <VehicleSystems />
+  <WorkshopGallery />
+  <GenerationArchive />
 </BaseLayout>

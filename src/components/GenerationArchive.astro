@@ -1,0 +1,158 @@
+---
+import { Picture } from "astro:assets";
+
+import { carPage, currentGeneration, generationLabels, generations } from "../data/car";
+import { placeholderLabels } from "../data/site";
+import { findAsset } from "../lib/assets";
+import KeepTogether from "./KeepTogether.astro";
+import Placeholder from "./Placeholder.astro";
+
+const { generation: copy } = carPage;
+const [generationLabel, seasonLabel] = generationLabels(currentGeneration);
+// Newest first: the archive reads from the current vehicle back to the first one.
+const entries = [...generations].reverse().map((generation) => ({
+  ...generation,
+  src: findAsset(generation.image.file),
+  labels: generationLabels(generation),
+  current: generation === currentGeneration,
+}));
+---
+
+<section class="section" aria-labelledby="generation-title">
+  <div class="container layout">
+    <div class="intro">
+      <h2 id="generation-title">
+        <span class="part">{generationLabel}</span>
+        <span class="visually-hidden">·</span>
+        <span class="part">{seasonLabel}</span>
+      </h2>
+      <p class="lede">
+        <KeepTogether text={copy.text} />
+      </p>
+    </div>
+    <ol class="archive list-reset" aria-label={copy.archiveLabel}>
+      {entries.map((entry) => (
+        <li class="entry">
+          <div class="thumb blueprint">
+            {entry.src ? (
+              <Picture
+                src={entry.src}
+                alt={entry.image.alt}
+                formats={["avif", "webp"]}
+                fallbackFormat="webp"
+                widths={[320, 640, 960]}
+                sizes="(min-width: 640px) 288px, 100vw"
+                width={640}
+              />
+            ) : (
+              <Placeholder ratio="16:9" label={placeholderLabels.render} icon="render" />
+            )}
+          </div>
+          <div class="info">
+            <p class="caps meta">
+              {entry.labels.map((label) => (
+                <span>{label}</span>
+              ))}
+              {entry.current && <span class="current">{copy.current}</span>}
+            </p>
+            <h3 class="vehicle">{entry.vehicle}</h3>
+            <p class="state">{entry.state}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: center;
+    gap: var(--space-10) var(--space-16);
+  }
+
+  .intro {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  /* Generation on one line, season on the next: the dot only exists for screen readers. */
+  .part {
+    display: block;
+  }
+
+  .archive {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .entry {
+    display: grid;
+    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-4);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+    background: var(--color-surface);
+  }
+
+  .thumb {
+    --blueprint-shape: ellipse 70% 80% at 50% 50%;
+    border-radius: var(--radius-control);
+    background: var(--color-bg);
+  }
+
+  .thumb :global(img) {
+    width: 100%;
+    aspect-ratio: var(--stage-ratio);
+    object-fit: cover;
+  }
+
+  .info {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-4);
+  }
+
+  .vehicle {
+    font-size: var(--text-xl);
+  }
+
+  .state {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .current {
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-control);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-caps);
+    line-height: var(--leading-snug);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 959px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .entry {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-4);
+    }
+  }
+</style>

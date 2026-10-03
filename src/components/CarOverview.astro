@@ -1,0 +1,221 @@
+---
+import { Picture } from "astro:assets";
+
+import { car, carPage, specs, views } from "../data/car";
+import { pages, placeholderLabels } from "../data/site";
+import { findAsset } from "../lib/assets";
+import PendingTag from "./PendingTag.astro";
+import Placeholder from "./Placeholder.astro";
+import StatusDot from "./StatusDot.astro";
+
+const { overview } = carPage;
+const front = views[0];
+const render = findAsset(front.image.file);
+---
+
+<section class="overview" aria-labelledby="page-title">
+  <div class="container">
+    <header class="head">
+      <div class="title">
+        <p class="caps">{pages.car.heading}</p>
+        <h1 id="page-title" class="name">
+          {car.name}
+        </h1>
+      </div>
+      <ul class="status list-reset">
+        {overview.status.map((item) => (
+          <li>
+            <StatusDot status={item.status} />
+            {item.text}
+          </li>
+        ))}
+      </ul>
+    </header>
+    <div class="sheet">
+      <figure class="drawing blueprint">
+        {render ? (
+          <Picture
+            src={render}
+            alt={front.image.alt}
+            formats={["avif", "webp"]}
+            fallbackFormat="webp"
+            widths={[640, 960, 1280, 1600]}
+            sizes="(min-width: 1188px) 800px, (min-width: 960px) calc(100vw - 390px), 100vw"
+            width={1280}
+            loading="eager"
+            fetchpriority="high"
+          />
+        ) : (
+          <Placeholder ratio="16:9" label={placeholderLabels.render} icon="render" />
+        )}
+        <figcaption class="caps label">
+          {car.name} · {front.caption}
+        </figcaption>
+      </figure>
+      <section class="spec" aria-labelledby="spec-title">
+        <h2 id="spec-title" class="caps spec-title">
+          {overview.specHeading}
+        </h2>
+        <dl class="rows">
+          {specs.map((spec) => (
+            <div class="row">
+              <dt>
+                {spec.label}
+                {spec.unit && <span class="unit">{spec.unit}</span>}
+              </dt>
+              <dd>{spec.value ?? <PendingTag label={overview.specPending} />}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    </div>
+  </div>
+</section>
+
+<style>
+  .overview {
+    padding-block: var(--space-12) var(--section-space);
+  }
+
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6) var(--space-12);
+    margin-bottom: var(--space-10);
+  }
+
+  .name {
+    margin-top: var(--space-3);
+    font-size: var(--text-display);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+    white-space: nowrap;
+  }
+
+  .status {
+    display: grid;
+    gap: var(--space-2);
+    padding-bottom: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+  }
+
+  .status li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .status li:first-child {
+    color: var(--color-text);
+  }
+
+  /* One frame split in two, like a drawing sheet with its title block on the side. */
+  .sheet {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--spec-column);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+  }
+
+  .drawing {
+    --blueprint-shape: ellipse 70% 70% at 50% 50%;
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: var(--space-6);
+  }
+
+  /* The <img> becomes the grid item, so its size resolves against the frame. */
+  .drawing :global(picture) {
+    display: contents;
+  }
+
+  .drawing :global(img) {
+    width: 100%;
+    aspect-ratio: var(--render-trim);
+    object-fit: cover;
+  }
+
+  .label {
+    position: absolute;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-bg);
+  }
+
+  .spec {
+    display: grid;
+    align-content: start;
+    border-left: var(--border-width) solid var(--color-border-strong);
+    background: var(--color-surface);
+  }
+
+  .spec-title {
+    padding: var(--space-4) var(--space-6);
+    border-bottom: var(--border-width) solid var(--color-border-strong);
+    font-family: var(--font-body);
+    letter-spacing: var(--tracking-caps);
+  }
+
+  .row {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-6);
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  .row:last-child {
+    border-bottom: 0;
+  }
+
+  dt {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .unit {
+    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+  }
+
+  dd {
+    font-family: var(--font-heading);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-heading);
+  }
+
+  @media (max-width: 959px) {
+    .sheet {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .spec {
+      border-top: var(--border-width) solid var(--color-border-strong);
+      border-left: 0;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .overview {
+      padding-top: var(--space-8);
+    }
+
+    .drawing {
+      padding: var(--space-4) var(--space-2) var(--space-12);
+    }
+
+    .spec-title,
+    .row {
+      padding-inline: var(--space-4);
+    }
+  }
+</style>

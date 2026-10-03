@@ -104,6 +104,9 @@
   --grid-minor: 24px;
   --cell-min: 16rem;
   --band-padding: clamp(var(--space-8), 4vw, var(--space-12));
+  /* El carro: width of the spec sheet beside the render, and shape of the view stage. */
+  --spec-column: 21rem;
+  --stage-ratio: 2 / 1;
 
   /* Elements */
   --monogram-size: 36px;
