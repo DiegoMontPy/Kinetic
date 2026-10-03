@@ -50,6 +50,7 @@ export const placeholderLabels = {
   render: "RENDER FINAL — PENDIENTE",
   vehiclePhoto: "FOTO DEL VEHÍCULO",
   teamPhoto: "FOTO DE EQUIPO",
+  workshopPhoto: "FOTO DE TALLER",
   portrait: "FOTO INDIVIDUAL",
   sponsorLogo: "LOGO SPONSOR",
   tbd: "POR DEFINIR",

@@ -21,7 +21,7 @@ const { title, description } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
 // The side view keeps the whole chassis inside the 1.91:1 crop social networks use.
-const socialImage = car.images.social;
+const socialImage = car.images.side;
 const socialSource = findAsset(socialImage.file) ?? findAsset(car.images.wireframe.file);
 const ogImage = socialSource
   ? await getImage({
