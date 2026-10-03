@@ -21,7 +21,7 @@ export interface Team {
 }
 
 export const team: Team = {
-  activeMembers: 13,
+  activeMembers: 14,
   members: [],
   email: null,
   meetings: null,
