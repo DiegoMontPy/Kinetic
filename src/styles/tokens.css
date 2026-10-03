@@ -97,6 +97,8 @@
   --hero-visual-crop: 0.2;
   /* Render opacity behind the copy, so the text keeps its contrast over the tubes. */
   --hero-render-dim: 0.28;
+  /* Proportions of the front and rear renders without their empty top and bottom margins. */
+  --render-trim: 2400 / 1550;
   --intro-min-height: calc(60svh - var(--nav-height));
   --grid-major: 96px;
   --grid-minor: 24px;
@@ -135,8 +137,8 @@
 
 @media (max-width: 639px) {
   :root {
-    --hero-visual-width: 150vw;
-    --hero-visual-crop: 0.25;
+    --hero-visual-width: 120vw;
+    --hero-visual-crop: 0.2;
     --plate-platinum: 240px;
     --plate-gold: 144px;
     --plate-silver: 96px;

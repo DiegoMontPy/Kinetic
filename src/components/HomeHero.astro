@@ -211,4 +211,16 @@ const visual = [render, wireframe]
       margin: calc(var(--hero-visual-width) * -0.04) 0 0 calc(var(--gutter) - var(--space-2));
     }
   }
+
+  /* Phones drop the render's empty margins too, so the whole motto fits on the first screen. */
+  @media (max-width: 639px) {
+    .render :global(img) {
+      aspect-ratio: var(--render-trim);
+      object-fit: cover;
+    }
+
+    .caption {
+      margin-top: var(--space-2);
+    }
+  }
 </style>
