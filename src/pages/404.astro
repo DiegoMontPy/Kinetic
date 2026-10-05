@@ -1,0 +1,12 @@
+---
+import NotFound from "../components/NotFound.astro";
+import { pages } from "../data/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const page = pages.notFound;
+---
+
+<!-- Served for any missing path, at any depth: every link and asset already carries the base path. -->
+<BaseLayout title={page.title} description={page.description} noindex>
+  <NotFound />
+</BaseLayout>

@@ -106,6 +106,11 @@ export const pages = {
       "Cómo llegar a Kinetic Racing: Instagram para sumarte al equipo, y una conversación directa con nosotros para patrocinarlo.",
     heading: "Contacto",
   },
+  notFound: {
+    title: "Página no encontrada — Kinetic Racing",
+    description: "Esta dirección no lleva a ninguna página del sitio de Kinetic Racing.",
+    heading: "Fuera de pista",
+  },
 } satisfies Record<string, PageMeta>;
 
 export const home = {
@@ -330,4 +335,10 @@ export const joinPage = {
     // Pending: point to the team's own application form once it exists.
     apply: { label: "Aplicar", href: "/contacto/#unirse" } satisfies Link,
   },
+};
+
+export const notFoundPage = {
+  eyebrow: "Error 404",
+  text: "No hay ninguna página en esta dirección.",
+  action: { label: "Volver a Inicio", href: "/" } satisfies Link,
 };

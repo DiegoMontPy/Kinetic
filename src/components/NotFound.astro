@@ -1,0 +1,38 @@
+---
+import { notFoundPage, pages } from "../data/site";
+import ButtonLink from "./ButtonLink.astro";
+---
+
+<section class="not-found" aria-labelledby="page-title">
+  <div class="container">
+    <p class="caps">{notFoundPage.eyebrow}</p>
+    <h1 id="page-title" class="title">
+      {pages.notFound.heading}
+    </h1>
+    <p class="lede">{notFoundPage.text}</p>
+    <div class="action">
+      <ButtonLink href={notFoundPage.action.href}>{notFoundPage.action.label}</ButtonLink>
+    </div>
+  </div>
+</section>
+
+<style>
+  .not-found {
+    display: grid;
+    align-items: center;
+    min-height: var(--intro-min-height);
+    padding-block: var(--section-space);
+  }
+
+  .title {
+    margin-block: var(--space-5) var(--space-6);
+    font-size: var(--text-display);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .action {
+    margin-top: var(--space-8);
+  }
+</style>
