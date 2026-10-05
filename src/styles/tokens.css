@@ -118,6 +118,8 @@
   --path-min: 22rem;
   /* Únete: the opening statement and the first-year answer beside it. */
   --measure-statement: 24ch;
+  /* Únete: subsystem names, as a share of the column width. */
+  --chapter-name-fit: 15cqi;
 
   /* Elements */
   --monogram-size: 36px;

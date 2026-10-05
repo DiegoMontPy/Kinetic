@@ -1,8 +1,7 @@
 ---
 import { joinPage } from "../data/site";
-import { statusLabels, subsystems } from "../data/subsystems";
+import { subsystems } from "../data/subsystems";
 import KeepTogether from "./KeepTogether.astro";
-import StatusDot from "./StatusDot.astro";
 
 const copy = joinPage.subsystems;
 ---
@@ -20,22 +19,13 @@ const copy = joinPage.subsystems;
     </div>
     <div class="chapters">
       {subsystems.map((subsystem) => (
-        <article
-          class="chapter"
-          data-status={subsystem.status}
-          aria-labelledby={`subsystem-${subsystem.id}`}
-          data-reveal
-        >
-          <header class="chapter-head">
-            <h3 id={`subsystem-${subsystem.id}`} class="name">
-              {subsystem.name}
-            </h3>
-            <p class="state">
-              <StatusDot status={subsystem.status} />
-              {statusLabels[subsystem.status]}
-            </p>
-          </header>
-          <p class="role">{subsystem.role}</p>
+        <article class="chapter" aria-labelledby={`subsystem-${subsystem.id}`} data-reveal>
+          <h3 id={`subsystem-${subsystem.id}`} class="name">
+            {subsystem.name}
+          </h3>
+          <p class="role">
+            <KeepTogether text={subsystem.role} />
+          </p>
           <div class="learn">
             <h4 class="caps" id={`subsystem-${subsystem.id}-learn`}>
               {copy.learnLabel}
@@ -63,6 +53,10 @@ const copy = joinPage.subsystems;
     letter-spacing: var(--tracking-display);
   }
 
+  .chapters {
+    container-type: inline-size;
+  }
+
   /* One chapter per subsystem: its name at the size of the motto on Inicio, the detail below. */
   .chapter {
     display: grid;
@@ -77,32 +71,13 @@ const copy = joinPage.subsystems;
     padding-bottom: 0;
   }
 
-  /* The state reads above the name at every width; in the markup it follows it. */
-  .chapter-head {
-    display: flex;
-    flex-direction: column-reverse;
-    grid-column: 1 / -1;
-    align-items: start;
-    gap: var(--space-4);
-  }
-
+  /* Never wider than the column, so the longest name ("Manufactura") fits on the narrowest phone. */
   .name {
-    font-size: var(--text-display);
+    grid-column: 1 / -1;
+    font-size: min(var(--text-display), var(--chapter-name-fit));
     font-weight: var(--weight-bold);
     line-height: var(--leading-display);
     letter-spacing: var(--tracking-display);
-  }
-
-  .state {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    color: var(--color-text-muted);
-    font-size: var(--text-sm);
-  }
-
-  .chapter[data-status="done"] .state {
-    color: var(--color-text);
   }
 
   .role {

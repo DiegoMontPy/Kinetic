@@ -59,6 +59,11 @@ export const placeholderLabels = {
   tbd: "POR DEFINIR",
 };
 
+/** "Manufactura, Diseño y Finanzas", from the active subsystems. */
+const subsystemList = new Intl.ListFormat("es", { type: "conjunction" }).format(
+  subsystems.map((subsystem) => subsystem.name),
+);
+
 export interface PageMeta {
   /** Content of the <title> element. */
   title: string;
@@ -97,8 +102,7 @@ export const pages = {
   },
   join: {
     title: "Únete — Kinetic Racing",
-    description:
-      "Sumate a Kinetic Racing: CAD, manufactura, presupuesto y plazos reales en un monoplaza de Formula SAE. Chasis, Diseño y Finanzas.",
+    description: `Sumate a Kinetic Racing: CAD, manufactura, presupuesto y plazos reales en un monoplaza de Formula SAE. ${subsystemList}.`,
     heading: "Únete al equipo",
   },
   contact: {
@@ -308,7 +312,7 @@ export const joinPage = {
   subsystems: {
     eyebrow: "Subsistemas",
     heading: "Dónde vas a trabajar",
-    lead: "Entrás a un subsistema y trabajás en su parte de KR-01.",
+    lead: "Los subsistemas trabajan durante todo el proyecto, no por etapas. Entrás a uno y trabajás en su parte de KR-01.",
     learnLabel: "Qué aprendés",
     fitLabel: "Es para vos si",
   },

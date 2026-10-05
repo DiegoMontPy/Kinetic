@@ -1,10 +1,9 @@
 ---
 import type { VehicleSystemStatus } from "../data/car";
-import type { SubsystemStatus } from "../data/subsystems";
 
 interface Props {
   /** Green only for "done"; blue for work in progress; grey for anything still open. */
-  status: SubsystemStatus | VehicleSystemStatus;
+  status: VehicleSystemStatus;
 }
 
 const { status } = Astro.props;
