@@ -3,7 +3,9 @@ import CarOverview from "../components/CarOverview.astro";
 import CarViews from "../components/CarViews.astro";
 import GenerationArchive from "../components/GenerationArchive.astro";
 import VehicleSystems from "../components/VehicleSystems.astro";
+import VideoFeature from "../components/VideoFeature.astro";
 import WorkshopGallery from "../components/WorkshopGallery.astro";
+import { media } from "../data/media";
 import { pages } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -12,6 +14,7 @@ const page = pages.car;
 
 <BaseLayout title={page.title} description={page.description}>
   <CarOverview />
+  <VideoFeature video={media.car.video} />
   <CarViews />
   <VehicleSystems />
   <WorkshopGallery />
