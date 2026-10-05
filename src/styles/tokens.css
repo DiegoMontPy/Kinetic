@@ -116,6 +116,8 @@
   --handle-fit: 10.4cqi;
   /* Contacto: the paths sit side by side above this width per path. */
   --path-min: 22rem;
+  /* Únete: the opening statement and the first-year answer beside it. */
+  --measure-statement: 24ch;
 
   /* Elements */
   --monogram-size: 36px;

@@ -1,0 +1,117 @@
+---
+import { currentGeneration } from "../data/car";
+import { joinPage, pages } from "../data/site";
+import KeepTogether from "./KeepTogether.astro";
+
+const { intro } = joinPage;
+---
+
+<section class="intro" aria-labelledby="page-title">
+  <div class="container">
+    <header class="head">
+      <p class="caps">{intro.eyebrow(currentGeneration.season)}</p>
+      <h1 id="page-title" class="title">
+        {pages.join.heading}
+      </h1>
+    </header>
+    <div class="layout">
+      <p class="statement">
+        {intro.statement.map((part) =>
+          typeof part === "string" ? part : <strong>{part.key}</strong>,
+        )}
+      </p>
+      <aside class="first-year" aria-labelledby="first-year-title">
+        <h2 id="first-year-title" class="question">
+          {intro.question}
+        </h2>
+        {intro.answer.map((paragraph) => (
+          <p>
+            <KeepTogether text={paragraph} />
+          </p>
+        ))}
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro {
+    padding-block: var(--space-16) var(--section-space);
+  }
+
+  .head {
+    display: grid;
+    gap: var(--space-5);
+    margin-bottom: var(--space-12);
+  }
+
+  .title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    align-items: end;
+    gap: var(--space-10) var(--space-16);
+  }
+
+  /* What the work is, read in one breath: the muted sentence carries the white keywords. */
+  .statement {
+    max-width: var(--measure-statement);
+    color: var(--color-text-muted);
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-heading);
+    text-wrap: pretty;
+  }
+
+  .statement strong {
+    color: var(--color-text);
+    font-weight: inherit;
+  }
+
+  .first-year {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-frame);
+    color: var(--color-text-muted);
+  }
+
+  .question {
+    margin-bottom: var(--space-1);
+    color: var(--color-text);
+    font-size: var(--text-lg);
+  }
+
+  .first-year p:first-of-type {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 959px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .intro {
+      padding-top: var(--space-10);
+    }
+
+    .head {
+      margin-bottom: var(--space-8);
+    }
+
+    .first-year {
+      padding: var(--space-5);
+    }
+  }
+</style>

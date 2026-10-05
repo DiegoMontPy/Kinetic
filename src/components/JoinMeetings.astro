@@ -1,0 +1,109 @@
+---
+import { joinPage } from "../data/site";
+import { team } from "../data/team";
+import ButtonLink from "./ButtonLink.astro";
+import PendingTag from "./PendingTag.astro";
+
+const { meetings } = joinPage;
+---
+
+<section class="section" aria-labelledby="meetings-title">
+  <div class="container">
+    <h2 id="meetings-title" class="title">
+      {meetings.heading}
+    </h2>
+    <div class="columns">
+      <div class="column">
+        <h3 class="caps label">{meetings.whenLabel}</h3>
+        <p class="sentence">
+          {meetings.sentence.map((part) =>
+            typeof part === "string" ? (
+              part
+            ) : team.meetings ? (
+              <span class="value">{team.meetings[part.field]}</span>
+            ) : (
+              <PendingTag label={meetings.pending[part.field]} />
+            ),
+          )}
+        </p>
+        {!team.meetings && <p class="note">{meetings.pendingNote}</p>}
+      </div>
+      <div class="column">
+        <h3 class="caps label">{meetings.howLabel}</h3>
+        <p class="apply-text">{meetings.applyText}</p>
+        <div class="action">
+          <ButtonLink href={meetings.apply.href}>{meetings.apply.label}</ButtonLink>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .title {
+    margin-bottom: var(--space-10);
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--space-10) var(--space-16);
+  }
+
+  .column {
+    display: grid;
+    align-content: start;
+    gap: var(--space-4);
+  }
+
+  .label {
+    padding-bottom: var(--space-3);
+    border-bottom: var(--border-width) solid var(--color-border-strong);
+    font-family: var(--font-body);
+    letter-spacing: var(--tracking-caps);
+  }
+
+  /* The pending values sit inside the sentence, where the real ones will go. */
+  .sentence {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-body);
+    letter-spacing: var(--tracking-heading);
+  }
+
+  .sentence :global(.pending) {
+    font-size: var(--text-xs);
+    vertical-align: middle;
+  }
+
+  .value {
+    color: var(--color-accent-hover);
+  }
+
+  .note,
+  .apply-text {
+    max-width: var(--measure-narrow);
+    color: var(--color-text-muted);
+  }
+
+  .apply-text {
+    font-size: var(--text-md);
+  }
+
+  .action {
+    margin-top: var(--space-2);
+  }
+
+  @media (max-width: 959px) {
+    .columns {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .action :global(.button) {
+      width: 100%;
+    }
+  }
+</style>

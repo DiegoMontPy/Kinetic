@@ -1,0 +1,155 @@
+---
+import { joinPage } from "../data/site";
+import { statusLabels, subsystems } from "../data/subsystems";
+import KeepTogether from "./KeepTogether.astro";
+import StatusDot from "./StatusDot.astro";
+
+const copy = joinPage.subsystems;
+---
+
+<section class="section" id="subsistemas" aria-labelledby="subsystems-title">
+  <div class="container">
+    <div class="section-head">
+      <p class="caps">{copy.eyebrow}</p>
+      <h2 id="subsystems-title" class="title">
+        {copy.heading}
+      </h2>
+      <p class="lede">
+        <KeepTogether text={copy.lead} />
+      </p>
+    </div>
+    <div class="chapters">
+      {subsystems.map((subsystem) => (
+        <article
+          class="chapter"
+          data-status={subsystem.status}
+          aria-labelledby={`subsystem-${subsystem.id}`}
+          data-reveal
+        >
+          <header class="chapter-head">
+            <h3 id={`subsystem-${subsystem.id}`} class="name">
+              {subsystem.name}
+            </h3>
+            <p class="state">
+              <StatusDot status={subsystem.status} />
+              {statusLabels[subsystem.status]}
+            </p>
+          </header>
+          <p class="role">{subsystem.role}</p>
+          <div class="learn">
+            <h4 class="caps" id={`subsystem-${subsystem.id}-learn`}>
+              {copy.learnLabel}
+            </h4>
+            <ul class="learn-list list-reset" aria-labelledby={`subsystem-${subsystem.id}-learn`}>
+              {subsystem.learn.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <p class="fit">
+            <strong>{copy.fitLabel}</strong> {subsystem.fit}
+          </p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* One chapter per subsystem: its name at the size of the motto on Inicio, the detail below. */
+  .chapter {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 3fr);
+    align-items: start;
+    gap: var(--space-8) var(--space-10);
+    padding-block: var(--space-12) var(--space-16);
+    border-top: var(--border-width) solid var(--color-border-strong);
+  }
+
+  .chapter:last-child {
+    padding-bottom: 0;
+  }
+
+  /* The state reads above the name at every width; in the markup it follows it. */
+  .chapter-head {
+    display: flex;
+    flex-direction: column-reverse;
+    grid-column: 1 / -1;
+    align-items: start;
+    gap: var(--space-4);
+  }
+
+  .name {
+    font-size: var(--text-display);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .state {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .chapter[data-status="done"] .state {
+    color: var(--color-text);
+  }
+
+  .role {
+    max-width: var(--measure-narrow);
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+  }
+
+  .learn {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .learn h4 {
+    margin: 0;
+  }
+
+  .learn-list li {
+    padding-block: var(--space-2);
+    border-top: var(--border-width) solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .fit {
+    color: var(--color-text-muted);
+  }
+
+  .fit strong {
+    color: var(--color-text);
+    font-weight: var(--weight-semibold);
+  }
+
+  @media (max-width: 959px) {
+    .chapter {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .role {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .chapter {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-6);
+      padding-block: var(--space-10);
+    }
+  }
+</style>

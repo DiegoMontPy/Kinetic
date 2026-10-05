@@ -4,9 +4,13 @@ export interface TeamMember {
   subsystemId: string;
 }
 
+/** Written as they read inside a sentence on Únete: "Nos reunimos los sábados, a las 9:00, en el taller". */
 export interface Meetings {
+  /** "los sábados" */
   day: string;
+  /** "9:00" */
   time: string;
+  /** "el taller del Key Institute" */
   place: string;
 }
 

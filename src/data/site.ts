@@ -1,4 +1,5 @@
 import { subsystems } from "./subsystems";
+import type { Meetings } from "./team";
 
 /**
  * Public origin for canonical URLs, Open Graph and the sitemap.
@@ -95,9 +96,9 @@ export const pages = {
   },
   join: {
     title: "Únete — Kinetic Racing",
-    description: "Cómo sumarte a Kinetic Racing, el equipo de Formula SAE del Key Institute.",
+    description:
+      "Sumate a Kinetic Racing: CAD, manufactura, presupuesto y plazos reales en un monoplaza de Formula SAE. Chasis, Diseño y Finanzas.",
     heading: "Únete al equipo",
-    status: "La convocatoria está en preparación.",
   },
   contact: {
     title: "Contacto — Kinetic Racing",
@@ -270,5 +271,63 @@ export const contactPage = {
       copyFailed: "No se pudo copiar. Seleccioná el texto del mensaje y copialo a mano.",
       open: "Abrir Instagram",
     },
+  },
+};
+
+/** A sentence with some words set apart: plain text, and `{ key }` for the highlighted words. */
+export type Emphasis = (string | { key: string })[];
+
+export const joinPage = {
+  intro: {
+    eyebrow: (season: number) => `Únete · Temporada ${season}`,
+    statement: [
+      "En Kinetic Racing trabajás con ",
+      { key: "CAD" },
+      ", ",
+      { key: "manufactura" },
+      ", ",
+      { key: "presupuesto" },
+      " y ",
+      { key: "plazos reales" },
+      ", en un proyecto que termina en una ",
+      { key: "competencia internacional" },
+      ".",
+    ] satisfies Emphasis,
+    question: "¿Y si estoy en primer año?",
+    answer: [
+      "Mejor: tenés más temporadas por delante.",
+      "Formula SAE es una competencia de estudiantes, y un monoplaza se aprende a hacer haciéndolo. CAD, taller y presupuesto se aprenden en el equipo, trabajando sobre KR-01.",
+    ],
+  },
+  subsystems: {
+    eyebrow: "Subsistemas",
+    heading: "Dónde vas a trabajar",
+    lead: "Entrás a un subsistema y trabajás en su parte de KR-01.",
+    learnLabel: "Qué aprendés",
+    fitLabel: "Es para vos si",
+  },
+  meetings: {
+    heading: "Cuándo y cómo",
+    whenLabel: "Cuándo",
+    /** Each `{ field }` takes its value from `team.meetings`, or a pending tag while it is null. */
+    sentence: [
+      "Nos reunimos ",
+      { field: "day" },
+      ", a las ",
+      { field: "time" },
+      ", en ",
+      { field: "place" },
+      ".",
+    ] satisfies (string | { field: keyof Meetings })[],
+    pending: {
+      day: "Día por definir",
+      time: "Hora por definir",
+      place: "Lugar por definir",
+    } satisfies Record<keyof Meetings, string>,
+    pendingNote: "El día, la hora y el lugar se publican acá apenas estén definidos.",
+    howLabel: "Cómo",
+    applyText: "Escribinos desde Contacto con tu carrera, tu año y el subsistema que te interesa.",
+    // Pending: point to the team's own application form once it exists.
+    apply: { label: "Aplicar", href: "/contacto/#unirse" } satisfies Link,
   },
 };
