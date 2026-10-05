@@ -1,10 +1,9 @@
 ---
-import { car } from "../data/car";
+import { car, milestoneStatusLabels, milestones } from "../data/car";
 import { home } from "../data/site";
-import { statusLabels, subsystems } from "../data/subsystems";
 import KeepTogether from "./KeepTogether.astro";
 
-const done = subsystems.filter((subsystem) => subsystem.status === "done").length;
+const done = milestones.filter((milestone) => milestone.status === "done").length;
 ---
 
 <section class="section" aria-labelledby="status-title">
@@ -12,18 +11,18 @@ const done = subsystems.filter((subsystem) => subsystem.status === "done").lengt
     <div class="head">
       <h2 id="status-title">{home.status.heading}</h2>
       <p class="summary">
-        <KeepTogether text={home.status.summary(car.name, done, subsystems.length)} />
+        <KeepTogether text={home.status.summary(car.name, done, milestones.length)} />
       </p>
     </div>
     <ol class="rail list-reset">
-      {subsystems.map((subsystem, index) => (
-        <li class="stop" data-status={subsystem.status} data-reveal>
+      {milestones.map((milestone, index) => (
+        <li class="stop" data-status={milestone.status} data-reveal>
           <span class="marker" aria-hidden="true" />
           <span class="index" aria-hidden="true">
             {String(index + 1).padStart(2, "0")}
           </span>
-          <h3 class="name">{subsystem.name}</h3>
-          <p class="state">{statusLabels[subsystem.status]}</p>
+          <h3 class="name">{milestone.text}</h3>
+          <p class="state">{milestoneStatusLabels[milestone.status]}</p>
         </li>
       ))}
     </ol>
@@ -45,16 +44,18 @@ const done = subsystems.filter((subsystem) => subsystem.status === "done").lengt
     font-size: var(--text-md);
   }
 
+  /* One line from the first milestone to competition: every stop takes an equal share of it. */
   .rail {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--cell-min)), 1fr));
-    row-gap: var(--space-12);
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
   }
 
   /* Each stop draws the stretch of line up to the next one; a finished stop fills it. */
   .stop {
     position: relative;
     display: grid;
+    align-content: start;
     gap: var(--space-1);
     padding: calc(var(--stop-size) + var(--space-6)) var(--space-6) 0 0;
   }
@@ -104,10 +105,17 @@ const done = subsystems.filter((subsystem) => subsystem.status === "done").lengt
   }
 
   .name {
-    font-size: var(--text-xl);
+    font-size: var(--text-md);
+    text-wrap: balance;
+  }
+
+  /* What is still ahead reads one step back from what is done or under way. */
+  .stop[data-status="pending"] .name {
+    color: var(--color-text-muted);
   }
 
   .state {
+    margin-top: var(--space-1);
     color: var(--color-text-muted);
     font-size: var(--text-sm);
   }
@@ -116,9 +124,10 @@ const done = subsystems.filter((subsystem) => subsystem.status === "done").lengt
     color: var(--color-text);
   }
 
-  @media (max-width: 639px) {
+  /* Too many stops for one row: the rail turns vertical and runs down the page. */
+  @media (max-width: 959px) {
     .rail {
-      row-gap: 0;
+      grid-auto-flow: row;
     }
 
     .stop {
@@ -146,6 +155,17 @@ const done = subsystems.filter((subsystem) => subsystem.status === "done").lengt
 
     .stop:last-child::before {
       display: none;
+    }
+
+    .name {
+      max-width: var(--measure-narrow);
+      font-size: var(--text-lg);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .stop {
+      padding-bottom: var(--space-8);
     }
   }
 </style>

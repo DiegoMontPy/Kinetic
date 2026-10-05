@@ -199,6 +199,28 @@ export const generationLabels = (generation: Generation) => [
   `Temporada ${generation.season}`,
 ];
 
+export type MilestoneStatus = "done" | "in-progress" | "pending";
+
+/**
+ * Where the current vehicle stands on its way to competition, in order. A milestone is a point of the
+ * project, not a part of the car (`vehicleSystems`) nor a group of the team (subsystems.ts). No dates
+ * until the team sets them.
+ */
+export const milestones: { text: string; status: MilestoneStatus }[] = [
+  { text: "Chasis tubular de acero soldado y terminado", status: "done" },
+  { text: "El resto del vehículo en diseño", status: "in-progress" },
+  { text: "Sistemas fabricados y montados sobre el chasis", status: "pending" },
+  { text: "Motor montado y encendido", status: "pending" },
+  { text: "Primeras pruebas en pista", status: "pending" },
+  { text: "Competencia de Formula SAE", status: "pending" },
+];
+
+export const milestoneStatusLabels: Record<MilestoneStatus, string> = {
+  done: "Cumplido",
+  "in-progress": "En curso",
+  pending: "Pendiente",
+};
+
 export const carPage = {
   overview: {
     status: [

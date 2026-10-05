@@ -125,7 +125,7 @@ export const home = {
   status: {
     heading: "Estado del proyecto",
     summary: (car: string, done: number, total: number) =>
-      `${car}: ${done} de ${total} subsistemas terminados.`,
+      `${car} camino a competir: ${done} de ${total} hitos cumplidos.`,
   },
   figures: {
     heading: "El equipo en cifras",
