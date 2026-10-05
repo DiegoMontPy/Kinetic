@@ -1,22 +1,32 @@
 ---
 import { currentGeneration } from "../data/car";
+import { media } from "../data/media";
 import { sponsorPage } from "../data/sponsors";
 import KeepTogether from "./KeepTogether.astro";
+import PhotoFigure from "./PhotoFigure.astro";
 
 const { intro } = sponsorPage;
 ---
 
 <section class="intro" aria-labelledby="page-title">
   <div class="container">
-    <header class="head">
-      <p class="caps">{intro.eyebrow(currentGeneration.season)}</p>
-      <h1 id="page-title" class="title">
-        {intro.heading}
-      </h1>
-      <p class="lede">
-        <KeepTogether text={intro.lead} />
-      </p>
-    </header>
+    <div class="opening">
+      <header class="head">
+        <p class="caps">{intro.eyebrow(currentGeneration.season)}</p>
+        <h1 id="page-title" class="title">
+          {intro.heading}
+        </h1>
+        <p class="lede">
+          <KeepTogether text={intro.lead} />
+        </p>
+      </header>
+      <!-- What the company sponsors: the team and its car. -->
+      <PhotoFigure
+        photo={media.sponsors.team}
+        sizes="(min-width: 1188px) 488px, (min-width: 960px) 42vw, 100vw"
+        loading="eager"
+      />
+    </div>
     <h2 class="caps benefits-title">{intro.benefitsLabel}</h2>
     <dl class="benefits">
       {intro.benefits.map((benefit) => (
@@ -45,10 +55,17 @@ const { intro } = sponsorPage;
     padding-block: var(--space-16) var(--section-space);
   }
 
+  .opening {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: var(--space-10) var(--space-16);
+    margin-bottom: var(--space-16);
+  }
+
   .head {
     display: grid;
     gap: var(--space-5);
-    margin-bottom: var(--space-16);
   }
 
   .title {
@@ -109,12 +126,19 @@ const { intro } = sponsorPage;
     font-size: var(--text-sm);
   }
 
+  @media (max-width: 959px) {
+    .opening {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
   @media (max-width: 639px) {
     .intro {
       padding-top: var(--space-10);
     }
 
-    .head {
+    .opening {
+      gap: var(--space-8);
       margin-bottom: var(--space-12);
     }
 
