@@ -1,3 +1,5 @@
+import { subsystems } from "./subsystems";
+
 /**
  * Public origin for canonical URLs, Open Graph and the sitemap.
  * Pending: the final domain, most likely one provided by the university.
@@ -100,9 +102,8 @@ export const pages = {
   contact: {
     title: "Contacto — Kinetic Racing",
     description:
-      "Contacto de Kinetic Racing para patrocinios, prensa y estudiantes interesados en el equipo.",
+      "Cómo llegar a Kinetic Racing: Instagram para sumarte al equipo, y una conversación directa con nosotros para patrocinarlo.",
     heading: "Contacto",
-    status: "Los canales de contacto están en preparación.",
   },
 } satisfies Record<string, PageMeta>;
 
@@ -167,4 +168,107 @@ export const footer = {
     { label: "Contacto", href: "/contacto/" },
   ] satisfies Link[],
   copyright: (year: number) => `© ${year} Kinetic Racing · Key Institute, El Salvador`,
+};
+
+/** "Chasis, Diseño o Finanzas", from the active subsystems. */
+const subsystemChoice = new Intl.ListFormat("es", { type: "disjunction" }).format(
+  subsystems.map((subsystem) => subsystem.name),
+);
+
+/** Reasons to write through the Contacto form. Sponsorships are not one: they are arranged in person. */
+export type ContactReason = "join" | "other";
+
+interface ContactPathBase {
+  /** Anchor on Contacto. Links from other pages point to `/contacto/#<id>`. */
+  id: string;
+  audience: string;
+  title: string;
+  text: string;
+  link: Link;
+}
+
+/**
+ * Students write on Instagram. Arriving through the anchor also picks `reason` in the form.
+ * Companies do not write in: a sponsorship is talked over in a meeting with the team. The team email
+ * (`email` in team.ts) appears on their path only once it exists.
+ */
+export type ContactPath =
+  | (ContactPathBase & {
+      channel: "instagram";
+      reason: ContactReason;
+      /** What to include in the message. */
+      ask: string[];
+    })
+  | (ContactPathBase & { channel: "meeting" });
+
+export const contactPage = {
+  intro: {
+    heading: "Hablemos",
+    lead: "Para sumarte al equipo o para cualquier consulta, el canal es Instagram. Los patrocinios se conversan directamente con nosotros.",
+  },
+  channel: {
+    label: "Canal principal",
+    note: "Escribinos por mensaje directo.",
+    /** Shown only once the team has an email (`email` in team.ts). */
+    emailLabel: "Correo",
+    placeLabel: "Dónde",
+  },
+  paths: {
+    heading: "¿Cómo querés sumarte?",
+    askLabel: "En el mensaje, contanos",
+    instagramAction: "Escribir por Instagram",
+    /** Shown on the sponsorship path only once the team has an email. */
+    emailLabel: "Correo del equipo",
+    emailAction: "Escribir al equipo",
+    items: [
+      {
+        id: "patrocinar",
+        channel: "meeting",
+        audience: "Empresas",
+        title: "Quiero patrocinar",
+        text: "El patrocinio se conversa directamente con nosotros: nos reunimos con tu empresa, te presentamos KR-01 y te explicamos los beneficios de cada nivel.",
+        link: { label: "Ver los niveles", href: "/sponsors/#niveles" },
+      },
+      {
+        id: "unirse",
+        channel: "instagram",
+        reason: "join",
+        audience: "Estudiantes",
+        title: "Quiero entrar al equipo",
+        text: "Contanos quién sos y qué te gustaría aprender; te explicamos cómo sumarte.",
+        ask: [
+          "Tu carrera y en qué año estás",
+          `Qué subsistema te interesa: ${subsystemChoice}`,
+          "Qué te gustaría aprender",
+        ],
+        link: { label: "Ver los subsistemas", href: "/unete/#subsistemas" },
+      },
+    ] satisfies ContactPath[],
+  },
+  /** Pending: the form is not connected to any service yet. It never sends anything. */
+  form: {
+    heading: "Escribinos desde acá",
+    tag: "Sin conectar",
+    lead: "Este formulario todavía no está conectado. Si lo enviás, te mostramos cómo hacernos llegar el mensaje por Instagram.",
+    fields: {
+      name: "Nombre",
+      reply: "Correo o Instagram para responderte",
+      reason: "Motivo",
+      message: "Mensaje",
+    },
+    reasons: [
+      { value: "join", label: "Entrar al equipo" },
+      { value: "other", label: "Otra consulta" },
+    ] satisfies { value: ContactReason; label: string }[],
+    submit: "Enviar mensaje",
+    notice: {
+      title: "Este formulario todavía no envía mensajes",
+      text: "Nada de lo que escribas acá nos llega. Escribinos por Instagram a",
+      copyHint: "Podés copiar tu mensaje y pegarlo en el chat.",
+      copy: "Copiar mi mensaje",
+      copied: "Copiado. Pegalo en el chat de Instagram.",
+      copyFailed: "No se pudo copiar. Seleccioná el texto del mensaje y copialo a mano.",
+      open: "Abrir Instagram",
+    },
+  },
 };

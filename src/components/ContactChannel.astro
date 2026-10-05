@@ -1,0 +1,133 @@
+---
+import { contactPage, pages, site } from "../data/site";
+import { team } from "../data/team";
+
+const { intro, channel } = contactPage;
+---
+
+<section class="contact" aria-labelledby="page-title">
+  <div class="container">
+    <header class="head">
+      <p class="caps">{pages.contact.heading}</p>
+      <h1 id="page-title" class="title">
+        {intro.heading}
+      </h1>
+      <p class="lede">{intro.lead}</p>
+    </header>
+    <div class="channel">
+      <p class="caps">
+        {channel.label} · {site.instagram.label}
+      </p>
+      <a class="handle" href={site.instagram.url} rel="me">
+        {site.instagram.handle}
+      </a>
+      <div class="foot">
+        <p class="note">{channel.note}</p>
+        <dl class="details">
+          {/* The team email only appears once it exists: an unusable channel is left out. */}
+          {team.email && (
+            <div class="detail">
+              <dt class="caps">{channel.emailLabel}</dt>
+              <dd>
+                <a href={`mailto:${team.email}`}>{team.email}</a>
+              </dd>
+            </div>
+          )}
+          <div class="detail">
+            <dt class="caps">{channel.placeLabel}</dt>
+            <dd>
+              {site.institution}, {site.country}
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding-block: var(--space-16) var(--section-space);
+  }
+
+  .head {
+    display: grid;
+    gap: var(--space-5);
+    margin-bottom: var(--space-16);
+  }
+
+  .title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* The handle is the way in: set at display size, as wide as its block allows on one line. */
+  .channel {
+    container-type: inline-size;
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .handle {
+    width: fit-content;
+    max-width: 100%;
+    font-family: var(--font-heading);
+    font-size: min(var(--text-display), var(--handle-fit));
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+    white-space: nowrap;
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.14em;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .handle:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    justify-content: space-between;
+    gap: var(--space-6) var(--space-12);
+    margin-top: var(--space-4);
+    padding-top: var(--space-6);
+    border-top: var(--border-width) solid var(--color-border-strong);
+  }
+
+  .note {
+    max-width: var(--measure-narrow);
+    font-size: var(--text-md);
+  }
+
+  .details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-12);
+  }
+
+  .detail {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .detail dd {
+    font-size: var(--text-md);
+  }
+
+  @media (max-width: 639px) {
+    .contact {
+      padding-top: var(--space-10);
+    }
+
+    .head {
+      margin-bottom: var(--space-12);
+    }
+  }
+</style>

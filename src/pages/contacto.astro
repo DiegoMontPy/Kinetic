@@ -1,5 +1,7 @@
 ---
-import PageIntro from "../components/PageIntro.astro";
+import ContactChannel from "../components/ContactChannel.astro";
+import ContactForm from "../components/ContactForm.astro";
+import ContactPaths from "../components/ContactPaths.astro";
 import { pages } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -7,5 +9,7 @@ const page = pages.contact;
 ---
 
 <BaseLayout title={page.title} description={page.description}>
-  <PageIntro heading={page.heading} status={page.status} />
+  <ContactChannel />
+  <ContactPaths />
+  <ContactForm />
 </BaseLayout>

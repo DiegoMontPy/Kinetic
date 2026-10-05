@@ -1,0 +1,330 @@
+---
+import { contactPage, site } from "../data/site";
+import ButtonLink from "./ButtonLink.astro";
+import PendingTag from "./PendingTag.astro";
+
+const { form } = contactPage;
+const { fields, notice } = form;
+---
+
+<section class="section" id="formulario" aria-labelledby="form-title">
+  <div class="container layout">
+    <div class="intro">
+      <h2 id="form-title">{form.heading}</h2>
+      <PendingTag label={form.tag} />
+      <p class="lede">{form.lead}</p>
+    </div>
+    <!--
+      Pending: no service receives this form yet. method="dialog" outside a <dialog> makes
+      submitting a no-op, so nothing leaves the page, not even in the URL.
+    -->
+    <form class="form" method="dialog" data-contact-form>
+      <div class="sheet">
+        <div class="cell" data-field>
+          <label class="label" for="contact-name" data-label>
+            {fields.name}
+          </label>
+          <input class="control" id="contact-name" name="name" type="text" autocomplete="name" />
+        </div>
+        <div class="cell" data-field>
+          <label class="label" for="contact-reply" data-label>
+            {fields.reply}
+          </label>
+          <input
+            class="control"
+            id="contact-reply"
+            name="reply"
+            type="text"
+            autocomplete="email"
+            spellcheck="false"
+          />
+        </div>
+        <fieldset class="cell wide" data-field>
+          <legend class="label" data-label>
+            {fields.reason}
+          </legend>
+          <div class="options">
+            {form.reasons.map((reason) => (
+              <label class="option">
+                <input type="radio" name="reason" value={reason.value} />
+                <span data-option>{reason.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <div class="cell wide" data-field>
+          <label class="label" for="contact-message" data-label>
+            {fields.message}
+          </label>
+          <textarea class="control" id="contact-message" name="message" rows="6"></textarea>
+        </div>
+      </div>
+      <div class="submit">
+        <ButtonLink type="submit">{form.submit}</ButtonLink>
+      </div>
+      <div class="notice" role="region" aria-labelledby="notice-title" tabindex="-1" data-notice>
+        <p class="notice-title" id="notice-title">
+          {notice.title}
+        </p>
+        <p>
+          {notice.text} <a href={site.instagram.url}>{site.instagram.handle}</a>.{" "}
+          <span data-copy-hint hidden>
+            {notice.copyHint}
+          </span>
+        </p>
+        <div class="notice-actions">
+          <ButtonLink data-copy hidden>
+            {notice.copy}
+          </ButtonLink>
+          <ButtonLink href={site.instagram.url} variant="outline">
+            {notice.open}
+          </ButtonLink>
+        </div>
+        <p
+          class="copy-status"
+          role="status"
+          data-copy-status
+          data-copied={notice.copied}
+          data-failed={notice.copyFailed}
+        ></p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  // The form is not connected: submitting only explains that and hands the message over to Instagram.
+  for (const form of document.querySelectorAll<HTMLFormElement>("[data-contact-form]")) {
+    const notice = form.querySelector<HTMLElement>("[data-notice]");
+    const copyButton = form.querySelector<HTMLButtonElement>("[data-copy]");
+    const copyHint = form.querySelector<HTMLElement>("[data-copy-hint]");
+    const status = form.querySelector<HTMLElement>("[data-copy-status]");
+    if (!notice || !copyButton || !copyHint || !status) continue;
+
+    // What the person wrote, one "Label: value" line per filled field, ready to paste in a chat.
+    const draft = () =>
+      [...form.querySelectorAll<HTMLElement>("[data-field]")]
+        .map((field) => {
+          const label = field.querySelector("[data-label]")?.textContent?.trim();
+          const choice = field.querySelector("input:checked + [data-option]");
+          const control = field.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+            "input[type='text'], textarea",
+          );
+          const value = (choice?.textContent ?? control?.value ?? "").trim();
+          return value ? `${label}: ${value}` : "";
+        })
+        .filter(Boolean)
+        .join("\n");
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const hasDraft = draft() !== "";
+      copyButton.hidden = !hasDraft;
+      copyHint.hidden = !hasDraft;
+      status.textContent = "";
+      notice.setAttribute("data-open", "");
+      notice.focus();
+    });
+
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(draft());
+        status.textContent = status.dataset.copied ?? "";
+      } catch {
+        status.textContent = status.dataset.failed ?? "";
+      }
+    });
+
+    // A link to one of the paths ("/contacto/#patrocinar") also picks that reason in the form.
+    const pickReason = () => {
+      const path = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      const reason = path?.dataset.reason;
+      if (!reason || form.querySelector("input[name='reason']:checked")) return;
+      const option = form.querySelector<HTMLInputElement>(
+        `input[name='reason'][value='${CSS.escape(reason)}']`,
+      );
+      if (option) option.checked = true;
+    };
+    pickReason();
+    window.addEventListener("hashchange", pickReason);
+  }
+</script>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    align-items: start;
+    gap: var(--space-10) var(--space-16);
+  }
+
+  .intro {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-5);
+  }
+
+  /* A title block: every field is a cell of one ruled sheet, its label in the corner. */
+  .sheet {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--border-width);
+    overflow: hidden;
+    border: var(--border-width) solid var(--color-field-line);
+    border-radius: var(--radius-control);
+    background: var(--color-field-line);
+  }
+
+  .cell {
+    display: grid;
+    align-content: start;
+    gap: var(--space-1);
+    min-width: 0;
+    margin: 0;
+    padding: var(--space-3) var(--space-4) var(--space-2);
+    border: 0;
+    background: var(--color-bg);
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+
+  /* The cell carries the focus ring, so the field and its label light up together. */
+  .cell:not(fieldset):focus-within {
+    outline: var(--focus-width) solid var(--color-accent-hover);
+    outline-offset: calc(-1 * var(--focus-width));
+  }
+
+  .label {
+    float: left;
+    width: 100%;
+    padding: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-caps);
+    line-height: var(--leading-snug);
+    text-transform: uppercase;
+  }
+
+  .control {
+    width: 100%;
+    min-height: var(--tap-min);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    font: inherit;
+    font-size: var(--text-md);
+  }
+
+  .control:focus-visible {
+    outline: none;
+  }
+
+  textarea.control {
+    padding-block: var(--space-2);
+    resize: vertical;
+  }
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-6);
+    clear: both;
+  }
+
+  .option {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap-min);
+    font-size: var(--text-md);
+    cursor: pointer;
+  }
+
+  .option input {
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+    margin: 0;
+    accent-color: var(--color-accent);
+  }
+
+  .submit {
+    margin-top: var(--space-4);
+  }
+
+  /* Same dashed line as every placeholder: what is missing here is the connection. */
+  .notice {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding: var(--space-6);
+    border: var(--border-width-strong) dashed var(--color-accent);
+    border-radius: var(--radius-frame);
+    background: var(--color-placeholder-fill);
+  }
+
+  .notice:focus {
+    outline: none;
+  }
+
+  /* With scripting the notice waits for the first submit; without it, it stays in view. */
+  @media (scripting: enabled) {
+    .notice:not([data-open]) {
+      display: none;
+    }
+  }
+
+  .notice-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+  }
+
+  .notice p a {
+    color: var(--color-accent-hover);
+    font-weight: var(--weight-semibold);
+  }
+
+  .notice-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  /* The button's own display would otherwise win over the hidden attribute. */
+  .notice-actions :global([hidden]) {
+    display: none;
+  }
+
+  /* Out of the flow while empty, but still rendered so the live region announces the result. */
+  .copy-status:empty {
+    position: absolute;
+  }
+
+  @media (max-width: 959px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .sheet {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .notice {
+      padding: var(--space-5);
+    }
+
+    .submit :global(.button),
+    .notice-actions :global(.button) {
+      width: 100%;
+    }
+  }
+</style>

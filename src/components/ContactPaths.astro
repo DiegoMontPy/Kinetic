@@ -1,0 +1,165 @@
+---
+import { contactPage, site } from "../data/site";
+import { team } from "../data/team";
+import ButtonLink from "./ButtonLink.astro";
+import KeepTogether from "./KeepTogether.astro";
+
+const { paths } = contactPage;
+---
+
+<section class="section" aria-labelledby="paths-title">
+  <div class="container">
+    <h2 id="paths-title" class="title">
+      {paths.heading}
+    </h2>
+    <div class="paths">
+      {paths.items.map((path) => (
+        <article
+          class="path"
+          id={path.id}
+          data-reason={path.channel === "instagram" ? path.reason : undefined}
+          aria-labelledby={`${path.id}-title`}
+        >
+          <p class="caps audience">{path.audience}</p>
+          <h3 id={`${path.id}-title`} class="path-title">
+            {path.title}
+          </h3>
+          <p class="text">
+            <KeepTogether text={path.text} />
+          </p>
+          {path.channel === "instagram" && (
+            <div class="detail">
+              <p class="caps" id={`${path.id}-ask`}>
+                {paths.askLabel}
+              </p>
+              <ul class="ask-list list-reset" aria-labelledby={`${path.id}-ask`}>
+                {path.ask.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {/* The team email only appears once it exists: an unusable channel is left out. */}
+          {path.channel === "meeting" && team.email && (
+            <dl class="detail email">
+              <dt class="caps">{paths.emailLabel}</dt>
+              <dd>
+                <a href={`mailto:${team.email}`}>{team.email}</a>
+              </dd>
+            </dl>
+          )}
+          <div class="actions">
+            {path.channel === "instagram" && (
+              <ButtonLink href={site.instagram.url}>{paths.instagramAction}</ButtonLink>
+            )}
+            {path.channel === "meeting" && team.email && (
+              <ButtonLink href={`mailto:${team.email}`}>{paths.emailAction}</ButtonLink>
+            )}
+            {/* Without a channel of its own, the link is the panel's main action. */}
+            <ButtonLink
+              href={path.link.href}
+              variant={path.channel === "meeting" && !team.email ? "solid" : "outline"}
+            >
+              {path.link.label}
+            </ButtonLink>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .title {
+    margin-bottom: var(--space-10);
+  }
+
+  .paths {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--path-min)), 1fr));
+    gap: var(--space-3);
+  }
+
+  .path {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-8);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-frame);
+    background: var(--color-surface);
+  }
+
+  /* Arriving through a link to this path (Aplicar, on Únete): the panel is marked as the way to go. */
+  .path:target {
+    border-color: var(--color-accent);
+    outline: var(--border-width) solid var(--color-accent);
+    outline-offset: calc(-2 * var(--border-width));
+  }
+
+  .path:target .audience {
+    color: var(--color-accent-hover);
+  }
+
+  .path-title {
+    font-size: var(--text-xl);
+  }
+
+  .text {
+    max-width: var(--measure-narrow);
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+  }
+
+  .detail {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .ask-list li {
+    padding-block: var(--space-3);
+    border-top: var(--border-width) solid var(--color-border-strong);
+  }
+
+  .ask-list li:last-child,
+  .email {
+    border-bottom: var(--border-width) solid var(--color-border-strong);
+  }
+
+  /* The team email is the way to arrange the meeting: one ruled line, label and value. */
+  .email {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+    padding-block: var(--space-3);
+    border-top: var(--border-width) solid var(--color-border-strong);
+  }
+
+  .email a {
+    color: var(--color-accent-hover);
+    font-weight: var(--weight-semibold);
+  }
+
+  /* Always at the foot of the panel, so the two paths end on the same line. */
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: auto;
+    padding-top: var(--space-4);
+  }
+
+  @media (max-width: 639px) {
+    .path {
+      padding: var(--space-6) var(--space-5);
+    }
+
+    .actions :global(.button) {
+      width: 100%;
+    }
+  }
+</style>
