@@ -5,17 +5,25 @@ import { withBase } from "../lib/paths";
 import Icon from "./Icon.astro";
 
 interface Props {
-  /** Root-relative internal path. Without it, or when disabled, a <button> is rendered. */
+  /**
+   * Root-relative internal path, or a URL with its own scheme (https:, mailto:) that is left as is.
+   * Without it, or when disabled, a <button> is rendered.
+   */
   href?: string;
   variant?: "solid" | "outline" | "light" | "light-outline";
   size?: "sm" | "md";
   block?: boolean;
   disabled?: boolean;
   download?: boolean;
+  /** Type of the rendered <button>. */
+  type?: "button" | "submit";
   icon?: ComponentProps<typeof Icon>["name"];
   class?: string;
+  id?: string;
+  hidden?: boolean;
   "aria-current"?: "page";
   "aria-describedby"?: string;
+  [data: `data-${string}`]: string | boolean | undefined;
 }
 
 const {
@@ -25,6 +33,7 @@ const {
   block = false,
   disabled = false,
   download = false,
+  type = "button",
   icon,
   class: className,
   ...attrs
@@ -34,7 +43,7 @@ const {
 {href && !disabled ? (
   <a
     class:list={["button", className]}
-    href={withBase(href)}
+    href={/^[a-z][a-z+.-]*:/i.test(href) ? href : withBase(href)}
     download={download || undefined}
     data-variant={variant}
     data-size={size}
@@ -47,7 +56,7 @@ const {
 ) : (
   <button
     class:list={["button", className]}
-    type="button"
+    type={type}
     disabled={disabled}
     data-variant={variant}
     data-size={size}
