@@ -1,5 +1,7 @@
 ---
+import { media } from "../data/media";
 import { home } from "../data/site";
+import PhotoFigure from "./PhotoFigure.astro";
 
 const { fsae } = home;
 ---
@@ -10,6 +12,12 @@ const { fsae } = home;
       <h2 id="fsae-title">{fsae.heading}</h2>
       <p class="lede">{fsae.intro}</p>
       <p class="note">{fsae.companyNote}</p>
+    </div>
+    <div class="photo" data-reveal>
+      <PhotoFigure
+        photo={media.home.fsae}
+        sizes="(min-width: 1188px) 588px, (min-width: 960px) 52vw, 100vw"
+      />
     </div>
     <ol class="sequence list-reset">
       {fsae.phases.map((phase, index) => (
@@ -32,12 +40,14 @@ const { fsae } = home;
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
     align-items: start;
-    gap: var(--space-16);
+    gap: var(--space-12) var(--space-16);
   }
 
+  /* The text stays beside the photo and then beside the phases, which run down under the photo. */
   .intro {
     position: sticky;
     top: calc(var(--nav-height) + var(--space-10));
+    grid-row: span 2;
     display: grid;
     gap: var(--space-5);
   }
@@ -102,6 +112,7 @@ const { fsae } = home;
 
     .intro {
       position: static;
+      grid-row: auto;
     }
   }
 

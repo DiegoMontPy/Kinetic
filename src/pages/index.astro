@@ -2,9 +2,12 @@
 import FsaeExplainer from "../components/FsaeExplainer.astro";
 import HomeHero from "../components/HomeHero.astro";
 import KeyFigures from "../components/KeyFigures.astro";
+import PhotoBand from "../components/PhotoBand.astro";
+import PhotoStrip from "../components/PhotoStrip.astro";
 import ProjectStatus from "../components/ProjectStatus.astro";
 import SponsorWall from "../components/SponsorWall.astro";
-import { pages } from "../data/site";
+import { media } from "../data/media";
+import { home, pages } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
@@ -12,6 +15,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <HomeHero />
   <ProjectStatus />
   <KeyFigures />
+  <PhotoBand photo={media.home.band} />
   <FsaeExplainer />
+  <PhotoStrip id="strip" heading={home.strip.heading} photos={media.home.strip} />
   <SponsorWall />
 </BaseLayout>

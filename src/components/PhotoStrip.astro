@@ -1,5 +1,6 @@
 ---
 import type { PhotoSlot } from "../data/media";
+import { findPhoto } from "../lib/media";
 import PhotoFigure from "./PhotoFigure.astro";
 
 interface Props {
@@ -10,25 +11,29 @@ interface Props {
 }
 
 const { id, heading, photos } = Astro.props;
+// One photo beside two empty frames looks worse than nothing: the strip waits for all of them.
+const complete = photos.every((photo) => findPhoto(photo) !== undefined);
 ---
 
-<section class="section" aria-labelledby={`${id}-title`}>
-  <div class="container">
-    <h2 id={`${id}-title`} class="title">
-      {heading}
-    </h2>
-    <ul class="strip list-reset">
-      {photos.map((photo) => (
-        <li data-reveal>
-          <PhotoFigure
-            photo={photo}
-            sizes="(min-width: 1188px) 372px, (min-width: 640px) 31vw, 100vw"
-          />
-        </li>
-      ))}
-    </ul>
-  </div>
-</section>
+{complete && (
+  <section class="section" aria-labelledby={`${id}-title`}>
+    <div class="container">
+      <h2 id={`${id}-title`} class="title">
+        {heading}
+      </h2>
+      <ul class="strip list-reset">
+        {photos.map((photo) => (
+          <li data-reveal>
+            <PhotoFigure
+              photo={photo}
+              sizes="(min-width: 1188px) 372px, (min-width: 640px) 31vw, 100vw"
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
 
 <style>
   .title {

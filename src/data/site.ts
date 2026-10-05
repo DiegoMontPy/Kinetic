@@ -167,6 +167,9 @@ export const home = {
       },
     ],
   },
+  strip: {
+    heading: "Del taller a la pista",
+  },
 };
 
 export const footer = {
