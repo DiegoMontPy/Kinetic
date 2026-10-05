@@ -1,0 +1,69 @@
+---
+import { Picture } from "astro:assets";
+
+import type { PhotoSlot } from "../data/media";
+import { findPhoto } from "../lib/media";
+import Placeholder from "./Placeholder.astro";
+
+interface Props {
+  photo: PhotoSlot;
+  /** Rendered width of the photo at each breakpoint, as in the `sizes` attribute. */
+  sizes: string;
+  /** "eager" only for a photo in the first screen. */
+  loading?: "lazy" | "eager";
+}
+
+const { photo, sizes, loading = "lazy" } = Astro.props;
+const image = findPhoto(photo);
+---
+
+<!-- A photo with its caption, beside a text or in a strip of three. -->
+<figure class="photo">
+  {image ? (
+    <Picture
+      src={image}
+      alt={photo.alt}
+      formats={["avif", "webp"]}
+      fallbackFormat="webp"
+      widths={[480, 800, 1200, 1600]}
+      sizes={sizes}
+      width={1200}
+      loading={loading}
+    />
+  ) : (
+    <Placeholder ratio="16:9" label={photo.label} icon="camera" />
+  )}
+  <figcaption class="caption">{photo.caption}</figcaption>
+</figure>
+
+<style>
+  .photo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+    container-type: inline-size;
+  }
+
+  .photo :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-frame);
+    object-fit: cover;
+  }
+
+  .caption {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  /* In a narrow cell the placeholder keeps its 16:9 shape: the label stays and the icon goes. */
+  @container (max-width: 15rem) {
+    .photo :global(.placeholder) {
+      padding: var(--space-2);
+    }
+
+    .photo :global(.placeholder .icon) {
+      display: none;
+    }
+  }
+</style>

@@ -120,6 +120,21 @@
   --measure-statement: 24ch;
   /* Únete: subsystem names, as a share of the column width. */
   --chapter-name-fit: 15cqi;
+  /* Full-width photo band, and the chassis drawing that stands in for the photo until it exists. */
+  --band-height: clamp(18rem, 36vw, 34rem);
+  --band-drawing-width: 130%;
+  --band-drawing-left: -8%;
+  --band-drawing-dim: 0.85;
+  --band-drawing-width-sm: 190%;
+  --band-drawing-left-sm: -55%;
+  /* Video frame: the rear view stands in for the poster until the video exists. */
+  --video-ratio: 16 / 9;
+  /* Dimmer than the bands: on El carro the frame sits next to the renders and must not read as one. */
+  --video-drawing-dim: 0.45;
+  --video-drawing-width: 82%;
+  --video-drawing-right: -10%;
+  --video-drawing-width-sm: 120%;
+  --video-drawing-right-sm: -22%;
 
   /* Elements */
   --monogram-size: 36px;

@@ -1,0 +1,161 @@
+---
+import { getImage, Picture } from "astro:assets";
+
+import { car, carPage } from "../data/car";
+import type { VideoSlot } from "../data/media";
+import { placeholderLabels } from "../data/site";
+import { findAsset } from "../lib/assets";
+import { findVideo } from "../lib/media";
+import KeepTogether from "./KeepTogether.astro";
+
+interface Props {
+  video: VideoSlot;
+}
+
+const { video } = Astro.props;
+const copy = carPage.video;
+const file = findVideo(video);
+const poster = file && (await getImage({ src: file.poster, width: 1920, format: "webp" }));
+// Until the video exists, the frame is a drawing sheet: the rear of the chassis, where the engine goes.
+const drawing = file ? undefined : findAsset(car.images.rear.file);
+---
+
+<section class="section" aria-labelledby="video-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="video-title">{copy.heading}</h2>
+      <p class="lede">
+        <KeepTogether text={file ? video.description : video.pending} />
+      </p>
+    </div>
+    <figure class="frame" data-empty={!file || undefined}>
+      {file && poster ? (
+        <video
+          controls
+          preload="none"
+          playsinline
+          poster={poster.src}
+          width={poster.attributes.width}
+          height={poster.attributes.height}
+          aria-describedby="video-caption"
+        >
+          <source src={file.src} type="video/mp4" />
+          <track kind="captions" src={file.captions} srclang="es" label={copy.captionsLabel} />
+        </video>
+      ) : (
+        <div class="sheet blueprint" aria-hidden="true">
+          {drawing && (
+            <Picture
+              src={drawing}
+              alt=""
+              formats={["avif", "webp"]}
+              fallbackFormat="webp"
+              widths={[640, 960, 1280, 1600]}
+              sizes="(min-width: 1188px) 880px, (min-width: 640px) 78vw, 100vw"
+              width={1280}
+            />
+          )}
+        </div>
+      )}
+      <figcaption id="video-caption" class="caption">
+        {!file && (
+          <span class="status">
+            {placeholderLabels.video} · {placeholderLabels.pending}
+          </span>
+        )}
+        <span class="text">
+          <KeepTogether text={video.caption} />
+        </span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .frame {
+    position: relative;
+    display: grid;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+    background: var(--color-bg);
+    overflow: clip;
+    container-type: inline-size;
+  }
+
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--video-ratio);
+    background: var(--color-bg);
+  }
+
+  /* With the video in place, its caption sits under the frame. */
+  .frame:not([data-empty]) .caption {
+    padding: var(--space-3) var(--space-4);
+    border-top: var(--border-width) solid var(--color-border-strong);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .sheet {
+    --blueprint-shape: ellipse 75% 85% at 62% 50%;
+    position: relative;
+    aspect-ratio: var(--video-ratio);
+  }
+
+  /* The rear of the chassis on the right, fading into the grid behind the title block. */
+  .sheet :global(img) {
+    position: absolute;
+    top: 50%;
+    right: var(--video-drawing-right);
+    width: var(--video-drawing-width);
+    max-width: none;
+    translate: 0 -50%;
+    opacity: var(--video-drawing-dim);
+    mask-image: linear-gradient(to right, transparent 5%, black 45%);
+  }
+
+  /* Without the video, the caption is the title block of the sheet. */
+  .frame[data-empty] .caption {
+    position: absolute;
+    bottom: var(--space-8);
+    left: var(--space-8);
+    display: grid;
+    gap: var(--space-2);
+    max-width: var(--measure-narrow);
+  }
+
+  .status {
+    white-space: nowrap;
+    color: var(--color-accent-hover);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-caps);
+    line-height: var(--leading-snug);
+    text-transform: uppercase;
+  }
+
+  .frame[data-empty] .text {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-heading);
+  }
+
+  /* Phones: the drawing above, the title block under it, both inside the frame. */
+  @media (max-width: 639px) {
+    .sheet :global(img) {
+      right: var(--video-drawing-right-sm);
+      width: var(--video-drawing-width-sm);
+      mask-image: linear-gradient(to bottom, black 40%, transparent 85%);
+    }
+
+    .frame[data-empty] .caption {
+      position: static;
+      padding: var(--space-4);
+      border-top: var(--border-width) solid var(--color-border-strong);
+    }
+  }
+</style>

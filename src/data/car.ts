@@ -158,19 +158,6 @@ export const vehicleStatusLabels: Record<VehicleSystemStatus, string> = {
   tbd: "Por definir",
 };
 
-export interface WorkshopShot {
-  caption: string;
-  /** Pending until the photo exists. File path inside src/assets/, e.g. "taller/soldadura.jpg". */
-  photo: CarImage | null;
-}
-
-/** The first shot leads the gallery at a larger size. */
-export const workshopShots: WorkshopShot[] = [
-  { caption: "El chasis terminado", photo: null },
-  { caption: "Soldadura de la estructura", photo: null },
-  { caption: "Corte y ajuste de los tubos", photo: null },
-];
-
 export interface Generation {
   number: number;
   season: number;
@@ -241,6 +228,10 @@ export const carPage = {
       `${done} de ${total} sistemas terminados. El resto se publica a medida que el equipo lo define.`,
     factsHeading: "Lo que está hecho",
     openHeading: "Falta definir",
+  },
+  video: {
+    heading: "Primer encendido",
+    captionsLabel: "Español",
   },
   workshop: {
     heading: "Fabricación",

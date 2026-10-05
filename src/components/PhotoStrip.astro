@@ -1,0 +1,54 @@
+---
+import type { PhotoSlot } from "../data/media";
+import PhotoFigure from "./PhotoFigure.astro";
+
+interface Props {
+  /** Prefix for the heading's id. */
+  id: string;
+  heading: string;
+  photos: PhotoSlot[];
+}
+
+const { id, heading, photos } = Astro.props;
+---
+
+<section class="section" aria-labelledby={`${id}-title`}>
+  <div class="container">
+    <h2 id={`${id}-title`} class="title">
+      {heading}
+    </h2>
+    <ul class="strip list-reset">
+      {photos.map((photo) => (
+        <li data-reveal>
+          <PhotoFigure
+            photo={photo}
+            sizes="(min-width: 1188px) 372px, (min-width: 640px) 31vw, 100vw"
+          />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .title {
+    margin-bottom: var(--space-10);
+  }
+
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-3);
+  }
+
+  /* Phones: the first photo leads at full width and the other two share a row under it. */
+  @media (max-width: 639px) {
+    .strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .strip li:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

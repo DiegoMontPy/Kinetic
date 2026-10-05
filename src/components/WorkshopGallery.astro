@@ -1,15 +1,12 @@
 ---
 import { Picture } from "astro:assets";
 
-import { carPage, workshopShots } from "../data/car";
-import { placeholderLabels } from "../data/site";
-import { findAsset } from "../lib/assets";
+import { carPage } from "../data/car";
+import { media } from "../data/media";
+import { findPhoto } from "../lib/media";
 import Placeholder from "./Placeholder.astro";
 
-const shots = workshopShots.map((shot) => ({
-  ...shot,
-  src: shot.photo ? findAsset(shot.photo.file) : undefined,
-}));
+const shots = media.car.workshop.map((slot) => ({ ...slot, src: findPhoto(slot) }));
 ---
 
 <section class="section" aria-labelledby="workshop-title">
@@ -22,10 +19,10 @@ const shots = workshopShots.map((shot) => ({
       {shots.map((shot) => (
         <li class="shot" data-reveal>
           <figure>
-            {shot.src && shot.photo ? (
+            {shot.src ? (
               <Picture
                 src={shot.src}
-                alt={shot.photo.alt}
+                alt={shot.alt}
                 formats={["avif", "webp"]}
                 fallbackFormat="webp"
                 widths={[480, 800, 1200]}
@@ -33,7 +30,7 @@ const shots = workshopShots.map((shot) => ({
                 width={1200}
               />
             ) : (
-              <Placeholder ratio="16:9" label={placeholderLabels.workshopPhoto} icon="camera" />
+              <Placeholder ratio="16:9" label={shot.label} icon="camera" />
             )}
             <figcaption class="caption">{shot.caption}</figcaption>
           </figure>

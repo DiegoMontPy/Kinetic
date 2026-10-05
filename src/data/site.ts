@@ -56,7 +56,10 @@ export const placeholderLabels = {
   workshopPhoto: "FOTO DE TALLER",
   portrait: "FOTO INDIVIDUAL",
   sponsorLogo: "LOGO SPONSOR",
+  video: "VIDEO",
   tbd: "POR DEFINIR",
+  /** Beside the label on the full-width bands and the video, which have no dashed frame. */
+  pending: "PENDIENTE",
 };
 
 /** "Manufactura, Diseño y Finanzas", from the active subsystems. */
