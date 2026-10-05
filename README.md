@@ -25,7 +25,7 @@ npm ci
 
 ```
 src/
-  assets/      imágenes procesadas por astro:assets (logos en sponsors/)
+  assets/      imágenes procesadas por astro:assets (logos en sponsors/, fotos en fotos/, videos en video/)
   components/  componentes, uno por archivo
   data/        contenido editable
   layouts/     layout base
@@ -39,7 +39,7 @@ docs/          CONVENCIONES.md
 
 ## Editar el contenido
 
-- Todo el texto y los datos están en `src/data/`: `site.ts`, `team.ts`, `subsystems.ts`, `sponsors.ts` y `car.ts`.
+- Todo el texto y los datos están en `src/data/`: `site.ts`, `team.ts`, `subsystems.ts`, `sponsors.ts`, `car.ts` y `media.ts`.
 - `null` marca un dato pendiente; el sitio muestra el placeholder o lo omite.
 - Las reglas completas están en `docs/CONVENCIONES.md`.
 
@@ -60,9 +60,34 @@ docs/          CONVENCIONES.md
 - Formulario de Contacto: hoy no envía nada y lo dice. Para conectarlo, seguí la nota de `docs/CONVENCIONES.md`.
 - Formulario propio para aplicar: cuando exista, cambiá `joinPage.meetings.apply.href` en `src/data/site.ts`.
 
-## Agregar fotos de taller
+## Agregar una foto
 
-- Copiá la foto a `src/assets/taller/` y completá `photo` (`file` y `alt`) en la entrada que corresponda de `workshopShots`.
+1. Copiá la foto a `src/assets/fotos/`, con nombre en kebab-case (`equipo-taller.jpg`). Usá el original más grande que tengas: el sitio genera los tamaños.
+2. En `src/data/media.ts`, buscá el espacio de la tabla de abajo y poné el nombre en `file`: `file: "equipo-taller.jpg"`.
+3. Si la foto muestra algo distinto de lo que pide el espacio, corregí `alt` y, si hace falta, `caption`.
+
+## Agregar un video
+
+1. Exportalo en MP4, de hasta 25 MB, con el comando de `docs/CONVENCIONES.md`.
+2. Copiá el video y su portada (una imagen 16:9) a `src/assets/video/`: `kr01-motor.mp4` y `kr01-motor.jpg`.
+3. En `src/data/media.ts`, en `car.video`, poné los dos nombres: `file: { video: "kr01-motor.mp4", poster: "kr01-motor.jpg" }`.
+
+## Espacios para fotos y video
+
+| Página   | Espacio en `media.ts`           | Forma                  | Qué va                                                                         |
+| -------- | ------------------------------- | ---------------------- | ------------------------------------------------------------------------------ |
+| Inicio   | `home.band`                     | Banda a sangre         | El equipo trabajando en el taller                                              |
+| Inicio   | `home.fsae`                     | Foto al lado del texto | El chasis o el carro, en "Qué es Formula SAE"                                  |
+| Inicio   | `home.strip` (tres)             | Tira de tres fotos     | El equipo completo, el taller y el chasis. Aparece cuando están las tres fotos |
+| El carro | `car.video`                     | Video con portada      | KR-01 con el motor montado y encendido                                         |
+| El carro | `car.workshop` (tres)           | Galería de Fabricación | El chasis terminado, la soldadura y el corte                                   |
+| Únete    | `join.band`                     | Banda a sangre         | El equipo completo                                                             |
+| Únete    | `join.subsystems.manufacturing` | Foto al lado del texto | Manufactura soldando o cortando                                                |
+| Únete    | `join.subsystems.design`        | Foto al lado del texto | Diseño frente al CAD                                                           |
+| Únete    | `join.subsystems.finance`       | Foto al lado del texto | Finanzas presentando el proyecto                                               |
+| Sponsors | `sponsors.team`                 | Foto al lado del texto | El equipo con KR-01                                                            |
+
+Contacto no lleva fotos.
 
 ## Agregar un sponsor
 

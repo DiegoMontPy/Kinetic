@@ -7,12 +7,15 @@
 
 ## Contenido
 
-- El contenido se cambia editando solo estos cinco archivos de `src/data/`: `site.ts`, `team.ts`, `subsystems.ts`, `sponsors.ts` y `car.ts`.
+- El contenido se cambia editando solo estos seis archivos de `src/data/`: `site.ts`, `team.ts`, `subsystems.ts`, `sponsors.ts`, `car.ts` y `media.ts`.
 - Ningún componente lleva texto escrito a mano: todo sale de esos archivos.
 - `null` (o una lista vacía) marca un dato pendiente. Nunca se rellena con texto inventado.
 - Un pendiente que el visitante solo mira (una cifra, una foto, un nivel) se muestra con su placeholder. Un pendiente que el visitante tendría que usar, como un canal de contacto, se omite mientras falte: no se muestra en blanco.
-- Un subsistema nuevo se abre agregando una entrada en `subsystems.ts`. La cuadrícula de estado y las cifras se ajustan solas.
+- Los subsistemas son los grupos de trabajo del equipo: Manufactura, Diseño y Finanzas. No son partes del carro ni etapas: trabajan durante todo el proyecto, así que ninguno tiene estado ni se termina. El chasis es una parte del carro y está en `vehicleSystems` (`car.ts`).
+- Un subsistema nuevo se abre agregando una entrada en `subsystems.ts`: Únete le suma un capítulo, Contacto lo nombra y la cifra de Inicio se ajusta sola. Su foto va en `media.join.subsystems`, bajo su `id`.
 - Cada subsistema dice qué hace (`role`), qué se aprende (`learn`) y para quién es (`fit`, que completa la frase "Es para vos si…"). Únete los muestra uno por capítulo, y Contacto los nombra en el camino de estudiantes.
+- "Estado del proyecto", en Inicio, muestra los hitos del vehículo camino a competir (`milestones` en `car.ts`), en orden. Un hito pasa a `done` cuando se cumple y queda cumplido. Ningún hito lleva fecha hasta que el equipo la fije.
+- Los hitos hablan del proyecto y los sistemas del vehículo, de las partes del carro, así que tienen que coincidir: un hito cumplido sobre una parte corresponde a un sistema en `done`, y ningún hito da por fabricado un sistema que sigue en `tbd`.
 - Los sistemas del vehículo (`vehicleSystems` en `car.ts`) no son los subsistemas del equipo: un sistema existe aunque ningún grupo lo tenga asignado. Sin especificaciones confirmadas, un sistema queda en `tbd` y solo lista lo que falta definir.
 - Cada vehículo es una generación (`generations` en `car.ts`). El del año siguiente se agrega al final de la lista, pasa a ser el actual y El carro lo muestra sin cambios en las páginas; los anteriores quedan en el archivo.
 - Los beneficios de cada nivel de patrocinio están en `tierOffers` (`sponsors.ts`). El primer nivel de la lista se resalta en azul.
@@ -51,7 +54,26 @@
 - El hero usa `kr01-chassis-render.png`. Si no existe, cae a `kr01-chassis-wireframe.png`, y si tampoco está, al placeholder.
 - La imagen para redes sociales (1200×630) se genera del render lateral, porque el recorte 1.91:1 no corta el chasis.
 - Astro copia a `dist/` el original de toda imagen de `src/assets/` que no se procese. Hoy le pasa a `kr01-chassis-wireframe.png`, que solo se usa si falta el render.
-- Las fotos de taller van en `src/assets/taller/` y se conectan en `workshopShots` (`car.ts`). Mientras `photo` sea `null`, la galería muestra el placeholder.
+- Las fotos y los videos tienen sus propias reglas, en la sección siguiente.
+
+## Fotos y video
+
+- Cada lugar del sitio que lleva una foto o un video es un espacio en `media.ts`, nombrado por página y ubicación (`home.band`, `join.subsystems.design`). Cada espacio tiene su pie (`caption`), su texto alternativo (`alt`) y `file`, que es `null` hasta que exista el archivo.
+- No hay página de galería. Cada foto va junto al texto del que habla.
+- Cuatro formas, y ninguna otra: banda a sangre (`PhotoBand.astro`), foto al lado del texto (`PhotoFigure.astro`), tira de tres fotos con pie (`PhotoStrip.astro`) y video con portada (`VideoFeature.astro`). La galería de Fabricación de El carro conserva su diseño y toma sus fotos de `media.car.workshop`.
+- Las fotos van en `src/assets/fotos/` y pasan por `astro:assets`, que genera AVIF y WebP en varios anchos. Si `file` nombra un archivo que no está en la carpeta, el espacio se muestra vacío.
+- Estado vacío: la foto al lado del texto lleva el placeholder etiquetado. La tira de tres no se muestra hasta que sus tres espacios tienen archivo: con una o dos fotos sigue oculta, porque una foto al lado de dos huecos se ve peor que nada, y no deja ningún hueco en la página. La banda y el video no llevan un recuadro punteado: son una hoja de plano, con la retícula, un recorte del render (el lateral en las bandas y el trasero en el video, donde va el motor) y una etiqueta en el ángulo ("FOTO DE EQUIPO · PENDIENTE").
+- Todas las fotos cargan diferido, salvo la de Sponsors, que está en la primera pantalla. Inicio no suma nada a su primera pantalla: el LCP sigue siendo el render del hero.
+- Los videos se sirven desde el propio sitio, en `src/assets/video/`. Ninguno se embebe de otro servicio: el sitio no hace ninguna petición externa.
+- Formato del video: MP4 con H.264 y audio AAC, 16:9, hasta 1920×1080, con `faststart` para que empiece a reproducirse antes de terminar de bajar. Tope: 25 MB por archivo (GitHub avisa desde 50 MB y rechaza más de 100 MB). Si pasa del tope, recortalo o bajalo a 720p (`scale=-2:720`).
+
+```bash
+ffmpeg -i original.mov -vf scale=-2:1080 -c:v libx264 -crf 23 -preset slow -c:a aac -b:a 128k -movflags +faststart kr01-motor.mp4
+```
+
+- Cada video lleva su portada: una imagen 16:9 (JPG o PNG) en la misma carpeta. Sin portada no se publica, y `file` exige los dos nombres juntos.
+- El video tiene controles nativos y `preload="none"`: no arranca solo ni descarga nada hasta que el visitante le da play.
+- Subtítulos: el sitio genera `/video/<nombre>.vtt` con el texto de `captions`, que describe lo que se oye entre corchetes. Sirve para videos sin voz. Un video con voz necesita subtítulos con tiempos, y hay que sumarlos antes de publicarlo.
 
 ## Logos de sponsors
 
