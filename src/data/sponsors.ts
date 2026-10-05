@@ -148,26 +148,35 @@ export const sponsorPage = {
     notIncluded: "No incluido",
     websiteNote: "El sitio muestra los logos en Inicio y en Sponsors, ordenados por nivel.",
     amountNote: "Los aportes de cada nivel se definen con el paquete de patrocinio.",
-    contact: "Para conversarlo antes, escribinos por Instagram a",
   },
 };
 
 /** Pending: path of the sponsorship package PDF inside public/, e.g. "/paquete-patrocinio.pdf". */
 export const sponsorshipPackage: string | null = null;
 
+/**
+ * Sponsorships are arranged in person, in a meeting with the team. The site backs that conversation
+ * instead of offering a way in: the invitation leads to the levels, and the closing band explains the
+ * meeting and presents the package left after it.
+ */
 export const sponsorSection = {
   heading: "Con el apoyo de",
   lead: "Empresas e instituciones que hacen posible KR-01.",
   invite: {
     title: "Tu logo aquí",
-    action: "Ser sponsor",
-    href: "/contacto/",
+    action: "Ver los niveles",
+    href: "/sponsors/#niveles",
   },
   cta: {
-    heading: "Poné tu marca sobre KR-01",
-    text: "Conversemos sobre cómo tu empresa puede sumarse al primer monoplaza de Formula SAE del Key Institute.",
-    contact: { label: "Hablemos", href: "/contacto/" },
-    packageLabel: "Descargar paquete (PDF)",
-    packagePending: "El paquete de patrocinio está en preparación.",
+    heading: "Cada patrocinio empieza con una conversación",
+    text: "Nos reunimos con tu empresa, te presentamos KR-01 y te explicamos los beneficios de cada nivel.",
+    /** Shown only once the team has an email (`email` in team.ts): the way to arrange the meeting. */
+    email: "Para coordinar la reunión, escribinos a",
+    package: {
+      label: "Paquete de patrocinio · PDF",
+      text: "Lo que le dejamos a tu empresa después de la reunión: el proyecto, los niveles y sus beneficios.",
+      action: "Descargar el paquete",
+      pending: "En preparación",
+    },
   },
 };

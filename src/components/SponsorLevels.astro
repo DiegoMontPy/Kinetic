@@ -1,7 +1,5 @@
 ---
-import { site } from "../data/site";
 import { sponsorPage, tierOffers, tiers } from "../data/sponsors";
-import KeepTogether from "./KeepTogether.astro";
 import PendingTag from "./PendingTag.astro";
 import TierBenefit from "./TierBenefit.astro";
 
@@ -13,7 +11,7 @@ const offers = tierOffers.map((offer, index) => ({
 }));
 ---
 
-<section class="section levels" aria-labelledby="levels-title">
+<section class="section levels" id="niveles" aria-labelledby="levels-title">
   <div class="container">
     <div class="section-head">
       <h2 id="levels-title" class="title">
@@ -78,10 +76,6 @@ const offers = tierOffers.map((offer, index) => ({
     <div class="notes">
       <p>
         {levels.websiteNote} {levels.amountNote}
-      </p>
-      <p>
-        <KeepTogether text={levels.contact} />{" "}
-        <a href={site.instagram.url}>{site.instagram.handle}</a>.
       </p>
     </div>
   </div>
@@ -185,11 +179,6 @@ const offers = tierOffers.map((offer, index) => ({
     margin-top: var(--space-10);
     color: var(--color-text-muted);
     font-size: var(--text-sm);
-  }
-
-  .notes a {
-    color: var(--color-accent-hover);
-    font-weight: var(--weight-semibold);
   }
 
   /* Narrow screens: one card per level instead of columns, so nothing scrolls sideways. */

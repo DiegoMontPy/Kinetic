@@ -14,7 +14,10 @@ export interface Team {
   activeMembers: number;
   /** Pending: member names and roles are not published yet. */
   members: TeamMember[];
-  /** Pending: the team does not have a public email address yet. */
+  /**
+   * Pending: the team does not have a public email address yet, and the site leaves it out while null.
+   * Once set, it appears on Contacto and on the sponsorship band of Inicio and Sponsors.
+   */
   email: string | null;
   /** Pending: meeting day, time and place are not defined yet. */
   meetings: Meetings | null;

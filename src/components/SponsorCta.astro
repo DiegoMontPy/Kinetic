@@ -1,48 +1,56 @@
 ---
 import { sponsorSection, sponsorshipPackage } from "../data/sponsors";
-import ButtonLink from "./ButtonLink.astro";
+import { team } from "../data/team";
+import { withBase } from "../lib/paths";
+import Icon from "./Icon.astro";
 import KeepTogether from "./KeepTogether.astro";
+import PendingTag from "./PendingTag.astro";
 
 const { cta } = sponsorSection;
 ---
 
+<!-- How a sponsorship is arranged: a meeting with the team, and the package left after it. -->
 <div class="band" data-reveal>
   <div class="copy">
     <h3 class="title">
       <KeepTogether text={cta.heading} />
     </h3>
-    <p>{cta.text}</p>
-  </div>
-  <div class="actions">
-    <ButtonLink href={cta.contact.href} variant="light">
-      {cta.contact.label}
-    </ButtonLink>
-    {sponsorshipPackage ? (
-      <ButtonLink href={sponsorshipPackage} variant="light-outline" icon="download" download>
-        {cta.packageLabel}
-      </ButtonLink>
-    ) : (
-      <>
-        <ButtonLink
-          variant="light-outline"
-          icon="download"
-          disabled
-          aria-describedby="package-note"
-        >
-          {cta.packageLabel}
-        </ButtonLink>
-        <p class="note" id="package-note">
-          {cta.packagePending}
+    <p>
+      <KeepTogether text={cta.text} />
+    </p>
+    {
+      /* A channel the visitor cannot use yet is left out, not shown empty. */
+      team.email && (
+        <p class="email">
+          {cta.email} <a href={`mailto:${team.email}`}>{team.email}</a>.
         </p>
-      </>
-    )}
+      )
+    }
   </div>
+  {sponsorshipPackage ? (
+    <a class="package" href={withBase(sponsorshipPackage)} download>
+      <span class="label">{cta.package.label}</span>
+      <span class="package-text">{cta.package.text}</span>
+      <span class="package-action">
+        <Icon name="download" size="sm" />
+        {cta.package.action}
+      </span>
+    </a>
+  ) : (
+    <div class="package">
+      <p class="label">{cta.package.label}</p>
+      <p class="package-text">{cta.package.text}</p>
+      <PendingTag label={cta.package.pending} surface="accent" />
+    </div>
+  )}
 </div>
 
 <style>
   .band {
     display: grid;
-    gap: var(--space-8);
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: var(--space-8) var(--space-12);
     margin-top: var(--space-12);
     padding: var(--band-padding);
     background: var(--color-accent);
@@ -55,7 +63,8 @@ const { cta } = sponsorSection;
 
   .copy {
     display: grid;
-    gap: var(--space-2);
+    justify-items: start;
+    gap: var(--space-3);
     max-width: var(--measure);
   }
 
@@ -63,23 +72,70 @@ const { cta } = sponsorSection;
     font-size: var(--text-xl);
   }
 
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
+  .label {
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-caps);
+    line-height: var(--leading-snug);
+    text-transform: uppercase;
+  }
+
+  .email {
+    justify-self: stretch;
+    margin-top: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: var(--border-width) solid var(--color-on-accent-line);
+  }
+
+  .email a {
+    font-weight: var(--weight-semibold);
+  }
+
+  /* The package is what stays with the company after the meeting, so it gets its own card.
+     Dashed while it is being prepared, like every other pending piece; solid once it can be downloaded. */
+  .package {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: var(--border-width-strong) dashed var(--color-on-accent);
+    border-radius: var(--radius-frame);
+    color: var(--color-on-accent);
+    text-decoration: none;
+  }
+
+  a.package {
+    border-style: solid;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  a.package:hover {
+    background: var(--color-on-accent);
+    color: var(--color-accent);
+  }
+
+  .package-text {
+    font-size: var(--text-md);
+  }
+
+  .package-action {
+    display: inline-flex;
     align-items: center;
-    gap: var(--space-3) var(--space-4);
+    gap: var(--space-2);
+    font-weight: var(--weight-semibold);
   }
 
-  .note {
-    max-width: var(--measure-narrow);
-    font-size: var(--text-sm);
+  @media (max-width: 959px) {
+    .band {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 
-  /* On narrow phones the band is thinner than a one-line button, so buttons go full width. */
   @media (max-width: 639px) {
-    .actions :global(.button) {
-      width: 100%;
-      white-space: normal;
+    .package {
+      padding: var(--space-5);
     }
   }
 </style>
