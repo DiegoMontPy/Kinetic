@@ -1,5 +1,5 @@
 import { subsystems } from "./subsystems";
-import type { Meetings } from "./team";
+import { type Meetings, team } from "./team";
 
 /**
  * Public origin for canonical URLs, Open Graph and the sitemap.
@@ -86,7 +86,8 @@ export const pages = {
     description:
       "El equipo de Formula SAE del Key Institute: estudiantes de ingeniería que diseñan y construyen KR-01.",
     heading: "Equipo",
-    status: "La presentación del equipo está en preparación.",
+    // Pending: the page waits for member names and roles (`members` in team.ts).
+    status: `Somos ${team.activeMembers} estudiantes en ${subsystems.length} subsistemas. La presentación del equipo, con nombres y roles, llega pronto.`,
   },
   sponsors: {
     title: "Sponsors — Kinetic Racing",
