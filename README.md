@@ -49,6 +49,17 @@ docs/          CONVENCIONES.md
 - Actualizá en el mismo archivo `car`, `specs`, `views` y `vehicleSystems` con los datos del vehículo nuevo.
 - Los vehículos anteriores siguen listados en el archivo de generaciones de El carro.
 
+## Completar los pendientes de Contacto, Únete y Sponsors
+
+- Correo del equipo: sigue pendiente (`email: null` en `src/data/team.ts`), así que el sitio no lo muestra en ningún lado. Al completarlo aparece en tres lugares:
+  - Contacto, arriba, junto a Instagram y la ubicación.
+  - Contacto, en el camino de empresas, con el botón "Escribir al equipo".
+  - La banda de cierre de Inicio y Sponsors, como la forma de coordinar la reunión de patrocinio.
+- Paquete de patrocinio: copiá el PDF a `public/` y completá `sponsorshipPackage` en `src/data/sponsors.ts`. Mientras tanto, la banda lo muestra "En preparación".
+- Reuniones: completá `meetings` en `src/data/team.ts` (`day`, `time` y `place`, escritos como se leen en una frase).
+- Formulario de Contacto: hoy no envía nada y lo dice. Para conectarlo, seguí la nota de `docs/CONVENCIONES.md`.
+- Formulario propio para aplicar: cuando exista, cambiá `joinPage.meetings.apply.href` en `src/data/site.ts`.
+
 ## Agregar fotos de taller
 
 - Copiá la foto a `src/assets/taller/` y completá `photo` (`file` y `alt`) en la entrada que corresponda de `workshopShots`.

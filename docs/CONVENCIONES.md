@@ -10,10 +10,30 @@
 - El contenido se cambia editando solo estos cinco archivos de `src/data/`: `site.ts`, `team.ts`, `subsystems.ts`, `sponsors.ts` y `car.ts`.
 - Ningún componente lleva texto escrito a mano: todo sale de esos archivos.
 - `null` (o una lista vacía) marca un dato pendiente. Nunca se rellena con texto inventado.
+- Un pendiente que el visitante solo mira (una cifra, una foto, un nivel) se muestra con su placeholder. Un pendiente que el visitante tendría que usar, como un canal de contacto, se omite mientras falte: no se muestra en blanco.
 - Un subsistema nuevo se abre agregando una entrada en `subsystems.ts`. La cuadrícula de estado y las cifras se ajustan solas.
+- Cada subsistema dice qué hace (`role`), qué se aprende (`learn`) y para quién es (`fit`, que completa la frase "Es para vos si…"). Únete los muestra uno por capítulo, y Contacto los nombra en el camino de estudiantes.
 - Los sistemas del vehículo (`vehicleSystems` en `car.ts`) no son los subsistemas del equipo: un sistema existe aunque ningún grupo lo tenga asignado. Sin especificaciones confirmadas, un sistema queda en `tbd` y solo lista lo que falta definir.
 - Cada vehículo es una generación (`generations` en `car.ts`). El del año siguiente se agrega al final de la lista, pasa a ser el actual y El carro lo muestra sin cambios en las páginas; los anteriores quedan en el archivo.
 - Los beneficios de cada nivel de patrocinio están en `tierOffers` (`sponsors.ts`). El primer nivel de la lista se resalta en azul.
+
+## Patrocinio
+
+- Los patrocinios se arreglan en persona: el equipo se reúne con la empresa, le presenta el proyecto y le explica los beneficios. La página Sponsors es el material que respalda esa conversación, no un canal de entrada.
+- Ninguna página invita a una empresa a escribir por Instagram ni ofrece un formulario de sponsors.
+- "Tu logo aquí" lleva a los niveles (`/sponsors/#niveles`). La banda de cierre (`sponsorSection.cta`) explica la reunión y presenta el paquete en PDF, que es lo que se le deja a la empresa después.
+- El paquete va en `sponsorshipPackage` (`sponsors.ts`). Mientras falte, la banda lo muestra "En preparación"; cuando exista, pasa a ser una descarga.
+- El correo del equipo (`email` en `team.ts`) no se muestra mientras sea `null`. Cuando exista, la banda suma la línea para coordinar la reunión.
+
+## Contacto, Únete y 404
+
+- Instagram es el canal para sumarse al equipo y para consultas generales. Para empresas, Contacto explica que el patrocinio se conversa directamente con el equipo, y lleva a los niveles. El correo aparece ahí cuando exista.
+- Contacto tiene un camino por motivo en `contactPage.paths` (`site.ts`), cada uno con su ancla: `#patrocinar` y `#unirse`. El botón Aplicar de Únete lleva a `/contacto/#unirse`: al llegar, el camino se marca en azul y el formulario elige ese motivo.
+- El formulario de Contacto no está conectado. Al enviarlo no sale nada de la página, ni siquiera en la URL (`method="dialog"`): avisa que no funciona, ofrece copiar lo escrito y abrir Instagram. Nunca simula un envío. Para conectarlo hay que darle un destino real y sacar el aviso y la etiqueta "Sin conectar" (`contactPage.form`).
+- Mientras no exista un formulario propio para aplicar, `joinPage.meetings.apply` lleva a Contacto.
+- Día, hora y lugar de reunión van en `meetings` (`team.ts`), escritos como se leen dentro de la frase de Únete: `day: "los sábados"`, `time: "9:00"`, `place: "el taller del Key Institute"`. Mientras sea `null`, la frase muestra los tres pendientes.
+- Equipo queda provisional a propósito: una línea de estado (`pages.team.status`) hasta que haya nombres y roles en `members`.
+- `404.astro` se sirve para cualquier ruta que no existe, a cualquier profundidad. Funciona desde `/Kinetic/` porque todo enlace y recurso lleva la ruta base. Lleva `noindex`, no tiene canonical y queda fuera del sitemap.
 
 ## Diseño
 
@@ -23,6 +43,7 @@
 - El texto azul sobre `surface` o `surface-alt` usa `--color-accent-hover`, porque `--color-accent` no llega a AA sobre esos fondos.
 - Lo que falta se muestra siempre con `Placeholder.astro` y una etiqueta de `placeholderLabels` (`site.ts`): 16:9 para fotos y renders, 1:1 para logos y retratos.
 - Un valor pendiente dentro de un texto, una ficha o una tabla usa `PendingTag.astro`, la versión en línea del mismo borde punteado. Una cifra que no existe nunca se muestra como cero.
+- Los campos de formulario se delimitan con `--color-field-line`, que llega a 3:1 contra el fondo. Las líneas de `--color-border` no alcanzan para marcar dónde se escribe.
 
 ## Imágenes
 
