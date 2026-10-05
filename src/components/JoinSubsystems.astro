@@ -1,7 +1,9 @@
 ---
+import { media } from "../data/media";
 import { joinPage } from "../data/site";
 import { subsystems } from "../data/subsystems";
 import KeepTogether from "./KeepTogether.astro";
+import PhotoFigure from "./PhotoFigure.astro";
 
 const copy = joinPage.subsystems;
 ---
@@ -18,29 +20,40 @@ const copy = joinPage.subsystems;
       </p>
     </div>
     <div class="chapters">
-      {subsystems.map((subsystem) => (
-        <article class="chapter" aria-labelledby={`subsystem-${subsystem.id}`} data-reveal>
-          <h3 id={`subsystem-${subsystem.id}`} class="name">
-            {subsystem.name}
-          </h3>
-          <p class="role">
-            <KeepTogether text={subsystem.role} />
-          </p>
-          <div class="learn">
-            <h4 class="caps" id={`subsystem-${subsystem.id}-learn`}>
-              {copy.learnLabel}
-            </h4>
-            <ul class="learn-list list-reset" aria-labelledby={`subsystem-${subsystem.id}-learn`}>
-              {subsystem.learn.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </div>
-          <p class="fit">
-            <strong>{copy.fitLabel}</strong> {subsystem.fit}
-          </p>
-        </article>
-      ))}
+      {subsystems.map((subsystem) => {
+        const photo = media.join.subsystems[subsystem.id];
+        return (
+          <article class="chapter" aria-labelledby={`subsystem-${subsystem.id}`} data-reveal>
+            <h3 id={`subsystem-${subsystem.id}`} class="name">
+              {subsystem.name}
+            </h3>
+            <p class="role">
+              <KeepTogether text={subsystem.role} />
+            </p>
+            <div class="learn">
+              <h4 class="caps" id={`subsystem-${subsystem.id}-learn`}>
+                {copy.learnLabel}
+              </h4>
+              <ul class="learn-list list-reset" aria-labelledby={`subsystem-${subsystem.id}-learn`}>
+                {subsystem.learn.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <p class="fit">
+              <strong>{copy.fitLabel}</strong> {subsystem.fit}
+            </p>
+            {photo && (
+              <div class="photo">
+                <PhotoFigure
+                  photo={photo}
+                  sizes="(min-width: 1188px) 442px, (min-width: 960px) 37vw, 100vw"
+                />
+              </div>
+            )}
+          </article>
+        );
+      })}
     </div>
   </div>
 </section>
@@ -57,10 +70,15 @@ const copy = joinPage.subsystems;
     container-type: inline-size;
   }
 
-  /* One chapter per subsystem: its name at the size of the motto on Inicio, the detail below. */
+  /* One chapter per subsystem: its name at the size of the motto on Inicio, the text beside its photo. */
   .chapter {
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 3fr);
+    grid-template-areas:
+      "name name name"
+      "role role photo"
+      "learn fit photo";
+    grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 5fr);
+    grid-template-rows: auto auto 1fr;
     align-items: start;
     gap: var(--space-8) var(--space-10);
     padding-block: var(--space-12) var(--space-16);
@@ -73,7 +91,7 @@ const copy = joinPage.subsystems;
 
   /* Never wider than the column, so the longest name ("Manufactura") fits on the narrowest phone. */
   .name {
-    grid-column: 1 / -1;
+    grid-area: name;
     font-size: min(var(--text-display), var(--chapter-name-fit));
     font-weight: var(--weight-bold);
     line-height: var(--leading-display);
@@ -81,12 +99,14 @@ const copy = joinPage.subsystems;
   }
 
   .role {
+    grid-area: role;
     max-width: var(--measure-narrow);
     font-size: var(--text-lg);
     line-height: var(--leading-snug);
   }
 
   .learn {
+    grid-area: learn;
     display: grid;
     gap: var(--space-3);
   }
@@ -102,6 +122,7 @@ const copy = joinPage.subsystems;
   }
 
   .fit {
+    grid-area: fit;
     color: var(--color-text-muted);
   }
 
@@ -110,18 +131,30 @@ const copy = joinPage.subsystems;
     font-weight: var(--weight-semibold);
   }
 
+  .photo {
+    grid-area: photo;
+  }
+
   @media (max-width: 959px) {
     .chapter {
+      grid-template-areas:
+        "name name"
+        "role role"
+        "photo photo"
+        "learn fit";
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .role {
-      grid-column: 1 / -1;
+      grid-template-rows: none;
     }
   }
 
   @media (max-width: 639px) {
     .chapter {
+      grid-template-areas:
+        "name"
+        "role"
+        "photo"
+        "learn"
+        "fit";
       grid-template-columns: minmax(0, 1fr);
       gap: var(--space-6);
       padding-block: var(--space-10);

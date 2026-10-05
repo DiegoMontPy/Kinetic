@@ -2,6 +2,8 @@
 import JoinIntro from "../components/JoinIntro.astro";
 import JoinMeetings from "../components/JoinMeetings.astro";
 import JoinSubsystems from "../components/JoinSubsystems.astro";
+import PhotoBand from "../components/PhotoBand.astro";
+import { media } from "../data/media";
 import { pages } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -10,6 +12,7 @@ const page = pages.join;
 
 <BaseLayout title={page.title} description={page.description}>
   <JoinIntro />
+  <PhotoBand photo={media.join.band} />
   <JoinSubsystems />
   <JoinMeetings />
 </BaseLayout>
