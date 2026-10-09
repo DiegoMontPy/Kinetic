@@ -18,7 +18,7 @@ const image = findPhoto(photo);
 ---
 
 <!-- A photo with its caption, beside a text or in a strip of three. -->
-<figure class="photo">
+<figure class="photo" style={photo.position && `--photo-position: ${photo.position}`}>
   {image ? (
     <Picture
       src={image}
@@ -49,6 +49,7 @@ const image = findPhoto(photo);
     aspect-ratio: 16 / 9;
     border-radius: var(--radius-frame);
     object-fit: cover;
+    object-position: var(--photo-position, 50% 50%);
   }
 
   .caption {

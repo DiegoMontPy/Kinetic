@@ -18,7 +18,7 @@ const shots = media.car.workshop.map((slot) => ({ ...slot, src: findPhoto(slot) 
     <ul class="gallery list-reset">
       {shots.map((shot) => (
         <li class="shot" data-reveal>
-          <figure>
+          <figure style={shot.position && `--photo-position: ${shot.position}`}>
             {shot.src ? (
               <Picture
                 src={shot.src}
@@ -70,6 +70,7 @@ const shots = media.car.workshop.map((slot) => ({ ...slot, src: findPhoto(slot) 
     aspect-ratio: 16 / 9;
     border-radius: var(--radius-frame);
     object-fit: cover;
+    object-position: var(--photo-position, 50% 50%);
   }
 
   .caption {

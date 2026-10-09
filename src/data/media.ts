@@ -13,6 +13,11 @@ export interface PhotoSlot {
   alt: string;
   /** File name inside src/assets/fotos/, e.g. "equipo-taller.jpg". `null` until the photo exists. */
   file: string | null;
+  /**
+   * Which part of the photo stays in view when its frame crops it, as CSS `object-position`
+   * ("50% 40%"). Centered when omitted.
+   */
+  position?: string;
 }
 
 /** A video served by the site itself, never embedded from another service. */

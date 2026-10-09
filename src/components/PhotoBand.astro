@@ -18,7 +18,11 @@ const drawing = image ? undefined : findAsset(car.images.side.file);
 ---
 
 <!-- Full-width pause between two sections. -->
-<figure class="band" data-empty={!image || undefined}>
+<figure
+  class="band"
+  data-empty={!image || undefined}
+  style={photo.position && `--photo-position: ${photo.position}`}
+>
   {image ? (
     <Picture
       src={image}
@@ -67,6 +71,7 @@ const drawing = image ? undefined : findAsset(car.images.side.file);
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: var(--photo-position, 50% 50%);
   }
 
   /* With a photo, the caption is a small tag in the corner, like the one under the hero render. */
