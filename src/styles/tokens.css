@@ -154,6 +154,8 @@
   --plate-gold: 176px;
   --plate-silver: 128px;
   --plate-bronze: 96px;
+  /* While no level is defined, every sponsor shares the wall at this size: four plates per row at 1440. */
+  --plate-provisional: 248px;
   --plate-inset: 16%;
   /* Rows of logos under the hero and in the footer: wide plates, smallest width before they wrap. */
   --supporters-ratio: 2 / 1;
@@ -197,6 +199,7 @@
     --plate-gold: 144px;
     --plate-silver: 96px;
     --plate-bronze: 72px;
+    --plate-provisional: 144px;
     --logo-mark-box: 40px;
   }
 }

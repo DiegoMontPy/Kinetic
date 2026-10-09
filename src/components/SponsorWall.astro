@@ -37,7 +37,7 @@ const { invite } = sponsorSection;
         <ul class="wall list-reset">
           {wall.sponsors.map((sponsor) => (
             <li data-reveal>
-              <SponsorPlate sponsor={sponsor} />
+              <SponsorPlate sponsor={sponsor} sizes="(max-width: 639px) 40vw, 190px" />
             </li>
           ))}
           {wall === lowest && (
@@ -93,6 +93,10 @@ const { invite } = sponsorSection;
 
   .tier[data-tier="bronze"] {
     --plate: var(--plate-bronze);
+  }
+
+  .tier[data-tier="provisional"] {
+    --plate: var(--plate-provisional);
   }
 
   .wall {
