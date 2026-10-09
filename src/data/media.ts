@@ -86,9 +86,10 @@ export const media: {
   car: {
     /** El carro, under the overview. */
     video: {
-      caption: "KR-01 con el motor montado y encendido",
-      description: "El motor de KR-01 montado sobre el chasis y encendido en el taller.",
-      pending: "Se publica cuando el motor esté montado y encendido.",
+      caption: "Primer encendido, en pruebas de montaje",
+      description: "El motor de KR-01 encendido en una prueba de montaje sobre el chasis.",
+      pending:
+        "El motor ya se encendió en una prueba de montaje sobre el chasis. El video se suma acá cuando esté disponible.",
       captions: "[Motor encendido]",
       file: null,
     },

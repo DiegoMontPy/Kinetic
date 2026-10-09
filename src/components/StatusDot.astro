@@ -2,7 +2,7 @@
 import type { VehicleSystemStatus } from "../data/car";
 
 interface Props {
-  /** Green only for "done"; blue for work in progress; grey for anything still open. */
+  /** Green only for "done"; blue for work in progress or in tests; grey for anything still open. */
   status: VehicleSystemStatus;
 }
 
@@ -25,6 +25,7 @@ const { status } = Astro.props;
     background: var(--color-done);
   }
 
+  .dot[data-status="testing"],
   .dot[data-status="in-progress"] {
     background: var(--color-accent);
   }

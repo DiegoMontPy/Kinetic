@@ -15,8 +15,9 @@
 - Un subsistema nuevo se abre agregando una entrada en `subsystems.ts`: Únete le suma un capítulo, Contacto lo nombra y la cifra de Inicio se ajusta sola. Su foto va en `media.join.subsystems`, bajo su `id`.
 - Cada subsistema dice qué hace (`role`), qué se aprende (`learn`) y para quién es (`fit`, que completa la frase "Es para vos si…"). Únete los muestra uno por capítulo, y Contacto los nombra en el camino de estudiantes.
 - "Estado del proyecto", en Inicio, muestra los hitos del vehículo camino a competir (`milestones` en `car.ts`), en orden. Un hito pasa a `done` cuando se cumple y queda cumplido. Ningún hito lleva fecha hasta que el equipo la fije.
-- Los hitos hablan del proyecto y los sistemas del vehículo, de las partes del carro, así que tienen que coincidir: un hito cumplido sobre una parte corresponde a un sistema en `done`, y ningún hito da por fabricado un sistema que sigue en `tbd`.
+- Los hitos hablan del proyecto y los sistemas del vehículo, de las partes del carro, así que tienen que coincidir: un hito cumplido sobre una parte corresponde a un sistema en `done` o en `testing`, y ningún hito da por fabricado un sistema que sigue en `tbd`.
 - Los sistemas del vehículo (`vehicleSystems` en `car.ts`) no son los subsistemas del equipo: un sistema existe aunque ningún grupo lo tenga asignado. Sin especificaciones confirmadas, un sistema queda en `tbd` y solo lista lo que falta definir.
+- Un sistema en `testing` ("En pruebas") tiene partes que se prueban sobre el chasis pero nada montado de forma definitiva: se ponen y se quitan. Lista lo que se probó y lo que falta definir. El sitio nunca da a entender que el carro está armado: se escribe "en pruebas", no "montado".
 - Cada vehículo es una generación (`generations` en `car.ts`). El del año siguiente se agrega al final de la lista, pasa a ser el actual y El carro lo muestra sin cambios en las páginas; los anteriores quedan en el archivo.
 - Los beneficios de cada nivel de patrocinio están en `tierOffers` (`sponsors.ts`). El primer nivel de la lista se resalta en azul.
 

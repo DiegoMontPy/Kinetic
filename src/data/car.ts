@@ -73,8 +73,9 @@ export const defaultViewId = "side";
 /**
  * Systems of the vehicle. They are not the team's subsystems (subsystems.ts):
  * a system exists even when no group of the team is working on it yet.
+ * "testing": the part exists and is tried on the chassis, but nothing is mounted for good.
  */
-export type VehicleSystemStatus = "done" | "in-progress" | "tbd";
+export type VehicleSystemStatus = "done" | "testing" | "in-progress" | "tbd";
 
 export interface VehicleSystem {
   id: string;
@@ -105,18 +106,23 @@ export const vehicleSystems: VehicleSystem[] = [
   {
     id: "suspension",
     name: "Suspensión",
-    status: "tbd",
+    status: "testing",
     role: "Une las ruedas al chasis y controla cómo se mueven sobre la pista.",
-    facts: [],
-    open: ["Geometría", "Amortiguadores y resortes"],
+    facts: [
+      { label: "Eje trasero", value: "En pruebas de montaje; se pone y se quita del chasis" },
+    ],
+    open: ["Suspensión delantera", "Geometría", "Amortiguadores y resortes"],
   },
   {
     id: "powertrain",
     name: "Powertrain",
-    status: "tbd",
+    status: "testing",
     role: "Genera la potencia y la lleva a las ruedas.",
-    facts: [],
-    open: ["Motor", "Transmisión", "Refrigeración"],
+    facts: [
+      { label: "Motor", value: "Se encendió en una prueba de montaje sobre el chasis" },
+      { label: "Montaje", value: "De prueba; el motor se pone y se quita del chasis" },
+    ],
+    open: ["Especificaciones del motor", "Montaje definitivo", "Transmisión", "Refrigeración"],
   },
   {
     id: "brakes",
@@ -154,6 +160,7 @@ export const vehicleSystems: VehicleSystem[] = [
 
 export const vehicleStatusLabels: Record<VehicleSystemStatus, string> = {
   done: "Terminado",
+  testing: "En pruebas",
   "in-progress": "En diseño",
   tbd: "Por definir",
 };
@@ -173,7 +180,7 @@ export const generations: Generation[] = [
     number: 1,
     season: 2026,
     vehicle: car.name,
-    state: "Chasis terminado, resto en diseño",
+    state: "Chasis terminado, motor en pruebas, resto en diseño",
     image: car.images.side,
   },
 ];
@@ -195,9 +202,9 @@ export type MilestoneStatus = "done" | "in-progress" | "pending";
  */
 export const milestones: { text: string; status: MilestoneStatus }[] = [
   { text: "Chasis tubular de acero soldado y terminado", status: "done" },
+  { text: "Motor encendido en pruebas de montaje sobre el chasis", status: "done" },
   { text: "El resto del vehículo en diseño", status: "in-progress" },
-  { text: "Sistemas fabricados y montados sobre el chasis", status: "pending" },
-  { text: "Motor montado y encendido", status: "pending" },
+  { text: "Sistemas fabricados y montados de forma definitiva", status: "pending" },
   { text: "Primeras pruebas en pista", status: "pending" },
   { text: "Competencia de Formula SAE", status: "pending" },
 ];
@@ -212,6 +219,7 @@ export const carPage = {
   overview: {
     status: [
       { status: "done", text: "Chasis tubular de acero, soldado y terminado" },
+      { status: "testing", text: "Motor y eje trasero en pruebas de montaje" },
       { status: "in-progress", text: "Resto del vehículo en diseño" },
     ] satisfies { status: VehicleSystemStatus; text: string }[],
     specHeading: "Ficha técnica",
