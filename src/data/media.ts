@@ -48,16 +48,18 @@ export const media: {
     /** Full-width band between the figures and "Qué es Formula SAE". */
     band: {
       label: teamPhoto,
-      caption: "El equipo trabajando en el taller",
-      alt: "Integrantes de Kinetic Racing trabajando en el taller",
-      file: null,
+      caption: "El equipo trabajando en el chasis de KR-01",
+      alt: "Cuatro integrantes de Kinetic Racing sostienen y alinean los tubos del chasis de KR-01, todavía sin pintar, sobre caballetes al aire libre",
+      file: "equipo-chasis-al-aire-libre.jpg",
+      position: "50% 40%",
     },
     /** Beside "Qué es Formula SAE". */
     fsae: {
       label: vehiclePhoto,
-      caption: "KR-01, el primer monoplaza del equipo",
-      alt: "El chasis tubular de acero de KR-01 en el taller",
-      file: null,
+      caption: "El chasis de KR-01, el primer monoplaza del equipo",
+      alt: "El chasis tubular de acero de KR-01, pintado de negro, sobre caballetes en el taller",
+      file: "chasis-pintado-frente.jpg",
+      position: "50% 65%",
     },
     /** Three photos before the sponsors, from the workshop to the track. */
     strip: [
@@ -95,8 +97,8 @@ export const media: {
       {
         label: workshopPhoto,
         caption: "El chasis terminado",
-        alt: "El chasis de KR-01 terminado en el taller",
-        file: null,
+        alt: "El chasis de KR-01 terminado y pintado de negro, sobre caballetes en el taller",
+        file: "chasis-pintado-tres-cuartos.jpg",
       },
       {
         label: workshopPhoto,
@@ -106,9 +108,10 @@ export const media: {
       },
       {
         label: workshopPhoto,
-        caption: "Corte y ajuste de los tubos",
-        alt: "Corte y ajuste de los tubos del chasis de KR-01",
-        file: null,
+        caption: "Ajuste de los tubos sobre la mesa",
+        alt: "Tres integrantes del equipo acomodan el arco principal y los tubos del chasis de KR-01 sobre la mesa del taller, de noche",
+        file: "ajuste-de-tubos-en-la-mesa.jpg",
+        position: "50% 30%",
       },
     ],
   },
@@ -146,9 +149,10 @@ export const media: {
     /** Beside the opening of Sponsors: what a company sponsors. */
     team: {
       label: teamPhoto,
-      caption: "El equipo con KR-01",
-      alt: "El equipo de Kinetic Racing junto a KR-01",
-      file: null,
+      caption: "El chasis de KR-01, donde va tu marca",
+      alt: "El chasis tubular de acero de KR-01, pintado de negro, visto desde atrás y de costado sobre caballetes en el taller",
+      file: "chasis-pintado-costado.jpg",
+      position: "50% 8%",
     },
   },
 };
