@@ -7,7 +7,7 @@
 
 ## Contenido
 
-- El contenido se cambia editando solo estos seis archivos de `src/data/`: `site.ts`, `team.ts`, `subsystems.ts`, `sponsors.ts`, `car.ts` y `media.ts`.
+- El contenido se cambia editando solo estos siete archivos de `src/data/`: `site.ts`, `team.ts`, `subsystems.ts`, `sponsors.ts`, `car.ts`, `media.ts` e `instagram.ts`.
 - Ningún componente lleva texto escrito a mano: todo sale de esos archivos.
 - `null` (o una lista vacía) marca un dato pendiente. Nunca se rellena con texto inventado.
 - Un pendiente que el visitante solo mira (una cifra, una foto, un nivel) se muestra con su placeholder. Un pendiente que el visitante tendría que usar, como un canal de contacto, se omite mientras falte: no se muestra en blanco.
@@ -31,6 +31,10 @@
 ## Contacto, Únete y 404
 
 - Instagram es el canal para sumarse al equipo y para consultas generales. Para empresas, Contacto explica que el patrocinio se conversa directamente con el equipo, y lleva a los niveles. El correo aparece ahí cuando exista.
+- Contacto tiene tres bloques: Instagram, los caminos y el formulario. El de Instagram muestra la cuenta: el logo junto al handle, una línea de quiénes somos (`contactPage.channel.bio`), el botón al perfil y las últimas publicaciones (`instagram.ts`). No muestra seguidores ni cantidad de publicaciones: son datos que se quedan viejos al día siguiente.
+- Las publicaciones son fotos guardadas en `src/assets/instagram/` y procesadas por `astro:assets`, cada una con su texto alternativo y el enlace a la publicación. Nada se carga de Instagram: ni el embed oficial, ni widgets de terceros, ni la API de Meta.
+- Se muestran en filas completas de tres, hasta seis, y cargan diferido. Con menos de tres no hay cuadrícula ni placeholder: queda solo el perfil.
+- Contacto no lleva otras fotos: estas son el canal mismo, no decoración. El ícono de Instagram va solo en el botón al perfil, en los colores del sitio.
 - Contacto tiene un camino por motivo en `contactPage.paths` (`site.ts`), cada uno con su ancla: `#patrocinar` y `#unirse`. El botón Aplicar de Únete lleva a `/contacto/#unirse`: al llegar, el camino se marca en azul y el formulario elige ese motivo.
 - El formulario de Contacto no está conectado. Al enviarlo no sale nada de la página, ni siquiera en la URL (`method="dialog"`): avisa que no funciona, ofrece copiar lo escrito y abrir Instagram. Nunca simula un envío. Para conectarlo hay que darle un destino real y sacar el aviso y la etiqueta "Sin conectar" (`contactPage.form`).
 - Mientras no exista un formulario propio para aplicar, `joinPage.meetings.apply` lleva a Contacto.
@@ -60,6 +64,7 @@
 
 - Cada lugar del sitio que lleva una foto o un video es un espacio en `media.ts`, nombrado por página y ubicación (`home.band`, `join.subsystems.design`). Cada espacio tiene su pie (`caption`), su texto alternativo (`alt`) y `file`, que es `null` hasta que exista el archivo.
 - No hay página de galería. Cada foto va junto al texto del que habla.
+- Las publicaciones de Instagram de Contacto no son espacios de `media.ts`: tienen su propio archivo y sus reglas, en la sección de Contacto.
 - Cuatro formas, y ninguna otra: banda a sangre (`PhotoBand.astro`), foto al lado del texto (`PhotoFigure.astro`), tira de tres fotos con pie (`PhotoStrip.astro`) y video con portada (`VideoFeature.astro`). La galería de Fabricación de El carro conserva su diseño y toma sus fotos de `media.car.workshop`.
 - Las fotos van en `src/assets/fotos/` y pasan por `astro:assets`, que genera AVIF y WebP en varios anchos. Si `file` nombra un archivo que no está en la carpeta, el espacio se muestra vacío.
 - Estado vacío: la foto al lado del texto lleva el placeholder etiquetado. La tira de tres no se muestra hasta que sus tres espacios tienen archivo: con una o dos fotos sigue oculta, porque una foto al lado de dos huecos se ve peor que nada, y no deja ningún hueco en la página. La banda y el video no llevan un recuadro punteado: son una hoja de plano, con la retícula, un recorte del render (el lateral en las bandas y el trasero en el video, donde va el motor) y una etiqueta en el ángulo ("FOTO DE EQUIPO · PENDIENTE").

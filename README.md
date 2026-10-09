@@ -25,7 +25,7 @@ npm ci
 
 ```
 src/
-  assets/      imágenes procesadas por astro:assets (logos en sponsors/, fotos en fotos/, videos en video/)
+  assets/      imágenes procesadas por astro:assets (logos en sponsors/, fotos en fotos/, publicaciones en instagram/, videos en video/)
   components/  componentes, uno por archivo
   data/        contenido editable
   layouts/     layout base
@@ -39,7 +39,7 @@ docs/          CONVENCIONES.md
 
 ## Editar el contenido
 
-- Todo el texto y los datos están en `src/data/`: `site.ts`, `team.ts`, `subsystems.ts`, `sponsors.ts`, `car.ts` y `media.ts`.
+- Todo el texto y los datos están en `src/data/`: `site.ts`, `team.ts`, `subsystems.ts`, `sponsors.ts`, `car.ts`, `media.ts` e `instagram.ts`.
 - `null` marca un dato pendiente; el sitio muestra el placeholder o lo omite.
 - Las reglas completas están en `docs/CONVENCIONES.md`.
 
@@ -87,7 +87,21 @@ docs/          CONVENCIONES.md
 | Únete    | `join.subsystems.finance`       | Foto al lado del texto | Finanzas presentando el proyecto                                               |
 | Sponsors | `sponsors.team`                 | Foto al lado del texto | El equipo con KR-01                                                            |
 
-Contacto no lleva fotos.
+Contacto no lleva fotos, salvo las publicaciones de Instagram, que son el canal mismo (ver abajo).
+
+## Agregar o cambiar una publicación de Instagram
+
+Contacto muestra las últimas publicaciones de la cuenta debajo del perfil. Cada una es una foto guardada en el repositorio que lleva a la publicación en Instagram.
+
+1. Copiá la foto de la publicación a `src/assets/instagram/`, con nombre en kebab-case (`2026-10-chasis.jpg`). Usá el original que se subió; si es un carrusel, la primera foto; si es un reel, su portada.
+2. En Instagram, abrí la publicación y copiá su enlace (Compartir → Copiar enlace).
+3. En `src/data/instagram.ts`, agregá la entrada al principio de `instagramPosts`, con el nombre de la foto, el enlace y lo que muestra la foto:
+   `{ file: "2026-10-chasis.jpg", url: "https://www.instagram.com/p/…/", alt: "El chasis de KR-01 en el taller" },`
+4. Para cambiar una publicación, editá su entrada; para sacarla, borrá la entrada y su foto.
+
+- Se muestran las seis primeras de la lista, en filas de tres. Con tres, cuatro o cinco se ven las tres primeras; con menos de tres, solo el perfil.
+- La foto se recorta al cuadrado desde el centro.
+- Una entrada cuya foto no está en la carpeta no se muestra.
 
 ## Agregar un sponsor
 
