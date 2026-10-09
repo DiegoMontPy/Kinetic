@@ -15,6 +15,11 @@ export default defineConfig([
     languageOptions: { globals: globals.node },
   },
   {
+    // The video recorder runs in Node and hands some of its functions to the page it records.
+    files: ["scripts/**/*.mjs"],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
+  },
+  {
     rules: { "no-console": "error" },
   },
 ]);
