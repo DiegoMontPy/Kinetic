@@ -87,7 +87,8 @@ ffmpeg -i original.mov -vf scale=-2:1080 -c:v libx264 -crf 23 -preset slow -c:a 
 - Un logo nunca se edita: no se invierte ni se recolorea. Es la marca del patrocinador.
 - Dos variantes de placa, con igual tamaño, padding y proporción 1:1: clara (`--color-plate`) para logos oscuros y oscura (`--color-plate-dark`) para logos que vienen en blanco. Cada entrada de `sponsors.ts` declara la suya en `plate`.
 - `mix-blend-mode` funde el fondo del logo con la placa: `multiply` en la clara (fondos blancos) y `screen` en la oscura (fondos negros).
-- Lo correcto es pedirle a cada empresa su logo en la variante que haga falta. La placa oscura es el recurso mientras tanto; hoy la usa Grupo Cofiño.
+- Lo correcto es pedirle a cada empresa su logo en la variante que haga falta. La placa oscura es el recurso mientras tanto; hoy la usa Flexiplan.
+- Audi, Flexiplan y Reus Pharma tienen versiones provisionales hasta que lleguen los archivos oficiales. Se hicieron de los archivos que mandó cada empresa (guardados fuera del repositorio, en `../logos-recibidos/`) quitando solo el fondo liso, sin tocar la forma ni los colores: de Audi, la versión de aros negros para la placa clara; de Flexiplan, el logo blanco para la placa oscura; de Reus Pharma, el logo sobre fondo transparente para la placa clara. Cuando llegue el archivo oficial, reemplaza al provisional con el mismo nombre.
 - Pendiente: cuando lleguen los logos definitivos en SVG o en versión blanca, pasar a logos transparentes sobre negro.
 - Niveles: `platinum`, `gold`, `silver`, `bronze` y `provisional`. Mientras todos sean `provisional`, el muro muestra un solo grupo.
 

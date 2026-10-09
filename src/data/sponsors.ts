@@ -26,6 +26,8 @@ export const tiers: { id: SponsorTier; label: string }[] = [
  * No URL is confirmed yet, so no logo links out.
  */
 export const sponsors: Sponsor[] = [
+  // Provisional logo until the official file arrives: the black-rings version, background removed.
+  { name: "Audi", tier: "provisional", logo: "audi.png", plate: "light" },
   {
     name: "Autódromo Internacional El Jabalí",
     tier: "provisional",
@@ -38,9 +40,21 @@ export const sponsors: Sponsor[] = [
     logo: "automovil-club-de-el-salvador.png",
     plate: "light",
   },
-  // Pending: ask for the logo in its dark version; the white one goes on the dark plate meanwhile.
-  { name: "Grupo Cofiño", tier: "provisional", logo: "grupo-cofino.png", plate: "dark" },
+  // Provisional logo until the official file arrives: the white version, background removed.
+  {
+    name: "Flexiplan",
+    tier: "provisional",
+    logo: "flexiplan.png",
+    plate: "dark",
+  },
   { name: "Grupo Infrasal", tier: "provisional", logo: "grupo-infrasal.jpg", plate: "light" },
+  // Provisional logo until the official file arrives: background removed.
+  {
+    name: "Reus Pharma",
+    tier: "provisional",
+    logo: "reus-pharma.png",
+    plate: "light",
+  },
   { name: "Super Repuestos", tier: "provisional", logo: "super-repuestos.png", plate: "light" },
 ];
 

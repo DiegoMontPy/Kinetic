@@ -5,7 +5,7 @@ const files = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
-/** Image for a path relative to src/assets/ ("sponsors/grupo-cofino.png"), or undefined if it is missing. */
+/** Image for a path relative to src/assets/ ("sponsors/grupo-infrasal.jpg"), or undefined if it is missing. */
 export function findAsset(path: string): ImageMetadata | undefined {
   return files[`/src/assets/${path}`]?.default;
 }
