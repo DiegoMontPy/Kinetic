@@ -1,6 +1,7 @@
 ---
 import { site } from "../data/site";
 import { withBase } from "../lib/paths";
+import BrandMark from "./BrandMark.astro";
 
 interface Props {
   showCategory?: boolean;
@@ -10,9 +11,7 @@ const { showCategory = true } = Astro.props;
 ---
 
 <a class="brand" href={withBase("/")}>
-  <span class="monogram" aria-hidden="true">
-    {site.monogram}
-  </span>
+  <BrandMark size={36} />
   <span class="text">
     <span class="name">{site.name}</span>
     {showCategory && <span class="category">{site.category}</span>}
@@ -21,25 +20,12 @@ const { showCategory = true } = Astro.props;
 
 <style>
   .brand {
+    --mark-size: var(--monogram-size);
     display: inline-flex;
     flex: none;
     align-items: center;
     gap: var(--space-3);
     text-decoration: none;
-  }
-
-  .monogram {
-    display: grid;
-    place-items: center;
-    width: var(--monogram-size);
-    height: var(--monogram-size);
-    border-radius: 50%;
-    background: var(--color-accent);
-    color: var(--color-on-accent);
-    font-family: var(--font-heading);
-    font-size: var(--text-xs);
-    font-weight: var(--weight-bold);
-    letter-spacing: var(--tracking-heading);
   }
 
   .text {

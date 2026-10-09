@@ -15,6 +15,12 @@ export interface Link {
 
 export const site = {
   name: "Kinetic Racing",
+  /**
+   * The team logo, inside src/assets/. Every place that shows it reads this one file: the
+   * navigation, the footer and the profile on Contacto.
+   * Until the file exists, the site shows `monogram` in its place.
+   */
+  logo: "brand/kr-logo.png",
   monogram: "KR",
   category: "Formula SAE",
   institution: "Key Institute",

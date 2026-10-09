@@ -1,0 +1,53 @@
+---
+import { Image } from "astro:assets";
+
+import { site } from "../data/site";
+import { findAsset } from "../lib/assets";
+
+interface Props {
+  /** Largest size it is shown at, in CSS pixels. The image is generated for screens up to 3x. */
+  size: number;
+  [data: `data-${string}`]: string | boolean | undefined;
+}
+
+const { size, ...attrs } = Astro.props;
+const logo = findAsset(site.logo);
+---
+
+<!-- Always beside the team's name or handle, which already say who it is: the mark adds no text. -->
+{logo ? (
+  <Image class="mark" src={logo} alt="" width={size} densities={[1, 2, 3]} {...attrs} />
+) : (
+  <span class="mark monogram" aria-hidden="true" {...attrs}>
+    <span class="letters">{site.monogram}</span>
+  </span>
+)}
+
+<style>
+  /* The parent sets the size with --mark-size. */
+  .mark {
+    display: block;
+    flex: none;
+    width: var(--mark-size, var(--monogram-size));
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .monogram {
+    display: grid;
+    place-items: center;
+    container-type: inline-size;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  /* The letters keep their share of the circle at any size. */
+  .letters {
+    font-family: var(--font-heading);
+    font-size: 36cqi;
+    font-weight: var(--weight-bold);
+    line-height: 1;
+    letter-spacing: var(--tracking-heading);
+  }
+</style>
