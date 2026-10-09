@@ -229,9 +229,14 @@ export const contactPage = {
     heading: "Hablemos",
     lead: "Para sumarte al equipo o para cualquier consulta, el canal es Instagram. Los patrocinios se conversan directamente con nosotros.",
   },
+  /** The Instagram block: the profile and its latest posts (instagram.ts). */
   channel: {
     label: "Canal principal",
+    /** Who we are, under the handle. */
+    bio: "Estudiantes de ingeniería que diseñan y construyen KR-01, el primer monoplaza de Formula SAE del Key Institute.",
     note: "Escribinos por mensaje directo.",
+    profileAction: "Ver el perfil",
+    postsLabel: "Últimas publicaciones en Instagram",
     /** Shown only once the team has an email (`email` in team.ts). */
     emailLabel: "Correo",
     placeLabel: "Dónde",

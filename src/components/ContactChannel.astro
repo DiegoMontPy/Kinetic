@@ -1,8 +1,14 @@
 ---
 import { contactPage, pages, site } from "../data/site";
 import { team } from "../data/team";
+import { latestPosts } from "../lib/instagram";
+import BrandMark from "./BrandMark.astro";
+import ButtonLink from "./ButtonLink.astro";
+import InstagramPosts from "./InstagramPosts.astro";
+import KeepTogether from "./KeepTogether.astro";
 
 const { intro, channel } = contactPage;
+const posts = latestPosts();
 ---
 
 <section class="contact" aria-labelledby="page-title">
@@ -19,10 +25,20 @@ const { intro, channel } = contactPage;
         {channel.label} · {site.instagram.label}
       </p>
       <a class="handle" href={site.instagram.url} rel="me">
-        {site.instagram.handle}
+        <BrandMark size={128} />
+        <span class="handle-text">{site.instagram.handle}</span>
       </a>
-      <div class="foot">
-        <p class="note">{channel.note}</p>
+      <div class="profile" data-posts={posts.length > 0 || undefined}>
+        <div class="about">
+          <p class="bio">
+            <KeepTogether text={channel.bio} />
+          </p>
+          <p class="note">{channel.note}</p>
+          <ButtonLink class="profile-link" href={site.instagram.url} icon="instagram">
+            {channel.profileAction}
+          </ButtonLink>
+        </div>
+        {posts.length > 0 && <InstagramPosts label={channel.postsLabel} posts={posts} />}
         <dl class="details">
           {/* The team email only appears once it exists: an unusable channel is left out. */}
           {team.email && (
@@ -63,14 +79,18 @@ const { intro, channel } = contactPage;
     letter-spacing: var(--tracking-display);
   }
 
-  /* The handle is the way in: set at display size, as wide as its block allows on one line. */
   .channel {
     container-type: inline-size;
     display: grid;
     gap: var(--space-4);
   }
 
+  /* The logo and the handle are the way in: display size, as wide as the block allows on one line. */
   .handle {
+    --mark-size: 0.84em;
+    display: flex;
+    align-items: center;
+    gap: 0.18em;
     width: fit-content;
     max-width: 100%;
     font-family: var(--font-heading);
@@ -79,6 +99,10 @@ const { intro, channel } = contactPage;
     line-height: var(--leading-tight);
     letter-spacing: var(--tracking-display);
     white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .handle-text {
     text-decoration-line: underline;
     text-decoration-color: var(--color-accent);
     text-decoration-thickness: 0.06em;
@@ -86,29 +110,38 @@ const { intro, channel } = contactPage;
     transition: color var(--duration-fast) var(--ease-out);
   }
 
-  .handle:hover {
+  .handle:hover .handle-text {
     color: var(--color-accent-hover);
   }
 
-  .foot {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: start;
-    justify-content: space-between;
-    gap: var(--space-6) var(--space-12);
+  .profile {
+    display: grid;
+    gap: var(--space-10);
     margin-top: var(--space-4);
     padding-top: var(--space-6);
     border-top: var(--border-width) solid var(--color-border-strong);
   }
 
-  .note {
+  .about {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: var(--space-4);
+  }
+
+  .bio {
     max-width: var(--measure-narrow);
     font-size: var(--text-md);
+  }
+
+  .note {
+    color: var(--color-text-muted);
   }
 
   .details {
     display: flex;
     flex-wrap: wrap;
+    align-content: start;
     gap: var(--space-4) var(--space-12);
   }
 
@@ -121,6 +154,30 @@ const { intro, channel } = contactPage;
     font-size: var(--text-md);
   }
 
+  /* Beside the posts, the profile and the details share the narrow column. */
+  @media (min-width: 960px) {
+    .profile[data-posts] {
+      grid-template-areas:
+        "about posts"
+        "details posts";
+      grid-template-rows: auto 1fr;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-8) var(--space-12);
+    }
+
+    .profile[data-posts] .about {
+      grid-area: about;
+    }
+
+    .profile[data-posts] :global(.posts) {
+      grid-area: posts;
+    }
+
+    .profile[data-posts] .details {
+      grid-area: details;
+    }
+  }
+
   @media (max-width: 639px) {
     .contact {
       padding-top: var(--space-10);
@@ -128,6 +185,10 @@ const { intro, channel } = contactPage;
 
     .head {
       margin-bottom: var(--space-12);
+    }
+
+    .about :global(.profile-link) {
+      width: 100%;
     }
   }
 </style>

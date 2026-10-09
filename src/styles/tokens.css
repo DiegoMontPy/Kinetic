@@ -112,8 +112,8 @@
   --stage-ratio: 2 / 1;
   /* Sponsors: width of the benefit column in the level table. */
   --row-header: 13rem;
-  /* Contacto: the Instagram handle grows with its block and always stays on one line. */
-  --handle-fit: 10.4cqi;
+  /* Contacto: the logo and the Instagram handle grow with their block and always stay on one line. */
+  --handle-fit: 9.3cqi;
   /* Contacto: the paths sit side by side above this width per path. */
   --path-min: 22rem;
   /* Únete: the opening statement and the first-year answer beside it. */

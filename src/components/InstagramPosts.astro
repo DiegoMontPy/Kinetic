@@ -1,0 +1,76 @@
+---
+import { Picture } from "astro:assets";
+
+import type { ShownPost } from "../lib/instagram";
+
+interface Props {
+  label: string;
+  posts: ShownPost[];
+}
+
+const { label, posts } = Astro.props;
+---
+
+<!-- The latest posts, each one a link to the post on Instagram. -->
+<div class="posts">
+  <p class="caps" id="posts-label">
+    {label}
+  </p>
+  <ul class="grid list-reset" aria-labelledby="posts-label">
+    {posts.map((post) => (
+      <li data-reveal>
+        <a class="post" href={post.url}>
+          <Picture
+            src={post.image}
+            alt={post.alt}
+            formats={["avif", "webp"]}
+            fallbackFormat="webp"
+            widths={[200, 300, 400, 600]}
+            sizes="(min-width: 1188px) 204px, (min-width: 960px) 19vw, 31vw"
+            width={600}
+            height={600}
+            fit="cover"
+            loading="lazy"
+          />
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .posts {
+    display: grid;
+    align-content: start;
+    gap: var(--space-4);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .post {
+    display: block;
+    border-radius: var(--radius-frame);
+  }
+
+  .post :global(img) {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--radius-frame);
+    object-fit: cover;
+  }
+
+  .post:hover {
+    outline: var(--border-width-strong) solid var(--color-accent);
+    outline-offset: calc(-1 * var(--border-width-strong));
+  }
+
+  @media (max-width: 639px) {
+    .grid {
+      gap: var(--space-2);
+    }
+  }
+</style>
