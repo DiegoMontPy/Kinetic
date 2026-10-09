@@ -68,8 +68,12 @@
 - Las publicaciones de Instagram de Contacto no son espacios de `media.ts`: tienen su propio archivo y sus reglas, en la sección de Contacto.
 - Cuatro formas, y ninguna otra: banda a sangre (`PhotoBand.astro`), foto al lado del texto (`PhotoFigure.astro`), tira de tres fotos con pie (`PhotoStrip.astro`) y video con portada (`VideoFeature.astro`). La galería de Fabricación de El carro conserva su diseño y toma sus fotos de `media.car.workshop`.
 - Las fotos van en `src/assets/fotos/` y pasan por `astro:assets`, que genera AVIF y WebP en varios anchos. Si `file` nombra un archivo que no está en la carpeta, el espacio se muestra vacío.
+- Al repositorio entra una copia de cada foto elegida: lado largo de hasta 2400 px, JPG de buena calidad y sin metadatos. El original queda fuera, en `../fotos/`, y las fotos que no se usan no entran.
+- Se puede recortar, enderezar y corregir la exposición, el balance de blancos y la perspectiva, parejo en toda la foto. Nada de filtros ni retoques, y nada que cambie lo que muestra: no se borra ni se agrega nada. Los logos que aparecen en una foto no se tocan, y nunca se agregan logos sobre una foto del carro.
+- Cuando el marco recorta la foto, `position` (en el espacio de `media.ts`, como `object-position` de CSS) elige qué parte queda a la vista. Sin él, el recorte es centrado.
+- Un espacio sin una foto que hable de su texto queda vacío: no se rellena con una foto de otra cosa.
 - Estado vacío: la foto al lado del texto lleva el placeholder etiquetado. La tira de tres no se muestra hasta que sus tres espacios tienen archivo: con una o dos fotos sigue oculta, porque una foto al lado de dos huecos se ve peor que nada, y no deja ningún hueco en la página. La banda y el video no llevan un recuadro punteado: son una hoja de plano, con la retícula, un recorte del render (el lateral en las bandas y el trasero en el video, donde va el motor) y una etiqueta en el ángulo ("FOTO DE EQUIPO · PENDIENTE").
-- Todas las fotos cargan diferido, salvo la de Sponsors, que está en la primera pantalla. Inicio no suma nada a su primera pantalla: el LCP sigue siendo el render del hero.
+- Todas las fotos cargan diferido, salvo la de Sponsors, que está en la primera pantalla. Inicio solo suma a su primera pantalla la fila de logos: el LCP sigue siendo el render del hero.
 - Los videos se sirven desde el propio sitio, en `src/assets/video/`. Ninguno se embebe de otro servicio: el sitio no hace ninguna petición externa.
 - Formato del video: MP4 con H.264 y audio AAC, 16:9, hasta 1920×1080, con `faststart` para que empiece a reproducirse antes de terminar de bajar. Tope: 25 MB por archivo (GitHub avisa desde 50 MB y rechaza más de 100 MB). Si pasa del tope, recortalo o bajalo a 720p (`scale=-2:720`).
 
@@ -86,13 +90,24 @@ ffmpeg -i original.mov -vf scale=-2:1080 -c:v libx264 -crf 23 -preset slow -c:a 
 - Formato preferido: SVG. Alternativa: PNG con fondo transparente.
 - Nombre en kebab-case con el nombre de la empresa (`grupo-infrasal.svg`), sin márgenes vacíos alrededor del logo.
 - Un logo nunca se edita: no se invierte ni se recolorea. Es la marca del patrocinador.
-- Dos variantes de placa, con igual tamaño, padding y proporción 1:1: clara (`--color-plate`) para logos oscuros y oscura (`--color-plate-dark`) para logos que vienen en blanco. Cada entrada de `sponsors.ts` declara la suya en `plate`.
+- Dos variantes de placa, con igual tamaño y padding: clara (`--color-plate`) para logos oscuros y oscura (`--color-plate-dark`) para logos que vienen en blanco. Cada entrada de `sponsors.ts` declara la suya en `plate`. En el muro las placas son cuadradas; en las filas de logos, apaisadas (2:1).
+- El muro está en Inicio y en Sponsors. Mientras todos los sponsors sean `provisional`, sus placas son más grandes (`--plate-provisional`): cuatro por fila a 1440.
+- Inicio muestra una fila de logos bajo la portada (`SponsorStrip.astro`). En pantallas anchas la portada se acorta lo que mide la fila (`--supporters-lead-height`) y el lema se ajusta también al alto de la pantalla (`--hero-motto-max`), así los logos entran en la primera pantalla. El pie repite la fila en todas las páginas salvo Inicio y Sponsors, que ya terminan con el muro (`footerSponsors` en `BaseLayout.astro`). Las filas solo muestran los logos que tienen archivo, nunca un placeholder.
 - `mix-blend-mode` funde el fondo del logo con la placa: `multiply` en la clara (fondos blancos) y `screen` en la oscura (fondos negros).
 - Un logo con fondo transparente lleva `transparent: true` en `sponsors.ts` y no se funde con la placa: se ve con sus colores exactos. Todos los logos se muestran siempre a color y con opacidad completa.
 - Lo correcto es pedirle a cada empresa su logo en la variante que haga falta. La placa oscura es el recurso mientras tanto; hoy la usa Flexiplan.
 - Audi, Flexiplan y Reus Pharma tienen versiones provisionales hasta que lleguen los archivos oficiales. Se hicieron de los archivos que mandó cada empresa (guardados fuera del repositorio, en `../logos-recibidos/`) quitando solo el fondo liso, sin tocar la forma ni los colores: de Audi, la versión de aros negros para la placa clara; de Flexiplan, el logo blanco para la placa oscura; de Reus Pharma, el logo sobre fondo transparente para la placa clara. Cuando llegue el archivo oficial, reemplaza al provisional con el mismo nombre.
 - Pendiente: cuando lleguen los logos definitivos en SVG o en versión blanca, pasar a logos transparentes sobre negro.
 - Niveles: `platinum`, `gold`, `silver`, `bronze` y `provisional`. Mientras todos sean `provisional`, el muro muestra un solo grupo.
+
+## Video demo
+
+- Se graba con `scripts/video/record.mjs` sobre el sitio publicado: un recorrido por Inicio, El carro y Sponsors para proyectar de fondo, sin sonido. Cómo regenerarlo está en el README.
+- Muestra las páginas tal como son: el sitio no tiene modo demo. El script controla el reloj de la página (animaciones, revelado y contadores) y la captura cuadro por cuadro, así el scroll es parejo y las animaciones de entrada se ven como en el navegador.
+- Se detiene en la portada, en el chasis pintado de Sponsors y en el muro de logos. Sin cursor, sin barra de scroll y sin nada pendiente a la vista: los tramos con algo pendiente se saltan con un fundido, y si aparece uno el script se corta.
+- Hace loop: el muro se funde con la portada todavía vacía, que se arma cuando el video vuelve a empezar.
+- Dura entre 60 y 90 segundos. MP4 H.264 a 30 fps, sin audio, en 3840×2160 y en 1920×1080, en `../video-demo/`, fuera del repositorio.
+- Sus dependencias (`playwright-core` y `ffmpeg-static`) están en `scripts/video/package.json`, aparte de las del sitio: el `npm ci` del build y del CI no las instala.
 
 ## Renders del chasis
 

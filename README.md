@@ -33,7 +33,7 @@ src/
   pages/       rutas del sitio
   styles/      tokens.css y global.css
 public/        favicon y fuentes
-scripts/       generación de renders con Blender
+scripts/       renders con Blender y el video demo (video/, con sus propias dependencias)
 docs/          CONVENCIONES.md
 ```
 
@@ -62,9 +62,12 @@ docs/          CONVENCIONES.md
 
 ## Agregar una foto
 
-1. Copiá la foto a `src/assets/fotos/`, con nombre en kebab-case (`equipo-taller.jpg`). Usá el original más grande que tengas: el sitio genera los tamaños.
+1. Dejá el original fuera del repositorio, en `../fotos/`. Al repositorio entra una copia en `src/assets/fotos/`: lado largo de hasta 2400 px, JPG de buena calidad, sin metadatos (las fotos del celular guardan la ubicación) y con nombre en kebab-case (`equipo-taller.jpg`). El sitio genera los tamaños.
 2. En `src/data/media.ts`, buscá el espacio de la tabla de abajo y poné el nombre en `file`: `file: "equipo-taller.jpg"`.
-3. Si la foto muestra algo distinto de lo que pide el espacio, corregí `alt` y, si hace falta, `caption`.
+3. Si el marco recorta la foto (las bandas son apaisadas y la foto al lado del texto es 16:9), elegí qué parte queda a la vista con `position`, como en CSS: `position: "50% 30%"` sube el encuadre.
+4. Escribí `caption` y `alt` según lo que se ve en la foto, aunque el espacio pida otra cosa.
+
+Se puede recortar, enderezar y corregir la exposición, el balance de blancos y la perspectiva. Nada que cambie lo que muestra la foto; las reglas completas están en `docs/CONVENCIONES.md`.
 
 ## Agregar un video
 
@@ -76,16 +79,16 @@ docs/          CONVENCIONES.md
 
 | Página   | Espacio en `media.ts`           | Forma                  | Qué va                                                                         |
 | -------- | ------------------------------- | ---------------------- | ------------------------------------------------------------------------------ |
-| Inicio   | `home.band`                     | Banda a sangre         | El equipo trabajando en el taller                                              |
+| Inicio   | `home.band`                     | Banda a sangre         | El equipo trabajando en el chasis o en el taller                               |
 | Inicio   | `home.fsae`                     | Foto al lado del texto | El chasis o el carro, en "Qué es Formula SAE"                                  |
 | Inicio   | `home.strip` (tres)             | Tira de tres fotos     | El equipo completo, el taller y el chasis. Aparece cuando están las tres fotos |
-| El carro | `car.video`                     | Video con portada      | KR-01 con el motor montado y encendido                                         |
-| El carro | `car.workshop` (tres)           | Galería de Fabricación | El chasis terminado, la soldadura y el corte                                   |
+| El carro | `car.video`                     | Video con portada      | El primer encendido del motor, en pruebas de montaje                           |
+| El carro | `car.workshop` (tres)           | Galería de Fabricación | El chasis terminado, la soldadura y el ajuste de los tubos                     |
 | Únete    | `join.band`                     | Banda a sangre         | El equipo completo                                                             |
 | Únete    | `join.subsystems.manufacturing` | Foto al lado del texto | Manufactura soldando o cortando                                                |
 | Únete    | `join.subsystems.design`        | Foto al lado del texto | Diseño frente al CAD                                                           |
 | Únete    | `join.subsystems.finance`       | Foto al lado del texto | Finanzas presentando el proyecto                                               |
-| Sponsors | `sponsors.team`                 | Foto al lado del texto | El equipo con KR-01                                                            |
+| Sponsors | `sponsors.team`                 | Foto al lado del texto | El chasis o el carro, donde va la marca del sponsor                            |
 
 Contacto no lleva fotos, salvo las publicaciones de Instagram, que son el canal mismo (ver abajo).
 
@@ -108,7 +111,23 @@ Contacto muestra las últimas publicaciones de la cuenta debajo del perfil. Cada
 - Copiá el logo a `src/assets/sponsors/`: SVG, o PNG con fondo transparente, con nombre en kebab-case.
 - Agregá una entrada en `src/data/sponsors.ts` con `name`, `tier`, `logo`, `plate` y, si existe, `url`.
 - `plate` es `"light"` para un logo oscuro y `"dark"` para uno que viene en blanco. El archivo del logo no se edita.
-- Si el archivo del logo no está, el sitio muestra un placeholder en su lugar.
+- Si el logo tiene fondo transparente, agregá `transparent: true`: no se funde con la placa y se ve con sus colores exactos.
+- Si una empresa manda el logo con fondo o en una lámina con varias versiones, guardá lo que mandó en `../logos-recibidos/` y usá una versión de trabajo que solo quite el fondo liso. Anotala como provisional en `docs/CONVENCIONES.md` hasta que llegue el archivo oficial.
+- Si el archivo del logo no está, el muro muestra un placeholder en su lugar.
+- Los logos se ven siempre a color: en el muro de Inicio y Sponsors, en la fila bajo la portada de Inicio y en el pie del resto de las páginas. Las filas solo muestran los logos que tienen archivo.
+
+## Video demo
+
+El video que se proyecta de fondo en los eventos se graba con un script sobre el sitio publicado: un recorrido sin sonido por Inicio, El carro y Sponsors, que hace loop.
+
+1. Instalá sus dependencias, que van aparte de las del sitio y no entran en el build ni en el CI: `npm --prefix scripts/video ci`.
+2. Grabá primero un tramo corto para revisarlo: `node scripts/video/record.mjs --test` deja `../video-demo/kinetic-demo-prueba.mp4`.
+3. Grabá el video completo: `node scripts/video/record.mjs` deja `../video-demo/kinetic-demo-4k.mp4` y `kinetic-demo-1080p.mp4`. Tarda entre 30 y 40 minutos.
+
+- Usa el Google Chrome instalado en la computadora; con `--chrome <ruta>` se elige otro. Con `--site <url>` se graba otra dirección, por ejemplo la de `npm run preview`.
+- El recorrido está en `shots`, al principio de `scripts/video/record.mjs`: por página, a qué parte va y cuántos segundos se queda.
+- Si un tramo muestra algo pendiente (una etiqueta "Por definir", un placeholder o una banda vacía), la grabación se corta y dice dónde. Ajustá el recorrido para saltarlo.
+- Tiene que durar entre 60 y 90 segundos; si no, el script avisa.
 
 ## Build
 
