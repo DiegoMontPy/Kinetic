@@ -16,7 +16,12 @@ const Plate = sponsor.url ? "a" : "div";
 ---
 
 {logo ? (
-  <Plate class="plate" href={sponsor.url} data-plate={sponsor.plate}>
+  <Plate
+    class="plate"
+    href={sponsor.url}
+    data-plate={sponsor.plate}
+    data-transparent={sponsor.transparent || undefined}
+  >
     <Image
       src={logo}
       alt={sponsor.name}
@@ -46,17 +51,13 @@ const Plate = sponsor.url ? "a" : "div";
     isolation: isolate;
   }
 
-  /* Multiply turns white logo backgrounds into the plate color, so every logo sits flush. */
+  /* The logo always shows in its own colors, at full opacity. Multiply turns a white logo background
+     into the plate color. */
   .plate :global(img) {
     width: 100%;
     height: 100%;
     object-fit: contain;
     mix-blend-mode: multiply;
-    filter: grayscale(1);
-    opacity: var(--logo-rest-opacity);
-    transition:
-      filter var(--duration-fast) var(--ease-out),
-      opacity var(--duration-fast) var(--ease-out);
   }
 
   /* Dark plate for logos that come in white: screen turns their black background into the plate. */
@@ -68,16 +69,8 @@ const Plate = sponsor.url ? "a" : "div";
     mix-blend-mode: screen;
   }
 
-  .plate:hover :global(img),
-  .plate:focus-visible :global(img) {
-    filter: none;
-    opacity: 1;
-  }
-
-  @media (hover: none) {
-    .plate :global(img) {
-      filter: none;
-      opacity: 1;
-    }
+  /* A logo without a background has nothing to blend: it keeps its exact colors on either plate. */
+  .plate[data-transparent] :global(img) {
+    mix-blend-mode: normal;
   }
 </style>

@@ -9,6 +9,8 @@ export interface Sponsor {
   /** File name inside src/assets/sponsors/. */
   logo: string;
   plate: PlateVariant;
+  /** The file has a transparent background, so it is not blended with the plate and keeps its colors. */
+  transparent?: boolean;
   url?: string;
 }
 
@@ -27,7 +29,7 @@ export const tiers: { id: SponsorTier; label: string }[] = [
  */
 export const sponsors: Sponsor[] = [
   // Provisional logo until the official file arrives: the black-rings version, background removed.
-  { name: "Audi", tier: "provisional", logo: "audi.png", plate: "light" },
+  { name: "Audi", tier: "provisional", logo: "audi.png", plate: "light", transparent: true },
   {
     name: "Autódromo Internacional El Jabalí",
     tier: "provisional",
@@ -39,6 +41,7 @@ export const sponsors: Sponsor[] = [
     tier: "provisional",
     logo: "automovil-club-de-el-salvador.png",
     plate: "light",
+    transparent: true,
   },
   // Provisional logo until the official file arrives: the white version, background removed.
   {
@@ -46,6 +49,7 @@ export const sponsors: Sponsor[] = [
     tier: "provisional",
     logo: "flexiplan.png",
     plate: "dark",
+    transparent: true,
   },
   { name: "Grupo Infrasal", tier: "provisional", logo: "grupo-infrasal.jpg", plate: "light" },
   // Provisional logo until the official file arrives: background removed.
@@ -54,6 +58,7 @@ export const sponsors: Sponsor[] = [
     tier: "provisional",
     logo: "reus-pharma.png",
     plate: "light",
+    transparent: true,
   },
   { name: "Super Repuestos", tier: "provisional", logo: "super-repuestos.png", plate: "light" },
 ];
