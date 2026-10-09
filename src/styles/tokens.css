@@ -93,7 +93,12 @@
   --nav-height: 68px;
   --nav-row: 48px;
   --tap-min: 44px;
-  --hero-min-height: calc(100svh - var(--nav-height));
+  --first-screen: calc(100svh - var(--nav-height));
+  /* Inicio: the motto also follows the screen height, so short laptop screens keep the logos in view. */
+  --hero-motto-max: 15svh;
+  /* Inicio: the row of sponsor logos under the hero, kept inside the first screen on wide screens. */
+  --supporters-lead-height: 7rem;
+  --hero-min-height: calc(var(--first-screen) - var(--supporters-lead-height));
   /* Wide enough to bleed off the right edge, short enough to keep the chassis inside the hero. */
   --hero-visual-width: min(92vw, 1.5 * var(--hero-min-height));
   /* Share of the render pushed past the right edge of the viewport. */
@@ -150,6 +155,12 @@
   --plate-silver: 128px;
   --plate-bronze: 96px;
   --plate-inset: 16%;
+  /* Rows of logos under the hero and in the footer: wide plates, smallest width before they wrap. */
+  --supporters-ratio: 2 / 1;
+  --supporters-inset: 6% 12%;
+  --supporters-min: 4.5rem;
+  --supporters-footer-max: 8.5rem;
+  --supporters-label: 10rem;
   /* Logo size on the car per level: the box stands for the space, the fill for the logo. */
   --logo-mark-box: 56px;
   --logo-mark-sm: 32%;
@@ -169,6 +180,13 @@
   --z-panel: 90;
   --z-nav: 100;
   --z-skip: 200;
+}
+
+/* Below 960px the hero stacks and runs past the first screen: the row of logos simply follows it. */
+@media (max-width: 959px) {
+  :root {
+    --supporters-lead-height: 0px;
+  }
 }
 
 @media (max-width: 639px) {

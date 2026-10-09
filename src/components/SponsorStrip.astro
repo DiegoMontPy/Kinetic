@@ -1,0 +1,92 @@
+---
+import { sponsorSection } from "../data/sponsors";
+import { sponsorsWithLogo } from "../lib/sponsors";
+import SponsorPlate from "./SponsorPlate.astro";
+
+interface Props {
+  /** "lead": under the hero of Inicio, inside the first screen. "footer": in the footer of every page. */
+  variant: "lead" | "footer";
+}
+
+const { variant } = Astro.props;
+const shown = sponsorsWithLogo();
+const titleId = `supporters-${variant}`;
+const sizes =
+  variant === "lead" ? "(max-width: 639px) 18vw, 120px" : "(max-width: 639px) 18vw, 100px";
+---
+
+<!-- One row of logos, the same plates as the wall: the sponsors in view without reaching the wall. -->
+{shown.length > 0 && (
+  <section class="supporters" data-variant={variant} aria-labelledby={titleId}>
+    <div class:list={[{ container: variant === "lead" }, "inner"]}>
+      <p class="caps title" id={titleId}>
+        {sponsorSection.heading}
+      </p>
+      <ul class="row list-reset">
+        {shown.map((sponsor) => (
+          <li>
+            <SponsorPlate sponsor={sponsor} sizes={sizes} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .supporters {
+    --plate-ratio: var(--supporters-ratio);
+    --plate-padding: var(--supporters-inset);
+  }
+
+  .inner {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--supporters-min), 1fr));
+    gap: var(--space-3);
+  }
+
+  /* Under the hero: a hairline above, centered in the height the hero leaves for it. */
+  .supporters[data-variant="lead"] {
+    display: grid;
+    align-content: center;
+    min-height: var(--supporters-lead-height);
+    padding-block: var(--space-6);
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  /* In the footer the plates keep a modest size and line up from the left. */
+  .supporters[data-variant="footer"] .row {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(var(--supporters-min), var(--supporters-footer-max))
+    );
+  }
+
+  .title {
+    color: var(--color-text-subtle);
+  }
+
+  /* Wide screens: the label beside the row, so the whole strip stays low. */
+  @media (min-width: 960px) {
+    .supporters[data-variant="lead"] .inner {
+      grid-template-columns: var(--supporters-label) minmax(0, 1fr);
+      align-items: center;
+      gap: var(--space-6);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .row {
+      gap: var(--space-2);
+    }
+
+    .supporters[data-variant="footer"] .row {
+      grid-template-columns: repeat(auto-fill, minmax(var(--supporters-min), 1fr));
+    }
+  }
+</style>

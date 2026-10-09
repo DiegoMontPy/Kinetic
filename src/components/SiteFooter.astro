@@ -2,7 +2,14 @@
 import { footer, navigation, site } from "../data/site";
 import { withBase } from "../lib/paths";
 import Brand from "./Brand.astro";
+import SponsorStrip from "./SponsorStrip.astro";
 
+interface Props {
+  /** The row of sponsor logos, left out where the page already ends with the wall. */
+  sponsors?: boolean;
+}
+
+const { sponsors = true } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
@@ -49,6 +56,11 @@ const year = new Date().getFullYear();
         </ul>
       </div>
     </div>
+    {sponsors && (
+      <div class="supporters">
+        <SponsorStrip variant="footer" />
+      </div>
+    )}
     <div class="legal">
       <p>{footer.copyright(year)}</p>
       <p class="caps" lang="en">
@@ -110,6 +122,12 @@ const year = new Date().getFullYear();
 
   .handle {
     color: var(--color-text-subtle);
+  }
+
+  .supporters {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: var(--border-width) solid var(--color-border);
   }
 
   .legal {

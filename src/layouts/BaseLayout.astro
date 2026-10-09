@@ -17,9 +17,11 @@ interface Props {
   description: string;
   /** For pages without an address of their own, such as the 404: kept out of search and canonical. */
   noindex?: boolean;
+  /** False on pages that already end with the sponsor wall, right above the footer. */
+  footerSponsors?: boolean;
 }
 
-const { title, description, noindex = false } = Astro.props;
+const { title, description, noindex = false, footerSponsors = true } = Astro.props;
 const canonical = noindex ? undefined : new URL(Astro.url.pathname, Astro.site);
 
 // The side view keeps the whole chassis inside the 1.91:1 crop social networks use.
@@ -94,7 +96,7 @@ const ogImageUrl = ogImage && new URL(ogImage.src, Astro.site).href;
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <SiteFooter />
+    <SiteFooter sponsors={footerSponsors} />
   </body>
 </html>
 

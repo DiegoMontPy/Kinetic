@@ -5,14 +5,16 @@ import KeyFigures from "../components/KeyFigures.astro";
 import PhotoBand from "../components/PhotoBand.astro";
 import PhotoStrip from "../components/PhotoStrip.astro";
 import ProjectStatus from "../components/ProjectStatus.astro";
+import SponsorStrip from "../components/SponsorStrip.astro";
 import SponsorWall from "../components/SponsorWall.astro";
 import { media } from "../data/media";
 import { home, pages } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title={pages.home.title} description={pages.home.description}>
+<BaseLayout title={pages.home.title} description={pages.home.description} footerSponsors={false}>
   <HomeHero />
+  <SponsorStrip variant="lead" />
   <ProjectStatus />
   <KeyFigures />
   <PhotoBand photo={media.home.band} />
