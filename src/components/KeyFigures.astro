@@ -13,7 +13,7 @@ const figures: { label: string; value: number | string }[] = [
 ];
 ---
 
-<section class="band" aria-labelledby="figures-title">
+<section class="band" aria-labelledby="figures-title" data-glow="low-left">
   <h2 id="figures-title" class="visually-hidden">
     {home.figures.heading}
   </h2>
@@ -39,7 +39,6 @@ const figures: { label: string; value: number | string }[] = [
   .band {
     container-type: inline-size;
     border-top: var(--border-width) solid var(--color-border);
-    background: var(--color-bg);
   }
 
   /* Columns never shrink below their figure, and share whatever width is left. */

@@ -18,7 +18,7 @@ const visual = [render, wireframe]
   .find((image): image is { alt: string; src: ImageMetadata } => image.src !== undefined);
 ---
 
-<section class="hero" aria-labelledby="hero-title">
+<section class="hero" aria-labelledby="hero-title" data-glow="hero">
   <div class="container copy">
     <p class="caps label eyebrow">{hero.eyebrow}</p>
     <h1 id="hero-title" class="motto" lang="en">
@@ -65,7 +65,6 @@ const visual = [render, wireframe]
     align-items: center;
     min-height: var(--hero-min-height);
     padding-block: var(--space-12);
-    overflow: clip;
     container-type: inline-size;
   }
 
@@ -108,10 +107,12 @@ const visual = [render, wireframe]
     margin-top: var(--space-8);
   }
 
+  /* The figure crops the render, not the hero, so the light behind it can run on below the hero. */
   .visual {
     position: absolute;
     inset: 0;
     margin: 0;
+    overflow: clip;
   }
 
   /* Anchored to the viewport edge, not the container, so the chassis is cut by the frame. */
