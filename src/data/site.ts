@@ -31,7 +31,8 @@ export const site = {
     performance: "Driven by passion. Built for performance.",
   },
   locale: "es_SV",
-  themeColor: "#000000",
+  /** The base black, --color-bg in src/styles/tokens.css: browser bar and social image background. */
+  themeColor: "#00040a",
   instagram: {
     label: "Instagram",
     handle: "@kineticracing.key",

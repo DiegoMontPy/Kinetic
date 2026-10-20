@@ -230,6 +230,143 @@ button {
   );
 }
 
+/* Light: a beam of the accent that enters on a diagonal and fades into the black, as on the team's
+   Instagram posts. A section opts in with data-glow. The beam leaves --glow-source towards
+   --glow-direction, --glow-spread wide, brightest in the middle and with a bell-shaped profile so no edge
+   or ridge shows. It fades with distance by --glow-reach and to nothing at the top and bottom of its box,
+   which can run past the section by --glow-top and --glow-bottom. It sits in the page's bottom layer,
+   under every section: no section paints an opaque background over it. One gradient and CSS masks only,
+   so it costs the first paint next to nothing. */
+[data-glow] {
+  position: relative;
+}
+
+[data-glow]::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--glow-top, 0px)) 0 calc(-1 * var(--glow-bottom, 0px));
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--glow-strength, var(--glow-strong));
+  background: conic-gradient(
+    from calc(var(--glow-direction) - var(--glow-spread) / 2) at var(--glow-source),
+    transparent,
+    color-mix(in srgb, var(--color-glow) 1%, transparent) calc(var(--glow-spread) * 0.05),
+    color-mix(in srgb, var(--color-glow) 5%, transparent) calc(var(--glow-spread) * 0.1),
+    color-mix(in srgb, var(--color-glow) 11%, transparent) calc(var(--glow-spread) * 0.15),
+    color-mix(in srgb, var(--color-glow) 19%, transparent) calc(var(--glow-spread) * 0.2),
+    color-mix(in srgb, var(--color-glow) 27%, transparent) calc(var(--glow-spread) * 0.25),
+    color-mix(in srgb, var(--color-glow) 42%, transparent) calc(var(--glow-spread) * 0.3),
+    color-mix(in srgb, var(--color-glow) 63%, transparent) calc(var(--glow-spread) * 0.35),
+    color-mix(in srgb, var(--color-glow) 83%, transparent) calc(var(--glow-spread) * 0.4),
+    color-mix(in srgb, var(--color-glow) 96%, transparent) calc(var(--glow-spread) * 0.45),
+    var(--color-glow) calc(var(--glow-spread) * 0.5),
+    color-mix(in srgb, var(--color-glow) 96%, transparent) calc(var(--glow-spread) * 0.55),
+    color-mix(in srgb, var(--color-glow) 83%, transparent) calc(var(--glow-spread) * 0.6),
+    color-mix(in srgb, var(--color-glow) 63%, transparent) calc(var(--glow-spread) * 0.65),
+    color-mix(in srgb, var(--color-glow) 42%, transparent) calc(var(--glow-spread) * 0.7),
+    color-mix(in srgb, var(--color-glow) 27%, transparent) calc(var(--glow-spread) * 0.75),
+    color-mix(in srgb, var(--color-glow) 19%, transparent) calc(var(--glow-spread) * 0.8),
+    color-mix(in srgb, var(--color-glow) 11%, transparent) calc(var(--glow-spread) * 0.85),
+    color-mix(in srgb, var(--color-glow) 5%, transparent) calc(var(--glow-spread) * 0.9),
+    color-mix(in srgb, var(--color-glow) 1%, transparent) calc(var(--glow-spread) * 0.95),
+    transparent var(--glow-spread)
+  );
+  mask-image:
+    var(--dither-fine), var(--dither-coarse),
+    radial-gradient(
+      circle at var(--glow-source),
+      black,
+      rgb(0 0 0 / 0.8) calc(var(--glow-reach) * 0.35),
+      rgb(0 0 0 / 0.35) calc(var(--glow-reach) * 0.7),
+      transparent var(--glow-reach)
+    ),
+    linear-gradient(
+      transparent,
+      black var(--glow-fade, 4rem),
+      black calc(100% - var(--glow-fade, 4rem)),
+      transparent
+    );
+  mask-size:
+    var(--dither-fine-size) var(--dither-fine-size),
+    var(--dither-coarse-size) var(--dither-coarse-size),
+    100% 100%,
+    100% 100%;
+  mask-composite: intersect;
+}
+
+/* Inicio, the hero: from the upper right, down onto the chassis, like a studio light. The side of the
+   text stays dark. It runs on under the row of logos and fades before Estado del proyecto. */
+[data-glow="hero"] {
+  --glow-bottom: 16rem;
+  --glow-fade: 10rem;
+  --glow-source: 96% -12%;
+  --glow-direction: 215deg;
+  --glow-spread: 84deg;
+  --glow-reach: 1400px;
+}
+
+/* Every other page opens like Inicio: the light falls from the upper right, behind the title block and
+   the first image, and fades out inside the opening itself: the next section may be a photo band or
+   the footer, which paint over it. */
+[data-glow="opening"] {
+  --glow-fade: 10rem;
+  --glow-source: 96% -12%;
+  --glow-direction: 215deg;
+  --glow-spread: 84deg;
+  --glow-reach: 1300px;
+}
+
+/* A low, soft light from the left, after a stretch of reading: the figures on Inicio, the archive on
+   El carro and the meetings on Únete. */
+[data-glow="low-left"] {
+  --glow-strength: var(--glow-soft);
+  --glow-top: 8rem;
+  --glow-fade: 6rem;
+  --glow-source: -8% 100%;
+  --glow-direction: 60deg;
+  --glow-spread: 100deg;
+  --glow-reach: 1100px;
+}
+
+/* Sponsor wall: from the lower right, rising behind the plates towards the heading. After the hero's
+   light from above and the figures' from the left, it comes back from the other side and low. */
+[data-glow="wall"] {
+  --glow-top: 10rem;
+  --glow-fade: 8rem;
+  --glow-source: 104% 82%;
+  --glow-direction: 302deg;
+  --glow-spread: 100deg;
+  --glow-reach: 1700px;
+}
+
+/* Below 960px the hero stacks with the chassis on top: the light falls from the upper right onto the
+   render and fades before the motto. The page openings follow it. */
+@media (max-width: 959px) {
+  [data-glow="hero"] {
+    --glow-bottom: 0px;
+    --glow-fade: 4rem;
+    --glow-source: 100% -6%;
+    --glow-direction: 218deg;
+    --glow-reach: 760px;
+  }
+
+  [data-glow="opening"] {
+    --glow-bottom: 0px;
+    --glow-fade: 4rem;
+    --glow-source: 100% -6%;
+    --glow-direction: 218deg;
+    --glow-reach: 760px;
+  }
+
+  /* The heading sits at the top of the stacked wall: the light rises from beside the lower plates. */
+  [data-glow="wall"] {
+    --glow-source: 106% 74%;
+    --glow-direction: 312deg;
+    --glow-reach: 1000px;
+  }
+}
+
 /* Scroll reveal. Hidden only once the inline script has set the flag on <html>. */
 [data-reveal] {
   transition:

@@ -8,7 +8,9 @@
   color-scheme: dark;
 
   /* Color */
-  --color-bg: #000000;
+  /* Base black, with a trace of the accent so the light fades into it without changing hue.
+     theme-color in src/data/site.ts repeats it. */
+  --color-bg: #00040a;
   --color-surface: #0b0f14;
   --color-surface-alt: #141c25;
   --color-accent: #006dff;
@@ -27,10 +29,24 @@
   --color-placeholder-fill: rgb(154 160 172 / 0.12);
   --color-grid-line: rgb(143 190 255 / 0.08);
   --color-grid-line-minor: rgb(143 190 255 / 0.035);
-  --color-nav-bg: rgb(0 0 0 / 0.82);
+  --color-nav-bg: color-mix(in srgb, var(--color-bg) 82%, transparent);
   --color-on-accent-line: rgb(255 255 255 / 0.5);
   /* Lines around form fields: 3:1 against the background, so every field reads as one. */
   --color-field-line: #5d6470;
+
+  /* Light: the accent darkened towards the base black, so there is still one blue. This is the beam at
+     its brightest; it fades from here into the black. Subtle text keeps AA up to 27% of the accent, so
+     this 40% only falls where no small text sits. */
+  --color-glow: color-mix(in srgb, var(--color-accent) 40%, var(--color-bg));
+  /* How much of the light reaches each section. */
+  --glow-strong: 1;
+  --glow-soft: 0.5;
+  /* Dither in the light, so long dark gradients do not show steps on large screens and projectors: two
+     fine checkerboards, made in CSS, that dim the light by up to 6%. The black stays black. */
+  --dither-fine: repeating-conic-gradient(black 0 25%, rgb(0 0 0 / 0.96) 0 50%);
+  --dither-coarse: repeating-conic-gradient(black 0 25%, rgb(0 0 0 / 0.98) 0 50%);
+  --dither-fine-size: 2px;
+  --dither-coarse-size: 4px;
 
   /* Typography */
   --font-heading: "Lexend", "Lexend Fallback", system-ui, sans-serif;
