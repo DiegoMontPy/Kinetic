@@ -53,6 +53,22 @@
 - Un valor pendiente dentro de un texto, una ficha o una tabla usa `PendingTag.astro`, la versión en línea del mismo borde punteado. Una cifra que no existe nunca se muestra como cero.
 - Los campos de formulario se delimitan con `--color-field-line`, que llega a 3:1 contra el fondo. Las líneas de `--color-border` no alcanzan para marcar dónde se escribe.
 
+## Fondo
+
+- El fondo es el negro base (`--color-bg`, `#00040a`) con luz azul que entra en diagonal, como en las publicaciones de Instagram del equipo. `theme-color` (`themeColor` en `site.ts`) repite el negro base: si cambia uno, cambia el otro.
+- La luz es el acento oscurecido hacia el negro (`--color-glow`, el 40 % de `--color-accent`): sigue habiendo un solo azul. La intensidad va en `--glow-strong` y `--glow-soft`. Ningún componente escribe un color de fondo ni de luz.
+- Una sección pide luz con `data-glow`. La forma de cada luz (de dónde sale, hacia dónde va, qué ancho tiene, hasta dónde llega y cuánto pasa a las secciones vecinas) está en `global.css`, una variante por nombre:
+  - `hero`: la portada de Inicio. Fuerte, cae desde arriba a la derecha sobre el chasis y se apaga dentro de Estado del proyecto.
+  - `opening`: la apertura de El carro, Sponsors, Únete, Contacto y la 404. La misma luz que la portada, apagada dentro de la propia apertura.
+  - `low-left`: suave y baja, desde la izquierda, después de un tramo de lectura: las cifras de Inicio, el archivo de El carro y las reuniones de Únete.
+  - `wall`: el muro de sponsors, en Inicio y en Sponsors. Fuerte, sube desde abajo a la derecha por detrás de las placas.
+- Dónde va: fuerte en la apertura de cada página y en el muro; suave en un cierre; ninguna en las secciones de lectura (Estado del proyecto, Qué es Formula SAE, video, vistas, sistemas, galería, niveles, subsistemas, caminos y formulario). Dos secciones seguidas no llevan luz del mismo lado.
+- La luz está en la capa de abajo de la página y puede pasar por debajo del borde de una sección sin costura. Ninguna sección pinta un fondo opaco encima: una luz que sigue más allá de su sección tiene que apagarse antes de una banda con foto o plano, o del pie, que sí son opacos.
+- Contraste: el texto chico gris (`--color-text-subtle`) llega a AA hasta el 27 % del acento, y `--color-text-muted` hasta el 48 %. Donde la luz llega al 40 % no va texto chico: detrás del render, entre las placas. Se mide en el píxel más claro debajo de cada línea, no sobre el negro.
+- Contra el bandeado, la máscara de la luz lleva un tramado fino hecho en CSS (`--dither-fine` y `--dither-coarse`) que baja la luz hasta un 6 % en un damero de 1 y 2 px. No lleva imágenes ni SVG: una imagen de fondo cuenta para el LCP y el SVG se procesa en el hilo principal.
+- Sin animación ni parallax, sin `filter: blur` y sin `background-attachment: fixed`: la luz es un solo degradado cónico por sección.
+- Las etiquetas sobre el render o las fotos, las placas, los placeholders, la retícula de plano, la banda azul de contacto y la barra de navegación mantienen su propio fondo.
+
 ## Imágenes
 
 - Van en `src/assets/` y se procesan con `astro:assets`. Se resuelven con `findAsset()` (`src/lib/assets.ts`), que devuelve `undefined` si el archivo no existe.
